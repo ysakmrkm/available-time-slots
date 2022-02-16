@@ -24,6 +24,8 @@
           ['6:00'],
           ['7:00']
         ],
+        slotSpan: 80,
+        businessHour: [8, 19],
         onClickNavigator: function() {
           var arr = [
             [
