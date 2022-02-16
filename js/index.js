@@ -17,6 +17,8 @@ AvailableTimeSlots = class AvailableTimeSlots {
       weekdays: ['日', '月', '火', '水', '木', '金', '土']
     };
     this.settings = Object.assign({}, this.defaults, options);
+    this.startNum = (this.settings.businessHour[0] * 60) / this.settings.slotSpan;
+    this.endNum = (this.settings.businessHour[1] * 60) / this.settings.slotSpan;
     this.onClick = this.settings.onClick;
     this.onClickNavigator = this.settings.onClickNavigator;
     this.target = target;
@@ -60,27 +62,35 @@ AvailableTimeSlots = class AvailableTimeSlots {
     return navHtml;
   }
 
+  getCurrentDate() {
+    var now, nowDate, nowDateTime;
+    now = new Date();
+    nowDateTime = now.toISOString();
+    nowDate = nowDateTime.split('T')[0];
+    return nowDate;
+  }
+
+  getCurrentTime(index) {
+    var time;
+    time = new Date(this.getCurrentDate() + 'T00:00:00');
+    time.setMinutes(index * this.settings.slotSpan);
+    return time;
+  }
+
   getTimeSlot() {
-    var end, i, k, now, nowDate, nowDateTime, ref, ref1, ret, start, time, tmp;
+    var i, l, ref, ref1, ret, tmp;
     tmp = '';
-    start = (this.settings.businessHour[0] * 60) / this.settings.slotSpan;
-    end = (this.settings.businessHour[1] * 60) / this.settings.slotSpan;
-    for (i = k = ref = start, ref1 = end; (ref <= ref1 ? k < ref1 : k > ref1); i = ref <= ref1 ? ++k : --k) {
-      now = new Date();
-      nowDateTime = now.toISOString();
-      nowDate = nowDateTime.split('T')[0];
-      time = new Date(nowDate + 'T00:00:00');
-      time.setMinutes(i * this.settings.slotSpan);
-      tmp += '<div id="ats-time-slot-' + i + '" class="ats-time-slot"> <div class="ats-time-slot-number">' + ('0' + time.getHours()).slice(-2) + ':' + ('0' + time.getMinutes()).slice(-2) + '</div> </div>';
+    for (i = l = ref = this.startNum, ref1 = this.endNum; (ref <= ref1 ? l < ref1 : l > ref1); i = ref <= ref1 ? ++l : --l) {
+      tmp += '<div id="ats-time-slot-' + i + '" class="ats-time-slot"> <div class="ats-time-slot-number">' + ('0' + this.getCurrentTime(i).getHours()).slice(-2) + ':' + ('0' + this.getCurrentTime(i).getMinutes()).slice(-2) + '</div> </div>';
     }
     ret = tmp;
     return ret;
   }
 
   getDatesHeader() {
-    var d, i, k, ret, tmp;
+    var d, i, l, ret, tmp;
     tmp = '';
-    for (i = k = 0; k < 7; i = ++k) {
+    for (i = l = 0; l < 7; i = ++l) {
       d = this.setDate(i);
       tmp += '<div id="ats-date-heading-' + i + '" class="ats-date-heading"> <div class="ats-date-number">' + d.getDate() + '</div> <div class="ats-date-text">' + this.settings.weekdays[d.getDay()] + '</div> </div>';
     }
@@ -89,14 +99,29 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   getAvailableTimeSlots() {
-    var i, j, k, l, ref, tmp, tmpAvailTimes;
+    var availableDate, className, i, isAvalable, j, k, l, m, mark, n, ref, ref1, ref2, tmp, tmpTimes;
     tmp = '';
-    for (i = k = 0; k < 7; i = ++k) {
-      tmpAvailTimes = '';
-      for (j = l = 0, ref = this.settings.availabileTimeSlots[i].length; (0 <= ref ? l < ref : l > ref); j = 0 <= ref ? ++l : --l) {
-        tmpAvailTimes += '<a class="ats-available-time-slot" data-time="' + this.settings.availabileTimeSlots[i][j] + '" data-date="' + this.formatDate(this.setDate(i)) + '">' + this.settings.availabileTimeSlots[i][j] + '</a>';
+    for (i = l = 0; l < 7; i = ++l) {
+      tmpTimes = '';
+      mark = '';
+      for (j = m = ref = this.startNum, ref1 = this.endNum; (ref <= ref1 ? m < ref1 : m > ref1); j = ref <= ref1 ? ++m : --m) {
+        isAvalable = false;
+        for (k = n = 0, ref2 = this.settings.availabileTimeSlots[i].length; (0 <= ref2 ? n < ref2 : n > ref2); k = 0 <= ref2 ? ++n : --n) {
+          availableDate = new Date(this.getCurrentDate() + 'T' + this.settings.availabileTimeSlots[i][k]);
+          if (availableDate.getTime() === this.getCurrentTime(j).getTime()) {
+            isAvalable = true;
+          }
+        }
+        if (!isAvalable) {
+          mark = '×';
+          className = 'ats-time-slot';
+        } else {
+          mark = '○';
+          className = 'ats-time-slot ats-time-slot__available';
+        }
+        tmpTimes += '<div class="' + className + '" data-time="' + ('0' + this.getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + this.getCurrentTime(j).getMinutes()).slice(-2) + '" data-date="' + this.formatDate(this.setDate(i)) + '">' + mark + '</div>';
       }
-      tmp += '<div class="ats-time-slot-container" id="ats-time-slot-container-' + i + '">' + tmpAvailTimes + '</div>';
+      tmp += '<div class="ats-time-slot-container" id="ats-time-slot-container-' + i + '">' + tmpTimes + '</div>';
     }
     return tmp;
   }
@@ -133,7 +158,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   clickAvailableTimeSlot() {
-    return Array.from(document.getElementsByClassName('ats-available-time-slot')).forEach((target) => {
+    return Array.from(document.getElementsByClassName('ats-time-slot__available')).forEach((target) => {
       return target.addEventListener('click', (e) => {
         var date, idx, time, tmp;
         date = target.getAttribute('data-date');
@@ -152,7 +177,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
           } else {
             this.settings.selectedDates.pop();
             if (!this.settings.selectedDates.length) {
-              Array.from(document.getElementsByClassName('ats-available-time-slot')).forEach(function(target) {
+              Array.from(document.getElementsByClassName('ats-time-slot__available')).forEach(function(target) {
                 return target.classList.remove('selected');
               });
               target.classList.add('selected');

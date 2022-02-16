@@ -15,6 +15,8 @@ class AvailableTimeSlots
       weekdays: ['日', '月', '火', '水', '木', '金', '土']
     }
     @settings = Object.assign({}, @defaults, options)
+    @startNum = (@settings.businessHour[0] * 60) / @settings.slotSpan
+    @endNum = (@settings.businessHour[1] * 60) / @settings.slotSpan
     @onClick = @settings.onClick
     @onClickNavigator = @settings.onClickNavigator
     @target = target
@@ -51,22 +53,25 @@ class AvailableTimeSlots
 
     return navHtml
 
+  getCurrentDate: ()->
+    now = new Date()
+    nowDateTime = now.toISOString()
+    nowDate = nowDateTime.split('T')[0]
+
+    return nowDate
+
+  getCurrentTime: (index)->
+    time = new Date(@getCurrentDate() + 'T00:00:00')
+    time.setMinutes(index * @settings.slotSpan)
+
+    return time
+
   getTimeSlot: ()->
     tmp = ''
 
-    start = (@settings.businessHour[0] * 60) / @settings.slotSpan
-    end = (@settings.businessHour[1] * 60) / @settings.slotSpan
-
-    for i in [start...end]
-      now = new Date()
-      nowDateTime = now.toISOString()
-      nowDate = nowDateTime.split('T')[0]
-
-      time = new Date(nowDate + 'T00:00:00')
-      time.setMinutes(i * @settings.slotSpan)
-
+    for i in [@startNum...@endNum]
       tmp += '<div id="ats-time-slot-' + i + '" class="ats-time-slot">
-      <div class="ats-time-slot-number">' + ('0' + time.getHours()).slice(-2) + ':' + ('0' + time.getMinutes()).slice(-2) + '</div>
+      <div class="ats-time-slot-number">' + ('0' + @getCurrentTime(i).getHours()).slice(-2) + ':' + ('0' + @getCurrentTime(i).getMinutes()).slice(-2) + '</div>
       </div>'
 
     ret = tmp
@@ -92,12 +97,28 @@ class AvailableTimeSlots
     tmp = ''
 
     for i in [0...7]
-      tmpAvailTimes = ''
+      tmpTimes = ''
+      mark = ''
 
-      for j in [0...@settings.availabileTimeSlots[i].length]
-        tmpAvailTimes += '<a class="ats-available-time-slot" data-time="' + @settings.availabileTimeSlots[i][j] + '" data-date="' + @formatDate(@setDate(i)) + '">' + @settings.availabileTimeSlots[i][j] + '</a>'
+      for j in [@startNum...@endNum]
+        isAvalable = false
 
-      tmp += '<div class="ats-time-slot-container" id="ats-time-slot-container-' + i + '">' + tmpAvailTimes + '</div>'
+        for k in [0...@settings.availabileTimeSlots[i].length]
+          availableDate = new Date(@getCurrentDate() + 'T' + @settings.availabileTimeSlots[i][k])
+
+          if availableDate.getTime() is @getCurrentTime(j).getTime()
+            isAvalable = true
+
+        if not isAvalable
+          mark = '×'
+          className = 'ats-time-slot'
+        else
+          mark = '○'
+          className = 'ats-time-slot ats-time-slot__available'
+
+        tmpTimes += '<div class="' + className + '" data-time="' + ('0' + @getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + @getCurrentTime(j).getMinutes()).slice(-2) + '" data-date="' + @formatDate(@setDate(i)) + '">' + mark + '</div>'
+
+      tmp += '<div class="ats-time-slot-container" id="ats-time-slot-container-' + i + '">' + tmpTimes + '</div>'
 
     return tmp
 
@@ -130,7 +151,7 @@ class AvailableTimeSlots
     )
 
   clickAvailableTimeSlot: ()->
-    Array.from(document.getElementsByClassName('ats-available-time-slot')).forEach((target)=>
+    Array.from(document.getElementsByClassName('ats-time-slot__available')).forEach((target)=>
       target.addEventListener('click', (e)=>
         date = target.getAttribute('data-date')
         time = target.getAttribute('data-time')
@@ -147,7 +168,7 @@ class AvailableTimeSlots
           else
             @settings.selectedDates.pop()
             if not @settings.selectedDates.length
-              Array.from(document.getElementsByClassName('ats-available-time-slot')).forEach((target)->
+              Array.from(document.getElementsByClassName('ats-time-slot__available')).forEach((target)->
                 target.classList.remove('selected')
               )
 
