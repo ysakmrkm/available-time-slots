@@ -1,0 +1,46 @@
+#ats-container {
+  width: 100%;
+}
+
+#ats-nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+#ats-current-date-container {
+  width: 75%;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+#ats-week-container {
+  width: 100%;
+}
+
+#ats-dates-container {
+  display: flex;
+  width: 100%;
+}
+
+#ats-available-time-container {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.ats-nav {
+  width: 12.5%;
+}
+
+.ats-nav__item {
+  cursor: pointer;
+}
+
+.ats-date-heading {
+  width: calc(100% / 7);
+}
+
+.ats-available-time-slot {
+  display: block;
+}

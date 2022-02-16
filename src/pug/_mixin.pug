@@ -1,0 +1,32 @@
+mixin picture(filename, alt, [pc_width=1, pc_height=1], [sp_width=1, sp_height=1])
+  if (typeof filename === "object")
+    - var pcimage = filename[0]
+    - var spimage = filename[1]
+  else
+    - var pcimage = spimage = filename
+
+  - var pcAttributes = {}
+  - var pcImgAttributes = {}
+  - var spAttributes = {}
+
+  if pc_width > 0 && pc_height > 0
+    - pcAttributes = {'data-aspectratio': pc_width+'/'+pc_height}
+    - pcImgAttributes = {'width': pc_width, 'height': pc_height}
+  if sp_width > 0 && sp_height > 0
+    - spAttributes = {'data-aspectratio': sp_width+'/'+sp_height}
+
+  picture
+    source(media='(max-width: 750px)', data-srcset='#{url}img/sp/#{spimage.replace(/(gif|jpg|jpeg|png)/, "webp")}', type='image/webp')&attributes(spAttributes)
+    source(media='(max-width: 750px)', data-srcset='#{url}img/sp/#{spimage}')&attributes(spAttributes)
+    source(media='(min-width: 751px)', data-srcset='#{url}img/pc/#{pcimage.replace(/(gif|jpg|jpeg|png)/, "webp")}', type='image/webp')&attributes(pcAttributes)
+    source(media='(min-width: 751px)', data-srcset='#{url}img/pc/#{pcimage}')&attributes(pcAttributes)
+    img(src='data:image/gif;base64,R0lGODlhAQABAGAAACH5BAEKAP8ALAAAAAABAAEAAAgEAP8FBAA7', data-aspectratio='', alt='#{alt}').lazyload&attributes(pcImgAttributes, {'class': attributes.class})
+
+mixin each(name)
+  != '{{#'
+  != name
+  != '}}'
+  block
+  != '{{/'
+  != name
+  != '}}'

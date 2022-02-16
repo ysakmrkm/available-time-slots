@@ -1,0 +1,68 @@
+@use 'sass:math';
+
+@function px2vw($px, $base: 750) {
+	// @return unquote((($px / ($px * 0 + 1)) / $base * 100)+'vw');
+	@return unquote(math.div(math.div($px, ($px * 0 + 1)), $base) * 100+'vw');
+}
+
+@function margin($margin, $lheight, $base, $unit: 0) {
+	// $val: $margin + (floor(((ceil((abs(1 - ($lheight / $base)) / 2) * 1000) / 1000) * $base) * 10) / 10 * -1);
+	$val: $margin + (math.div(floor((math.div(ceil(math.div(abs(1 - math.div($lheight, $base)), 2) * 1000), 1000) * $base) * 10), 10) * -1);
+
+	@if $unit == 1 or $unit == 'px' {
+		$val: $val + 'px';
+	} @else if type-of($unit) == 'string' {
+		$val: $val + $unit;
+	}
+
+	@if type-of($val) == 'string' {
+		@return unquote($val);
+	} @else {
+		@return $val;
+	}
+}
+
+@function padding($margin, $lheight, $base, $unit: 0) {
+	@return margin($margin, $lheight, $base, $unit);
+}
+
+@function str_to_list($target) {
+	$text: unquote('#{$target}');
+	$classes: ();
+
+	$pos: str-index($text, ' ');
+
+	@while $pos != str-length($text) {
+		$pos: str-index($text, ' ');
+
+		@if $pos == null {
+			$pos: str-length($text);
+		}
+
+		@if $pos != 0 {
+			$class: str-slice($text, 0, $pos);
+			$classes: append($classes, $class, comma);
+			$text: str-slice($text, $pos + 1, str-length($text));
+		}
+	}
+
+	@return $classes;
+}
+
+@function compact($var-1, $var-2: false,
+$var-3: false, $var-4: false,
+$var-5: false, $var-6: false,
+$var-7: false, $var-8: false,
+$var-9: false, $var-10: false) {
+	$full: $var-1;
+	$vars: $var-2, $var-3, $var-4, $var-5,
+		$var-6, $var-7, $var-8, $var-9, $var-10;
+
+	@each $var in $vars {
+		@if $var {
+			$full: $full, $var;
+		}
+	}
+
+	@return $full;
+}

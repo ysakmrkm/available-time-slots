@@ -1,0 +1,50 @@
+#ats {
+	&-container {
+		width: 100%;
+	}
+
+	&-nav-container {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+	}
+
+	&-current-date-container {
+		width: 75%;
+		text-align: center;
+		text-transform: capitalize;
+	}
+
+	&-week-container {
+		width: 100%;
+	}
+
+	&-dates-container {
+		display: flex;
+		width: 100%;
+	}
+
+	&-available-time-container {
+		display: grid;
+		grid-template-columns: repeat(7, 1fr);
+	}
+}
+
+.ats {
+	&-nav {
+		width: 12.5%;
+
+		&__item {
+			cursor: pointer;
+		}
+	}
+
+	&-date-heading {
+		width: calc(100% / 7);
+	}
+
+	&-available-time-slot {
+		display: block;
+	}
+}

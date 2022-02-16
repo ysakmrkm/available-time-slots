@@ -1,0 +1,191 @@
+@use 'fundation/_property';
+
+@mixin reset {
+	body ,
+	h1 ,
+	h2 ,
+	h3 ,
+	h4 ,
+	h5 ,
+	h6 ,
+	div ,
+	p ,
+	ul ,
+	ol ,
+	dl ,
+	form ,
+	fieldset ,
+	table ,
+	address ,
+	blockquote ,
+	noscript ,
+	pre ,
+	tr , //ここから非ブロック要素
+	td ,
+	input ,
+	textarea {
+		margin: 0;
+		padding: 0;
+		line-height: 1;
+		font-style: normal;
+	}
+
+	html {
+		font-family: property.$font_goth;
+		font-size: 10px;
+	}
+
+	h1 ,
+	h2 ,
+	h3 ,
+	h4 ,
+	h5 ,
+	h6 {
+		font-size: 1em;
+		font-weight: normal;
+	}
+
+	small {
+		font-size: 1em;
+	}
+
+	mark {
+		background: none;
+	}
+
+	fieldset {
+		border: 0;
+	}
+
+	table {
+		border-collapse: collapse;
+		border-spacing: 0;
+		font: 100%;
+		font-size: inherit;
+	}
+
+	li {
+		list-style-type: none;
+	}
+
+	dd {
+		margin: 0;
+	}
+
+	a ,
+	abbr ,
+	acronym ,
+	em ,
+	strong ,
+	span ,
+	img ,
+	sub ,
+	sup ,
+	input ,
+	button ,
+	textarea ,
+	select ,
+	label ,
+	caption {
+		font-weight: normal;
+		font-style: normal;
+	}
+
+	button {
+		margin: 0;
+
+		&::-moz-focus-inner {
+			padding: 0;
+			border: 0;
+		}
+	}
+
+	a {
+		text-decoration: none;
+	}
+
+	img {
+		border: 0;
+		vertical-align: bottom;
+	}
+
+	caption ,
+	th {
+		text-align: left;
+		font-weight: normal;
+	}
+
+	th ,
+	td {
+		padding: 0;
+	}
+
+	input ,
+	textarea ,
+	select {
+		font-family: inherit;
+		font-size: inherit;
+	}
+
+	textarea {
+		vertical-align: top;
+	}
+
+	iframe {
+		border: 0;
+	}
+
+	//以下未定義要素
+	//area
+	//base
+	//col
+	//colgroup
+	//del
+	//dt
+	//head
+	//hr
+	//ins
+	//legend
+	//link
+	//map
+	//meta
+	//noscript
+	//optgroup
+	//option
+	//param
+	//tbody
+	//tfoot
+	//thead
+	//tr
+	//tt
+}
+
+@mixin resethtml5 { //HTML5
+	header ,
+	footer ,
+	article ,
+	section ,
+	aside ,
+	nav ,
+	figure ,
+	figcaption ,
+	details ,
+	hgroup ,
+	main ,
+	menu ,
+	summary {
+		display: block;
+		margin: 0;
+		padding: 0;
+	}
+
+	input[type='search'] {
+		box-sizing: content-box;
+		-webkit-appearance: none;
+
+		&::-webkit-search-cancel-button ,
+		&::-webkit-search-decoration {
+			-webkit-appearance: none;
+		}
+	}
+}
