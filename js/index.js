@@ -11,6 +11,8 @@ AvailableTimeSlots = class AvailableTimeSlots {
       nextHtml: this.nextHtml,
       selectedDates: [],
       startDate: new Date(),
+      slotSpan: 30,
+      businessHour: [0, 23],
       months: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
       weekdays: ['日', '月', '火', '水', '木', '金', '土']
     };
@@ -56,6 +58,23 @@ AvailableTimeSlots = class AvailableTimeSlots {
     dateHtml = '<div id="ats-current-date-container">' + this.getYearName(this.settings.startDate.getFullYear()) + ' ' + this.getMonthName(this.settings.startDate.getMonth()) + '</div>';
     navHtml = previousWeekHtml + ' ' + dateHtml + ' ' + nextWeekHtml;
     return navHtml;
+  }
+
+  getTimeSlot() {
+    var end, i, k, now, nowDate, nowDateTime, ref, ref1, ret, start, time, tmp;
+    tmp = '';
+    start = (this.settings.businessHour[0] * 60) / this.settings.slotSpan;
+    end = (this.settings.businessHour[1] * 60) / this.settings.slotSpan;
+    for (i = k = ref = start, ref1 = end; (ref <= ref1 ? k < ref1 : k > ref1); i = ref <= ref1 ? ++k : --k) {
+      now = new Date();
+      nowDateTime = now.toISOString();
+      nowDate = nowDateTime.split('T')[0];
+      time = new Date(nowDate + 'T00:00:00');
+      time.setMinutes(i * this.settings.slotSpan);
+      tmp += '<div id="ats-time-slot-' + i + '" class="ats-time-slot"> <div class="ats-time-slot-number">' + ('0' + time.getHours()).slice(-2) + ':' + ('0' + time.getMinutes()).slice(-2) + '</div> </div>';
+    }
+    ret = tmp;
+    return ret;
   }
 
   getDatesHeader() {
@@ -150,7 +169,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
 
   render() {
     var ret;
-    ret = '<div id="ats-container"> <div id="ats-nav-container">' + this.getNavigation() + '</div> <div id="ats-week-container"> <div id="ats-dates-container">' + this.getDatesHeader() + '</div> <div id="ats-available-time-container">' + this.getAvailableTimeSlots() + '</div> </div> </div>';
+    ret = '<div id="ats-container"> <div id="ats-nav-container">' + this.getNavigation() + '</div> <div id="ats-week-container"> <div id="ats-times-container">' + this.getTimeSlot() + '</div> <div id="ats-dates-container">' + this.getDatesHeader() + '</div> <div id="ats-available-time-container">' + this.getAvailableTimeSlots() + '</div> </div> </div>';
     this.target.innerHTML = ret;
     this.clickPrevWeek();
     this.clickNextWeek();

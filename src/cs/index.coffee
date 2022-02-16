@@ -9,6 +9,8 @@ class AvailableTimeSlots
       nextHtml: @nextHtml
       selectedDates: []
       startDate: new Date()
+      slotSpan: 30
+      businessHour: [0,  23]
       months: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
       weekdays: ['日', '月', '火', '水', '木', '金', '土']
     }
@@ -48,6 +50,28 @@ class AvailableTimeSlots
     navHtml = previousWeekHtml + ' ' + dateHtml + ' ' + nextWeekHtml
 
     return navHtml
+
+  getTimeSlot: ()->
+    tmp = ''
+
+    start = (@settings.businessHour[0] * 60) / @settings.slotSpan
+    end = (@settings.businessHour[1] * 60) / @settings.slotSpan
+
+    for i in [start...end]
+      now = new Date()
+      nowDateTime = now.toISOString()
+      nowDate = nowDateTime.split('T')[0]
+
+      time = new Date(nowDate + 'T00:00:00')
+      time.setMinutes(i * @settings.slotSpan)
+
+      tmp += '<div id="ats-time-slot-' + i + '" class="ats-time-slot">
+      <div class="ats-time-slot-number">' + ('0' + time.getHours()).slice(-2) + ':' + ('0' + time.getMinutes()).slice(-2) + '</div>
+      </div>'
+
+    ret = tmp
+
+    return ret
 
   getDatesHeader: ()->
     tmp = ''
@@ -139,6 +163,7 @@ class AvailableTimeSlots
     ret = '<div id="ats-container">
       <div id="ats-nav-container">' + @getNavigation() + '</div>
       <div id="ats-week-container">
+        <div id="ats-times-container">' + @getTimeSlot() + '</div>
         <div id="ats-dates-container">' + @getDatesHeader() + '</div>
         <div id="ats-available-time-container">' + @getAvailableTimeSlots() + '</div>
       </div>
