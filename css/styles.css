@@ -55,6 +55,6 @@
   width: calc(100% / 7);
 }
 
-.ats-available-time-slot {
-  display: block;
+.ats-time-slot__available {
+  cursor: pointer;
 }

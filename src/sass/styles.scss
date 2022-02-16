@@ -59,7 +59,9 @@
 		width: calc(100% / 7);
 	}
 
-	&-available-time-slot {
-		display: block;
+	&-time-slot {
+		&__available {
+			cursor: pointer;
+		}
 	}
 }
