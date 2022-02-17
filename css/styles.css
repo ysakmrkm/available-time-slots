@@ -16,17 +16,31 @@
 }
 
 #ats-week-container {
+  display: grid;
   width: 100%;
+  grid-auto-columns: -webkit-min-content auto;
+  grid-auto-columns: min-content auto;
+  grid-auto-rows: -webkit-min-content auto;
+  grid-auto-rows: min-content auto;
+}
+
+#ats-times-container {
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
 }
 
 #ats-dates-container {
   display: flex;
   width: 100%;
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
 }
 
 #ats-available-time-container {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  display: flex;
+  width: 100%;
+  grid-column: 2 / 3;
+  grid-row: 2 / 3;
 }
 
 .ats-nav {
@@ -37,10 +51,10 @@
   cursor: pointer;
 }
 
-.ats-date-heading {
+.ats-date-heading, .ats-time-slot-container {
   width: calc(100% / 7);
 }
 
-.ats-available-time-slot {
-  display: block;
+.ats-time-slot__available {
+  cursor: pointer;
 }
