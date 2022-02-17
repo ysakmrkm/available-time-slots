@@ -13,6 +13,7 @@ class AvailableTimeSlots
       businessHour: [0,  23]
       months: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
       weekdays: ['日', '月', '火', '水', '木', '金', '土']
+      holidays: 'https://holidays-jp.github.io/api/v1/date.json'
     }
     @settings = Object.assign({}, @defaults, options)
     @startNum = (@settings.businessHour[0] * 60) / @settings.slotSpan
@@ -93,7 +94,7 @@ class AvailableTimeSlots
       else
         className += ' ats__weekday'
 
-      tmp += '<div id="ats-date-heading-' + i + '" class="' + className + '">
+      tmp += '<div id="ats-date-heading-' + i + '" class="' + className + '" data-date="' + @formatDate(date) + '">
         <div class="ats-date-number">' + date.getDate() + '</div>
         <div class="ats-date-text">' + @settings.weekdays[date.getDay()] + '</div>
       </div>'
@@ -212,6 +213,35 @@ class AvailableTimeSlots
 
     @target.innerHTML = ret
 
+    if @settings.holidays isnt ''
+      @updateHoliday()
+
     @clickPrevWeek()
     @clickNextWeek()
     @clickAvailableTimeSlot()
+
+  updateHoliday: ()->
+    request = new XMLHttpRequest()
+    request.open('GET', @settings.holidays, true)
+
+    request.onload = ()->
+      if request.status >= 200 and request.status < 400
+        data = JSON.parse(request.responseText)
+
+        Object.keys(data).forEach((key)->
+          headings = document.getElementsByClassName('ats-date-heading')
+          slots = document.getElementsByClassName('ats-time-slot-container')
+
+          Array.from(headings).forEach((target, index)->
+            current = target.getAttribute('data-date')
+
+            if key is current
+              headings[index].classList.add('ats__holiday')
+              slots[index].classList.add('ats__holiday')
+          )
+        )
+      else
+
+    request.onerror = ()->
+
+    request.send()
