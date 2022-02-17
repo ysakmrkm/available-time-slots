@@ -51,6 +51,11 @@
 
 		&__item {
 			cursor: pointer;
+
+			&.is-disable {
+				pointer-events: none;
+				opacity: .2;
+			}
 		}
 	}
 

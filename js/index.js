@@ -165,10 +165,16 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   clickPrevWeek() {
+    var currentDateTime, startDateTime;
+    currentDateTime = new Date(this.getCurrentDate()).getTime();
+    startDateTime = new Date(document.getElementById('ats-date-heading-0').getAttribute('data-date')).getTime();
+    if (startDateTime - currentDateTime < 0) {
+      document.getElementById('ats-prev-week').classList.add('is-disable');
+    }
     return document.getElementById('ats-prev-week').addEventListener('click', (e) => {
       this.settings.startDate = this.setDate(-7);
       this.clearAvailableTimeSlots();
-      this.render(this.target);
+      this.render();
       if (typeof this.onClickNavigator === 'function') {
         return this.onClickNavigator();
       }
@@ -179,7 +185,8 @@ AvailableTimeSlots = class AvailableTimeSlots {
     return document.getElementById('ats-next-week').addEventListener('click', (e) => {
       this.settings.startDate = this.setDate(7);
       this.clearAvailableTimeSlots();
-      this.render(this.target);
+      this.render();
+      document.getElementById('ats-prev-week').classList.remove('is-disable');
       if (typeof this.onClickNavigator === 'function') {
         return this.onClickNavigator();
       }
