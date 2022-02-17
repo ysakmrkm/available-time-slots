@@ -18,7 +18,7 @@ class AvailableTimeSlots
     @settings = Object.assign({}, @defaults, options)
     @startNum = (@settings.businessHour[0] * 60) / @settings.slotSpan
     @endNum = (@settings.businessHour[1] * 60) / @settings.slotSpan
-    @onClick = @settings.onClick
+    @onClickTimeSlot = @settings.onClickTimeSlot
     @onClickNavigator = @settings.onClickNavigator
     @target = target
 
@@ -207,8 +207,8 @@ class AvailableTimeSlots
               target.classList.add('selected')
               @settings.selectedDates.push(tmp)
 
-        if typeof @onClick is 'function'
-          @onClick()
+        if typeof @onClickTimeSlot is 'function'
+          @onClickTimeSlot(@settings.selectedDates)
       )
     )
 
