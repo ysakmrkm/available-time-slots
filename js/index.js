@@ -2,8 +2,8 @@ var AvailableTimeSlots;
 
 AvailableTimeSlots = class AvailableTimeSlots {
   constructor(target, options) {
-    this.prevHtml = '<div id="ats-prev-week" class="ats-nav__item"><</div>';
-    this.nextHtml = '<div id="ats-next-week" class="ats-nav__item">></div>';
+    this.prevHtml = '<div id="ats-prev-week" class="ats-nav__item ats-nav__item__prev"><</div>';
+    this.nextHtml = '<div id="ats-next-week" class="ats-nav__item ats-nav__item__next">></div>';
     this.defaults = {
       availabileTimeSlots: [[], [], [], [], [], [], []],
       isMultiple: false,
