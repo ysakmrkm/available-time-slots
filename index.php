@@ -15,9 +15,9 @@
       target = document.getElementById('app')
       
       settings = {
-        businessHour: [0,  12],
+        businessHour: [8,  19],
         availabileTimeSlots: [
-          ['08:00', '09:30', '10:00', '11:30', '12:00'],
+          ['08:00', '09:30', '10:00', '11:30', '12:00', '17:00', '18:30'],
           ['09:00', '12:30'],
           ['11:00'],
           ['08:30'],

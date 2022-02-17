@@ -78,11 +78,11 @@ AvailableTimeSlots = class AvailableTimeSlots {
     return time;
   }
 
-  getTimeSlot() {
+  getTimeLine() {
     var i, l, ref, ref1, ret, tmp;
     tmp = '';
     for (i = l = ref = this.startNum, ref1 = this.endNum; (ref <= ref1 ? l < ref1 : l > ref1); i = ref <= ref1 ? ++l : --l) {
-      tmp += '<div id="ats-time-slot-' + i + '" class="ats-time-slot"> <div class="ats-time-slot-number">' + ('0' + this.getCurrentTime(i).getHours()).slice(-2) + ':' + ('0' + this.getCurrentTime(i).getMinutes()).slice(-2) + '</div> </div>';
+      tmp += '<div id="ats-time-line-' + i + '" class="ats-time-line"> <div class="ats-time-line-number">' + ('0' + this.getCurrentTime(i).getHours()).slice(-2) + ':' + ('0' + this.getCurrentTime(i).getMinutes()).slice(-2) + '</div> </div>';
     }
     ret = tmp;
     return ret;
@@ -108,28 +108,39 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   getAvailableTimeSlots() {
-    var availableDate, className, date, i, isAvalable, j, k, l, m, mark, n, ref, ref1, ref2, tmp, tmpTimes;
+    var availableDate, className, date, i, isAvalable, isPast, j, k, l, m, mark, n, now, ref, ref1, ref2, slotDate, tmp, tmpTimes;
     tmp = '';
+    now = new Date();
     for (i = l = 0; l < 7; i = ++l) {
       tmpTimes = '';
       mark = '';
       date = this.setDate(i);
       for (j = m = ref = this.startNum, ref1 = this.endNum; (ref <= ref1 ? m < ref1 : m > ref1); j = ref <= ref1 ? ++m : --m) {
         isAvalable = false;
+        isPast = false;
+        className = 'ats-time-slot';
         for (k = n = 0, ref2 = this.settings.availabileTimeSlots[i].length; (0 <= ref2 ? n < ref2 : n > ref2); k = 0 <= ref2 ? ++n : --n) {
-          availableDate = new Date(this.getCurrentDate() + 'T' + this.settings.availabileTimeSlots[i][k]);
-          if (availableDate.getTime() === this.getCurrentTime(j).getTime()) {
+          availableDate = new Date(date.toISOString().split('T')[0] + 'T' + this.settings.availabileTimeSlots[i][k]);
+          slotDate = new Date(date.toISOString().split('T')[0] + 'T' + ('0' + this.getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + this.getCurrentTime(j).getMinutes()).slice(-2));
+          if (availableDate.getTime() === slotDate.getTime()) {
             isAvalable = true;
           }
+          if (slotDate.getTime() - now.getTime() < 0) {
+            isAvalable = false;
+            isPast = true;
+          }
+        }
+        if (isPast) {
+          className += ' ats-time-slot__past';
+          isPast = false;
         }
         if (!isAvalable) {
           mark = '×';
-          className = 'ats-time-slot';
         } else {
           mark = '○';
-          className = 'ats-time-slot ats-time-slot__available';
+          className += ' ats-time-slot__available';
         }
-        tmpTimes += '<div class="' + className + '" data-time="' + ('0' + this.getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + this.getCurrentTime(j).getMinutes()).slice(-2) + '" data-date="' + this.formatDate(this.setDate(i)) + '">' + mark + '</div>';
+        tmpTimes += '<div class="' + className + '" data-time="' + ('0' + this.getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + this.getCurrentTime(j).getMinutes()).slice(-2) + '" data-date="' + this.formatDate(date) + '">' + mark + '</div>';
       }
       className = 'ats-time-slot-container';
       if (date.getDay() === 0) {
@@ -212,7 +223,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
 
   render() {
     var ret;
-    ret = '<div id="ats-container"> <div id="ats-nav-container">' + this.getNavigation() + '</div> <div id="ats-week-container"> <div id="ats-times-container">' + this.getTimeSlot() + '</div> <div id="ats-dates-container">' + this.getDatesHeader() + '</div> <div id="ats-available-time-container">' + this.getAvailableTimeSlots() + '</div> </div> </div>';
+    ret = '<div id="ats-container"> <div id="ats-nav-container">' + this.getNavigation() + '</div> <div id="ats-week-container"> <div id="ats-times-container">' + this.getTimeLine() + '</div> <div id="ats-dates-container">' + this.getDatesHeader() + '</div> <div id="ats-available-time-container">' + this.getAvailableTimeSlots() + '</div> </div> </div>';
     this.target.innerHTML = ret;
     if (this.settings.holidays !== '') {
       this.updateHoliday();
