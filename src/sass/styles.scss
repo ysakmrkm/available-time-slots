@@ -59,6 +59,26 @@
 		width: calc(100% / 7);
 	}
 
+	&-date-heading {
+		&.ats__saturday {
+			color: #00f;
+		}
+
+		&.ats__sunday {
+			color: #f00;
+		}
+	}
+
+	&-time-slot-container {
+		&.ats__saturday {
+			background-color: rgba(#00f, .1);
+		}
+
+		&.ats__sunday {
+			background-color: rgba(#f00, .1);
+		}
+	}
+
 	&-time-slot {
 		&__available {
 			cursor: pointer;
