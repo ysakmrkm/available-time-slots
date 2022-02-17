@@ -11,7 +11,7 @@ class AvailableTimeSlots
       startDate: new Date()
       slotSpan: 30
       businessHour: [0,  23]
-      months: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+      months: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
       weekdays: ['日', '月', '火', '水', '木', '金', '土']
       holidays: 'https://holidays-jp.github.io/api/v1/date.json'
     }
@@ -31,7 +31,10 @@ class AvailableTimeSlots
     return year + '年'
 
   getMonthName: (index)->
-    return @settings.months[index]
+    return @settings.months[index] + '月'
+
+  getWeekdayName: (index)->
+    return '（' + @settings.weekdays[index] + '）'
 
   formatDate: (data)->
     date = '' + data.getDate()
@@ -96,7 +99,7 @@ class AvailableTimeSlots
 
       tmp += '<div id="ats-date-heading-' + i + '" class="' + className + '" data-date="' + @formatDate(date) + '">
         <div class="ats-date-number">' + date.getDate() + '</div>
-        <div class="ats-date-text">' + @settings.weekdays[date.getDay()] + '</div>
+        <div class="ats-date-text">' + @getWeekdayName(date.getDay()) + '</div>
       </div>'
 
     ret = tmp

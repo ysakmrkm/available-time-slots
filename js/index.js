@@ -13,7 +13,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
       startDate: new Date(),
       slotSpan: 30,
       businessHour: [0, 23],
-      months: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+      months: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
       weekdays: ['日', '月', '火', '水', '木', '金', '土'],
       holidays: 'https://holidays-jp.github.io/api/v1/date.json'
     };
@@ -37,7 +37,11 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   getMonthName(index) {
-    return this.settings.months[index];
+    return this.settings.months[index] + '月';
+  }
+
+  getWeekdayName(index) {
+    return '（' + this.settings.weekdays[index] + '）';
   }
 
   formatDate(data) {
@@ -101,7 +105,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
       } else {
         className += ' ats__weekday';
       }
-      tmp += '<div id="ats-date-heading-' + i + '" class="' + className + '" data-date="' + this.formatDate(date) + '"> <div class="ats-date-number">' + date.getDate() + '</div> <div class="ats-date-text">' + this.settings.weekdays[date.getDay()] + '</div> </div>';
+      tmp += '<div id="ats-date-heading-' + i + '" class="' + className + '" data-date="' + this.formatDate(date) + '"> <div class="ats-date-number">' + date.getDate() + '</div> <div class="ats-date-text">' + this.getWeekdayName(date.getDay()) + '</div> </div>';
     }
     ret = tmp;
     return ret;
