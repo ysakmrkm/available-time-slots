@@ -85,5 +85,9 @@
 		&__available {
 			cursor: pointer;
 		}
+
+		&__past {
+			background-color: rgba(#000, .1);
+		}
 	}
 }
