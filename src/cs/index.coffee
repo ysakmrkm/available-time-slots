@@ -67,12 +67,12 @@ class AvailableTimeSlots
 
     return time
 
-  getTimeSlot: ()->
+  getTimeLine: ()->
     tmp = ''
 
     for i in [@startNum...@endNum]
-      tmp += '<div id="ats-time-slot-' + i + '" class="ats-time-slot">
-      <div class="ats-time-slot-number">' + ('0' + @getCurrentTime(i).getHours()).slice(-2) + ':' + ('0' + @getCurrentTime(i).getMinutes()).slice(-2) + '</div>
+      tmp += '<div id="ats-time-line-' + i + '" class="ats-time-line">
+      <div class="ats-time-line-number">' + ('0' + @getCurrentTime(i).getHours()).slice(-2) + ':' + ('0' + @getCurrentTime(i).getMinutes()).slice(-2) + '</div>
       </div>'
 
     ret = tmp
@@ -105,6 +105,7 @@ class AvailableTimeSlots
 
   getAvailableTimeSlots: ()->
     tmp = ''
+    now = new Date()
 
     for i in [0...7]
       tmpTimes = ''
@@ -113,22 +114,32 @@ class AvailableTimeSlots
 
       for j in [@startNum...@endNum]
         isAvalable = false
+        isPast = false
+
+        className = 'ats-time-slot'
 
         for k in [0...@settings.availabileTimeSlots[i].length]
-          availableDate = new Date(@getCurrentDate() + 'T' + @settings.availabileTimeSlots[i][k])
+          availableDate = new Date(date.toISOString().split('T')[0] + 'T' + @settings.availabileTimeSlots[i][k])
+          slotDate = new Date(date.toISOString().split('T')[0] + 'T' + ('0' + @getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + @getCurrentTime(j).getMinutes()).slice(-2))
 
-          if availableDate.getTime() is @getCurrentTime(j).getTime()
+          if availableDate.getTime() is slotDate.getTime()
             isAvalable = true
+
+          if slotDate.getTime() - now.getTime() < 0
+            isAvalable = false
+            isPast = true
+
+        if isPast
+          className += ' ats-time-slot__past'
+          isPast = false
 
         if not isAvalable
           mark = '×'
-          className = 'ats-time-slot'
         else
           mark = '○'
-          className = 'ats-time-slot ats-time-slot__available'
+          className += ' ats-time-slot__available'
 
-        tmpTimes += '<div class="' + className + '" data-time="' + ('0' + @getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + @getCurrentTime(j).getMinutes()).slice(-2) + '" data-date="' + @formatDate(@setDate(i)) + '">' + mark + '</div>'
-
+        tmpTimes += '<div class="' + className + '" data-time="' + ('0' + @getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + @getCurrentTime(j).getMinutes()).slice(-2) + '" data-date="' + @formatDate(date) + '">' + mark + '</div>'
 
       className = 'ats-time-slot-container'
 
@@ -205,7 +216,7 @@ class AvailableTimeSlots
     ret = '<div id="ats-container">
       <div id="ats-nav-container">' + @getNavigation() + '</div>
       <div id="ats-week-container">
-        <div id="ats-times-container">' + @getTimeSlot() + '</div>
+        <div id="ats-times-container">' + @getTimeLine() + '</div>
         <div id="ats-dates-container">' + @getDatesHeader() + '</div>
         <div id="ats-available-time-container">' + @getAvailableTimeSlots() + '</div>
       </div>
