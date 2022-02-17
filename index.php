@@ -15,6 +15,9 @@
     <script>
       target = document.getElementById('app')
       
+      date = new Date()
+      date.setDate(date.getDate() - 1)
+      
       settings = {
         businessHour: [8,  19],
         availabileTimeSlots: [
@@ -26,6 +29,7 @@
           ['09:00', '11:30'],
           ['10:30', '12:00']
         ],
+        startDate: date,
         onClickNavigator: function() {
           var arr = [
             [

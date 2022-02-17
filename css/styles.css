@@ -51,6 +51,11 @@
   cursor: pointer;
 }
 
+.ats-nav__item.is-disable {
+  pointer-events: none;
+  opacity: .2;
+}
+
 .ats-date-heading, .ats-time-slot-container {
   width: calc(100% / 7);
 }
