@@ -10,6 +10,7 @@
   </head>
   <body class="index home" itemscope="itemscope" itemtype="http://schema.org/WebPage" id="index">
     <div id="app"></div>
+    <p>選択枠<br><span id="selected-date"></span></p>
     <script src="js/index.js"></script>
     <script>
       target = document.getElementById('app')
@@ -93,6 +94,13 @@
           ]
           var rn = Math.floor(Math.random() * 10) % 7;
           AvailableTimeSlots.setAvailableTimeSlots(arr[rn]);
+        },
+        onClickTimeSlot: function(data) {
+          document.getElementById('selected-date').innerHTML = ''
+      
+          data.forEach(function (data, index) {
+            document.getElementById('selected-date').innerHTML += data+'<br>';
+          });
         }
       }
       

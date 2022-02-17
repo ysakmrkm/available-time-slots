@@ -20,7 +20,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
     this.settings = Object.assign({}, this.defaults, options);
     this.startNum = (this.settings.businessHour[0] * 60) / this.settings.slotSpan;
     this.endNum = (this.settings.businessHour[1] * 60) / this.settings.slotSpan;
-    this.onClick = this.settings.onClick;
+    this.onClickTimeSlot = this.settings.onClickTimeSlot;
     this.onClickNavigator = this.settings.onClickNavigator;
     this.target = target;
   }
@@ -214,8 +214,8 @@ AvailableTimeSlots = class AvailableTimeSlots {
             }
           }
         }
-        if (typeof this.onClick === 'function') {
-          return this.onClick();
+        if (typeof this.onClickTimeSlot === 'function') {
+          return this.onClickTimeSlot(this.settings.selectedDates);
         }
       });
     });
