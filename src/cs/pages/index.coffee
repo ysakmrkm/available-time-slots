@@ -163,10 +163,16 @@ class AvailableTimeSlots
     @settings.availabileTimeSlots = [[], [], [], [], [], [], []]
 
   clickPrevWeek: ()->
+    currentDateTime = new Date(@getCurrentDate()).getTime()
+    startDateTime = new Date(document.getElementById('ats-date-heading-0').getAttribute('data-date')).getTime()
+
+    if startDateTime - currentDateTime < 0
+      document.getElementById('ats-prev-week').classList.add('is-disable')
+
     document.getElementById('ats-prev-week').addEventListener('click', (e)=>
       @settings.startDate = @setDate(-7)
       @clearAvailableTimeSlots()
-      @render(@target)
+      @render()
 
       if typeof @onClickNavigator is 'function'
         @onClickNavigator()
@@ -176,7 +182,9 @@ class AvailableTimeSlots
     document.getElementById('ats-next-week').addEventListener('click', (e)=>
       @settings.startDate = @setDate(7)
       @clearAvailableTimeSlots()
-      @render(@target)
+      @render()
+
+      document.getElementById('ats-prev-week').classList.remove('is-disable')
 
       if typeof @onClickNavigator is 'function'
         @onClickNavigator()
