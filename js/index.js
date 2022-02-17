@@ -88,22 +88,31 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   getDatesHeader() {
-    var d, i, l, ret, tmp;
+    var className, date, i, l, ret, tmp;
     tmp = '';
     for (i = l = 0; l < 7; i = ++l) {
-      d = this.setDate(i);
-      tmp += '<div id="ats-date-heading-' + i + '" class="ats-date-heading"> <div class="ats-date-number">' + d.getDate() + '</div> <div class="ats-date-text">' + this.settings.weekdays[d.getDay()] + '</div> </div>';
+      date = this.setDate(i);
+      className = 'ats-date-heading';
+      if (date.getDay() === 0) {
+        className += ' ats__sunday';
+      } else if (date.getDay() === 6) {
+        className += ' ats__saturday';
+      } else {
+        className += ' ats__weekday';
+      }
+      tmp += '<div id="ats-date-heading-' + i + '" class="' + className + '"> <div class="ats-date-number">' + date.getDate() + '</div> <div class="ats-date-text">' + this.settings.weekdays[date.getDay()] + '</div> </div>';
     }
     ret = tmp;
     return ret;
   }
 
   getAvailableTimeSlots() {
-    var availableDate, className, i, isAvalable, j, k, l, m, mark, n, ref, ref1, ref2, tmp, tmpTimes;
+    var availableDate, className, date, i, isAvalable, j, k, l, m, mark, n, ref, ref1, ref2, tmp, tmpTimes;
     tmp = '';
     for (i = l = 0; l < 7; i = ++l) {
       tmpTimes = '';
       mark = '';
+      date = this.setDate(i);
       for (j = m = ref = this.startNum, ref1 = this.endNum; (ref <= ref1 ? m < ref1 : m > ref1); j = ref <= ref1 ? ++m : --m) {
         isAvalable = false;
         for (k = n = 0, ref2 = this.settings.availabileTimeSlots[i].length; (0 <= ref2 ? n < ref2 : n > ref2); k = 0 <= ref2 ? ++n : --n) {
@@ -121,7 +130,15 @@ AvailableTimeSlots = class AvailableTimeSlots {
         }
         tmpTimes += '<div class="' + className + '" data-time="' + ('0' + this.getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + this.getCurrentTime(j).getMinutes()).slice(-2) + '" data-date="' + this.formatDate(this.setDate(i)) + '">' + mark + '</div>';
       }
-      tmp += '<div class="ats-time-slot-container" id="ats-time-slot-container-' + i + '">' + tmpTimes + '</div>';
+      className = 'ats-time-slot-container';
+      if (date.getDay() === 0) {
+        className += ' ats__sunday';
+      } else if (date.getDay() === 6) {
+        className += ' ats__saturday';
+      } else {
+        className += ' ats__weekday';
+      }
+      tmp += '<div id="ats-time-slot-container-' + i + '" class="' + className + '">' + tmpTimes + '</div>';
     }
     return tmp;
   }

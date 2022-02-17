@@ -82,11 +82,20 @@ class AvailableTimeSlots
     tmp = ''
 
     for i in [0...7]
-      d = @setDate(i)
+      date = @setDate(i)
 
-      tmp += '<div id="ats-date-heading-' + i + '" class="ats-date-heading">
-        <div class="ats-date-number">' + d.getDate() + '</div>
-        <div class="ats-date-text">' + @settings.weekdays[d.getDay()] + '</div>
+      className = 'ats-date-heading'
+
+      if date.getDay() is 0
+        className += ' ats__sunday'
+      else if date.getDay() is 6
+        className += ' ats__saturday'
+      else
+        className += ' ats__weekday'
+
+      tmp += '<div id="ats-date-heading-' + i + '" class="' + className + '">
+        <div class="ats-date-number">' + date.getDate() + '</div>
+        <div class="ats-date-text">' + @settings.weekdays[date.getDay()] + '</div>
       </div>'
 
     ret = tmp
@@ -99,6 +108,7 @@ class AvailableTimeSlots
     for i in [0...7]
       tmpTimes = ''
       mark = ''
+      date = @setDate(i)
 
       for j in [@startNum...@endNum]
         isAvalable = false
@@ -118,7 +128,17 @@ class AvailableTimeSlots
 
         tmpTimes += '<div class="' + className + '" data-time="' + ('0' + @getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + @getCurrentTime(j).getMinutes()).slice(-2) + '" data-date="' + @formatDate(@setDate(i)) + '">' + mark + '</div>'
 
-      tmp += '<div class="ats-time-slot-container" id="ats-time-slot-container-' + i + '">' + tmpTimes + '</div>'
+
+      className = 'ats-time-slot-container'
+
+      if date.getDay() is 0
+        className += ' ats__sunday'
+      else if date.getDay() is 6
+        className += ' ats__saturday'
+      else
+        className += ' ats__weekday'
+
+      tmp += '<div id="ats-time-slot-container-' + i + '" class="' + className + '">' + tmpTimes + '</div>'
 
     return tmp
 
