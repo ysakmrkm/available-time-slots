@@ -1,7 +1,7 @@
 class AvailableTimeSlots
   constructor: (target, options)->
-    @prevHtml = '<div id="ats-prev-week" class="ats-nav__item"><</div>'
-    @nextHtml = '<div id="ats-next-week" class="ats-nav__item">></div>'
+    @prevHtml = '<div id="ats-prev-week" class="ats-nav__item ats-nav__item__prev"><</div>'
+    @nextHtml = '<div id="ats-next-week" class="ats-nav__item ats-nav__item__next">></div>'
     @defaults = {
       availabileTimeSlots: [[], [], [], [], [], [], []],
       isMultiple: false
