@@ -12,6 +12,10 @@ block head
 block tag
   #app
 
+  p 選択枠
+    br
+    span#selected-date
+
 block script
   script(src='js/index.js')
   script.
@@ -96,6 +100,13 @@ block script
         ]
         var rn = Math.floor(Math.random() * 10) % 7;
         AvailableTimeSlots.setAvailableTimeSlots(arr[rn]);
+      },
+      onClickTimeSlot: function(data) {
+        document.getElementById('selected-date').innerHTML = ''
+
+        data.forEach(function (data, index) {
+          document.getElementById('selected-date').innerHTML += data+'<br>';
+        });
       }
     }
 
