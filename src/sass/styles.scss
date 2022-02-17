@@ -64,7 +64,8 @@
 			color: #00f;
 		}
 
-		&.ats__sunday {
+		&.ats__sunday ,
+		&.ats__holiday {
 			color: #f00;
 		}
 	}
@@ -74,7 +75,8 @@
 			background-color: rgba(#00f, .1);
 		}
 
-		&.ats__sunday {
+		&.ats__sunday ,
+		&.ats__holiday {
 			background-color: rgba(#f00, .1);
 		}
 	}

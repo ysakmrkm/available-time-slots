@@ -59,7 +59,7 @@
   color: #00f;
 }
 
-.ats-date-heading.ats__sunday {
+.ats-date-heading.ats__sunday, .ats-date-heading.ats__holiday {
   color: #f00;
 }
 
@@ -67,7 +67,7 @@
   background-color: rgba(0, 0, 255, 0.1);
 }
 
-.ats-time-slot-container.ats__sunday {
+.ats-time-slot-container.ats__sunday, .ats-time-slot-container.ats__holiday {
   background-color: rgba(255, 0, 0, 0.1);
 }
 
