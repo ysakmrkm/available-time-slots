@@ -7,7 +7,7 @@ block vars
   - var pageClass = page+' '+category
 
 block head
-  link(rel='stylesheet', href='./css/styles.css')
+  link(rel='stylesheet', href='css/styles.css')
 
 block tag
   #app
@@ -17,7 +17,7 @@ block tag
     span#selected-date
 
 block script
-  script(src='js/index.js')
+  script(src='../js/index.js')
   script.
     target = document.getElementById('app')
 
@@ -26,7 +26,7 @@ block script
 
     settings = {
       businessHour: [8,  19],
-      availabileTimeSlotResource: './json/data.json',
+      availabileTimeSlotResource: 'json/data.json',
       startDate: date,
       onClickTimeSlot: function(data) {
         document.getElementById('selected-date').innerHTML = ''

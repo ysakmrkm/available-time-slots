@@ -6,12 +6,12 @@
     <meta name="keywords" content="">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
-    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="css/styles.css">
   </head>
   <body class="index home" itemscope="itemscope" itemtype="http://schema.org/WebPage" id="index">
     <div id="app"></div>
     <p>選択枠<br><span id="selected-date"></span></p>
-    <script src="js/index.js"></script>
+    <script src="../js/index.js"></script>
     <script>
       target = document.getElementById('app')
       
@@ -20,7 +20,7 @@
       
       settings = {
         businessHour: [8,  19],
-        availabileTimeSlotResource: './json/data.json',
+        availabileTimeSlotResource: 'json/data.json',
         startDate: date,
         onClickTimeSlot: function(data) {
           document.getElementById('selected-date').innerHTML = ''
