@@ -159,6 +159,10 @@
 			cursor: pointer;
 
 			&:hover {
+				background-color: rgba(#ff0, .2);
+			}
+
+			&.is-selected {
 				background-color: rgba(#0f0, .2);
 			}
 		}
