@@ -5,6 +5,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
     this.prevHtml = '<div id="ats-prev-week" class="ats-nav__item ats-nav__item__prev"><</div>';
     this.nextHtml = '<div id="ats-next-week" class="ats-nav__item ats-nav__item__next">></div>';
     this.defaults = {
+      availabileTimeSlotResource: '',
       availabileTimeSlots: [[], [], [], [], [], [], []],
       isMultiple: false,
       prevHtml: this.prevHtml,
@@ -159,9 +160,30 @@ AvailableTimeSlots = class AvailableTimeSlots {
     return tmp;
   }
 
-  setAvailableTimeSlots(arr) {
-    this.settings.availabileTimeSlots = arr;
-    return this.render();
+  setAvailableTimeSlots(data) {
+    var request;
+    if (typeof data === 'string') {
+      request = new XMLHttpRequest();
+      request.open('GET', data, true);
+      request.onload = () => {
+        if (request.status >= 200 && request.status < 400) {
+          data = JSON.parse(request.responseText);
+          data.data = data.data.sort(function() {
+            return Math.random() - 0.5;
+          });
+          this.settings.availabileTimeSlots = data.data;
+          return this.render();
+        } else {
+
+        }
+      };
+      request.onerror = function() {};
+      request.send();
+    }
+    if (typeof data === 'object') {
+      this.settings.availabileTimeSlots = data;
+      return this.render();
+    }
   }
 
   clearAvailableTimeSlots() {
@@ -178,7 +200,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
     return document.getElementById('ats-prev-week').addEventListener('click', (e) => {
       this.settings.startDate = this.setDate(-7);
       this.clearAvailableTimeSlots();
-      this.render();
+      this.setAvailableTimeSlots(this.settings.availabileTimeSlotResource);
       if (typeof this.onClickNavigator === 'function') {
         return this.onClickNavigator();
       }
@@ -189,7 +211,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
     return document.getElementById('ats-next-week').addEventListener('click', (e) => {
       this.settings.startDate = this.setDate(7);
       this.clearAvailableTimeSlots();
-      this.render();
+      this.setAvailableTimeSlots(this.settings.availabileTimeSlotResource);
       document.getElementById('ats-prev-week').classList.remove('is-disable');
       if (typeof this.onClickNavigator === 'function') {
         return this.onClickNavigator();
@@ -271,6 +293,10 @@ AvailableTimeSlots = class AvailableTimeSlots {
     };
     request.onerror = function() {};
     return request.send();
+  }
+
+  init() {
+    return this.setAvailableTimeSlots(this.settings.availabileTimeSlotResource);
   }
 
 };

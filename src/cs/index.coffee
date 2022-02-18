@@ -3,6 +3,7 @@ class AvailableTimeSlots
     @prevHtml = '<div id="ats-prev-week" class="ats-nav__item ats-nav__item__prev"><</div>'
     @nextHtml = '<div id="ats-next-week" class="ats-nav__item ats-nav__item__next">></div>'
     @defaults = {
+      availabileTimeSlotResource: '',
       availabileTimeSlots: [[], [], [], [], [], [], []],
       isMultiple: false
       prevHtml: @prevHtml
@@ -157,10 +158,30 @@ class AvailableTimeSlots
 
     return tmp
 
-  setAvailableTimeSlots: (arr)->
-    @settings.availabileTimeSlots = arr
+  setAvailableTimeSlots: (data)->
+    if typeof data is 'string'
+      request = new XMLHttpRequest()
+      request.open('GET', data, true)
 
-    @render()
+      request.onload = ()=>
+        if request.status >= 200 and request.status < 400
+          data = JSON.parse(request.responseText)
+
+          data.data = data.data.sort(()-> Math.random() - 0.5)
+
+          @settings.availabileTimeSlots = data.data
+
+          @render()
+        else
+
+      request.onerror = ()->
+
+      request.send()
+
+    if typeof data is 'object'
+      @settings.availabileTimeSlots = data
+
+      @render()
 
   clearAvailableTimeSlots: ()->
     @settings.availabileTimeSlots = [[], [], [], [], [], [], []]
@@ -175,7 +196,7 @@ class AvailableTimeSlots
     document.getElementById('ats-prev-week').addEventListener('click', (e)=>
       @settings.startDate = @setDate(-7)
       @clearAvailableTimeSlots()
-      @render()
+      @setAvailableTimeSlots(@settings.availabileTimeSlotResource)
 
       if typeof @onClickNavigator is 'function'
         @onClickNavigator()
@@ -185,7 +206,7 @@ class AvailableTimeSlots
     document.getElementById('ats-next-week').addEventListener('click', (e)=>
       @settings.startDate = @setDate(7)
       @clearAvailableTimeSlots()
-      @render()
+      @setAvailableTimeSlots(@settings.availabileTimeSlotResource)
 
       document.getElementById('ats-prev-week').classList.remove('is-disable')
 
@@ -267,3 +288,6 @@ class AvailableTimeSlots
     request.onerror = ()->
 
     request.send()
+
+  init: ()->
+    @setAvailableTimeSlots(@settings.availabileTimeSlotResource)
