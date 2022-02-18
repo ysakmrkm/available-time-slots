@@ -220,23 +220,23 @@ class AvailableTimeSlots
         date = target.getAttribute('data-date')
         time = target.getAttribute('data-time')
         tmp = date + ' ' + time
-        if target.classList.contains('selected')
-          target.classList.remove('selected')
+        if target.classList.contains('is-selected')
+          target.classList.remove('is-selected')
           idx = @settings.selectedDates.indexOf(tmp)
           if idx isnt -1
             @settings.selectedDates.splice(idx, 1)
         else
           if @settings.isMultiple
-            target.classList.add('selected')
+            target.classList.add('is-selected')
             @settings.selectedDates.push(tmp)
           else
             @settings.selectedDates.pop()
             if not @settings.selectedDates.length
               Array.from(document.getElementsByClassName('ats-time-slot__available')).forEach((target)->
-                target.classList.remove('selected')
+                target.classList.remove('is-selected')
               )
 
-              target.classList.add('selected')
+              target.classList.add('is-selected')
               @settings.selectedDates.push(tmp)
 
         if typeof @onClickTimeSlot is 'function'
