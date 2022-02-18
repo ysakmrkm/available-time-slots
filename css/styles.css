@@ -137,12 +137,20 @@
 }
 
 .ats-time-line, .ats-time-slot {
-  padding: .25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: .25rem 0;
+  min-height: 1.5rem;
   text-align: center;
 }
 
 .ats-time-line + .ats-time-line, .ats-time-slot + .ats-time-line, .ats-time-line + .ats-time-slot, .ats-time-slot + .ats-time-slot {
   border-top: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.ats-time-line-number {
+  font-size: small;
 }
 
 .ats-time-slot__available {

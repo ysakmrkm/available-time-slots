@@ -146,11 +146,21 @@
 
 	&-time-line ,
 	&-time-slot {
-		padding: .25rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: .25rem 0;
+		min-height: 1.5rem;
 		text-align: center;
 
 		& + & {
 			border-top: 1px solid rgba(#000, .2);
+		}
+	}
+
+	&-time-line {
+		&-number {
+			font-size: small;
 		}
 	}
 
