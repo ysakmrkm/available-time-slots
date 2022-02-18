@@ -301,4 +301,4 @@ AvailableTimeSlots = class AvailableTimeSlots {
 
 };
 
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=main.js.map
