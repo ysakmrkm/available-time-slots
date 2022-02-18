@@ -1,6 +1,6 @@
 # available-time-slots
 
-![png](https://github.com/ysakmrkm/available-time-slots/blob/main/image/screenshot.png)
+![gif](https://github.com/ysakmrkm/available-time-slots/blob/main/image/screenshot.gif)
 
 ## Overview
 
