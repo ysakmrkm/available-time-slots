@@ -21,3 +21,7 @@ UI library of selectable available time slots
 ## Author
 
 [twitter](https://twitter.com/ysakmrkm)
+
+## Licence
+
+[MIT](https://github.com/ysakmrkm/available-time-slots/blob/main/LICENSE)
