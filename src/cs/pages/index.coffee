@@ -138,9 +138,9 @@ class AvailableTimeSlots
           isPast = false
 
         if not isAvalable
-          mark = '<img src="../image/cross.svg" />'
+          mark = '<img src="./image/cross.svg" />'
         else
-          mark = '<img src="../image/circle.svg" />'
+          mark = '<img src="./image/circle.svg" />'
           className += ' ats-time-slot__available'
 
         tmpTimes += '<div class="' + className + '" data-time="' + ('0' + @getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + @getCurrentTime(j).getMinutes()).slice(-2) + '" data-date="' + @formatDate(date) + '">' + mark + '</div>'
