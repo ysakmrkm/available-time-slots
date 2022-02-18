@@ -226,23 +226,23 @@ AvailableTimeSlots = class AvailableTimeSlots {
         date = target.getAttribute('data-date');
         time = target.getAttribute('data-time');
         tmp = date + ' ' + time;
-        if (target.classList.contains('selected')) {
-          target.classList.remove('selected');
+        if (target.classList.contains('is-selected')) {
+          target.classList.remove('is-selected');
           idx = this.settings.selectedDates.indexOf(tmp);
           if (idx !== -1) {
             this.settings.selectedDates.splice(idx, 1);
           }
         } else {
           if (this.settings.isMultiple) {
-            target.classList.add('selected');
+            target.classList.add('is-selected');
             this.settings.selectedDates.push(tmp);
           } else {
             this.settings.selectedDates.pop();
             if (!this.settings.selectedDates.length) {
               Array.from(document.getElementsByClassName('ats-time-slot__available')).forEach(function(target) {
-                return target.classList.remove('selected');
+                return target.classList.remove('is-selected');
               });
-              target.classList.add('selected');
+              target.classList.add('is-selected');
               this.settings.selectedDates.push(tmp);
             }
           }
