@@ -7,7 +7,7 @@ block vars
   - var pageClass = page+' '+category
 
 block head
-  link(rel='stylesheet', href='css/styles.css')
+  link(rel='stylesheet', href='../dist/css/styles.css')
 
 block tag
   #app
@@ -17,7 +17,7 @@ block tag
     span#selected-date
 
 block script
-  script(src='../dist/main.js')
+  script(src='../dist/js/main.js')
   script.
     target = document.getElementById('app')
 
