@@ -21,9 +21,7 @@
   box-sizing: border-box;
   display: grid;
   width: 100%;
-  grid-auto-columns: -webkit-min-content auto;
   grid-auto-columns: min-content auto;
-  grid-auto-rows: -webkit-min-content auto;
   grid-auto-rows: min-content auto;
   border: 1px solid rgba(0, 0, 0, 0.2);
 }
@@ -168,3 +166,5 @@
 .ats-time-slot__past {
   background-color: rgba(0, 0, 0, 0.1);
 }
+
+/*# sourceMappingURL=styles.css.map */
