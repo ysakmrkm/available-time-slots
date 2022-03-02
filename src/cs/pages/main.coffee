@@ -12,8 +12,7 @@ class AvailableTimeSlots
       startDate: new Date()
       slotSpan: 30
       businessHour: [0,  23]
-      months: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
-      weekdays: ['日', '月', '火', '水', '木', '金', '土']
+      locale: 'en'
       holidays: 'https://holidays-jp.github.io/api/v1/date.json'
     }
     @settings = Object.assign({}, @defaults, options)
@@ -22,6 +21,7 @@ class AvailableTimeSlots
     @onClickTimeSlot = @settings.onClickTimeSlot
     @onClickNavigator = @settings.onClickNavigator
     @target = target
+    @localeData = locales.find((u)=> u.code is @settings.locale)
 
   setDate: (days)->
     date = new Date(@settings.startDate.valueOf())

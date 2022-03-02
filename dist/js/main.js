@@ -14,8 +14,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
       startDate: new Date(),
       slotSpan: 30,
       businessHour: [0, 23],
-      months: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
-      weekdays: ['日', '月', '火', '水', '木', '金', '土'],
+      locale: 'en',
       holidays: 'https://holidays-jp.github.io/api/v1/date.json'
     };
     this.settings = Object.assign({}, this.defaults, options);
@@ -24,6 +23,9 @@ AvailableTimeSlots = class AvailableTimeSlots {
     this.onClickTimeSlot = this.settings.onClickTimeSlot;
     this.onClickNavigator = this.settings.onClickNavigator;
     this.target = target;
+    this.localeData = locales.find((u) => {
+      return u.code === this.settings.locale;
+    });
   }
 
   setDate(days) {
