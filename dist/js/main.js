@@ -14,8 +14,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
       startDate: new Date(),
       slotSpan: 30,
       businessHour: [0, 23],
-      locale: 'en',
-      holidays: 'https://holidays-jp.github.io/api/v1/date.json'
+      locale: 'en'
     };
     this.settings = Object.assign({}, this.defaults, options);
     this.startNum = (this.settings.businessHour[0] * 60) / this.settings.slotSpan;

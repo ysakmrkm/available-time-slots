@@ -13,7 +13,6 @@ class AvailableTimeSlots
       slotSpan: 30
       businessHour: [0,  23]
       locale: 'en'
-      holidays: 'https://holidays-jp.github.io/api/v1/date.json'
     }
     @settings = Object.assign({}, @defaults, options)
     @startNum = (@settings.businessHour[0] * 60) / @settings.slotSpan
