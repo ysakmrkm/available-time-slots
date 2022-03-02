@@ -14,9 +14,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
       startDate: new Date(),
       slotSpan: 30,
       businessHour: [0, 23],
-      months: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
-      weekdays: ['日', '月', '火', '水', '木', '金', '土'],
-      holidays: 'https://holidays-jp.github.io/api/v1/date.json'
+      locale: 'en'
     };
     this.settings = Object.assign({}, this.defaults, options);
     this.startNum = (this.settings.businessHour[0] * 60) / this.settings.slotSpan;
@@ -24,6 +22,9 @@ AvailableTimeSlots = class AvailableTimeSlots {
     this.onClickTimeSlot = this.settings.onClickTimeSlot;
     this.onClickNavigator = this.settings.onClickNavigator;
     this.target = target;
+    this.localeData = locales.find((u) => {
+      return u.code === this.settings.locale;
+    });
   }
 
   setDate(days) {
@@ -34,15 +35,30 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   getYearName(year) {
-    return year + '年';
+    switch (this.localeData.code) {
+      case 'ja':
+        return year + '年';
+      default:
+        return year;
+    }
   }
 
   getMonthName(index) {
-    return this.settings.months[index] + '月';
+    switch (this.localeData.code) {
+      case 'ja':
+        return this.localeData.months[index] + '月';
+      default:
+        return this.localeData.months[index];
+    }
   }
 
   getWeekdayName(index) {
-    return '（' + this.settings.weekdays[index] + '）';
+    switch (this.localeData.code) {
+      case 'ja':
+        return '（' + this.localeData.weekdays[index] + '）';
+      default:
+        return this.localeData.weekdays[index];
+    }
   }
 
   formatDate(data) {
@@ -60,10 +76,17 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   getNavigation() {
-    var dateHtml, navHtml, nextWeekHtml, previousWeekHtml;
+    var dateHtml, dateHtmlText, navHtml, nextWeekHtml, previousWeekHtml;
     previousWeekHtml = '<div id="ats-prev-week-container" class="ats-nav">' + this.settings.prevHtml + '</div>';
     nextWeekHtml = '<div id="ats-prev-week-container" class="ats-nav">' + this.settings.nextHtml + '</div>';
-    dateHtml = '<div id="ats-current-date-container">' + this.getYearName(this.settings.startDate.getFullYear()) + ' ' + this.getMonthName(this.settings.startDate.getMonth()) + '</div>';
+    switch (this.localeData.code) {
+      case 'ja':
+        dateHtmlText = this.getYearName(this.settings.startDate.getFullYear()) + ' ' + this.getMonthName(this.settings.startDate.getMonth());
+        break;
+      default:
+        dateHtmlText = this.getMonthName(this.settings.startDate.getMonth()) + ', ' + this.getYearName(this.settings.startDate.getFullYear());
+    }
+    dateHtml = '<div id="ats-current-date-container">' + dateHtmlText + '</div>';
     navHtml = previousWeekHtml + ' ' + dateHtml + ' ' + nextWeekHtml;
     return navHtml;
   }

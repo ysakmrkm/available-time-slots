@@ -12,9 +12,7 @@ class AvailableTimeSlots
       startDate: new Date()
       slotSpan: 30
       businessHour: [0,  23]
-      months: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
-      weekdays: ['日', '月', '火', '水', '木', '金', '土']
-      holidays: 'https://holidays-jp.github.io/api/v1/date.json'
+      locale: 'en'
     }
     @settings = Object.assign({}, @defaults, options)
     @startNum = (@settings.businessHour[0] * 60) / @settings.slotSpan
@@ -22,6 +20,7 @@ class AvailableTimeSlots
     @onClickTimeSlot = @settings.onClickTimeSlot
     @onClickNavigator = @settings.onClickNavigator
     @target = target
+    @localeData = locales.find((u)=> u.code is @settings.locale)
 
   setDate: (days)->
     date = new Date(@settings.startDate.valueOf())
@@ -29,13 +28,25 @@ class AvailableTimeSlots
     return date
 
   getYearName: (year)->
-    return year + '年'
+    switch @localeData.code
+      when 'ja'
+        return year + '年'
+      else
+        return year
 
   getMonthName: (index)->
-    return @settings.months[index] + '月'
+    switch @localeData.code
+      when 'ja'
+        return @localeData.months[index] + '月'
+      else
+        return @localeData.months[index]
 
   getWeekdayName: (index)->
-    return '（' + @settings.weekdays[index] + '）'
+    switch @localeData.code
+      when 'ja'
+        return '（' + @localeData.weekdays[index] + '）'
+      else
+        return @localeData.weekdays[index]
 
   formatDate: (data)->
     date = '' + data.getDate()
@@ -53,7 +64,15 @@ class AvailableTimeSlots
   getNavigation: ()->
     previousWeekHtml = '<div id="ats-prev-week-container" class="ats-nav">' + @settings.prevHtml + '</div>'
     nextWeekHtml = '<div id="ats-prev-week-container" class="ats-nav">' + @settings.nextHtml + '</div>'
-    dateHtml = '<div id="ats-current-date-container">' + @getYearName(@settings.startDate.getFullYear()) + ' ' + @getMonthName(@settings.startDate.getMonth()) + '</div>'
+
+    switch @localeData.code
+      when 'ja'
+        dateHtmlText = @getYearName(@settings.startDate.getFullYear()) + ' ' + @getMonthName(@settings.startDate.getMonth())
+      else
+        dateHtmlText = @getMonthName(@settings.startDate.getMonth()) + ', ' + @getYearName(@settings.startDate.getFullYear())
+
+    dateHtml = '<div id="ats-current-date-container">' + dateHtmlText + '</div>'
+
     navHtml = previousWeekHtml + ' ' + dateHtml + ' ' + nextWeekHtml
 
     return navHtml
