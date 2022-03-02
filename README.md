@@ -11,6 +11,8 @@ UI library of selectable available time slots
 ```
 <div id="app"></div>
 
+<script src="../dist/js/main.js"></script>
+<script src="../dist/js/locales.js"></script>
 <script>
 	target = document.getElementById('app');
 
