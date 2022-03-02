@@ -28,13 +28,25 @@ class AvailableTimeSlots
     return date
 
   getYearName: (year)->
-    return year + '年'
+    switch @localeData.code
+      when 'ja'
+        return year + '年'
+      else
+        return year
 
   getMonthName: (index)->
-    return @settings.months[index] + '月'
+    switch @localeData.code
+      when 'ja'
+        return @localeData.months[index] + '月'
+      else
+        return @localeData.months[index]
 
   getWeekdayName: (index)->
-    return '（' + @settings.weekdays[index] + '）'
+    switch @localeData.code
+      when 'ja'
+        return '（' + @localeData.weekdays[index] + '）'
+      else
+        return @localeData.weekdays[index]
 
   formatDate: (data)->
     date = '' + data.getDate()
@@ -52,7 +64,15 @@ class AvailableTimeSlots
   getNavigation: ()->
     previousWeekHtml = '<div id="ats-prev-week-container" class="ats-nav">' + @settings.prevHtml + '</div>'
     nextWeekHtml = '<div id="ats-prev-week-container" class="ats-nav">' + @settings.nextHtml + '</div>'
-    dateHtml = '<div id="ats-current-date-container">' + @getYearName(@settings.startDate.getFullYear()) + ' ' + @getMonthName(@settings.startDate.getMonth()) + '</div>'
+
+    switch @localeData.code
+      when 'ja'
+        dateHtmlText = @getYearName(@settings.startDate.getFullYear()) + ' ' + @getMonthName(@settings.startDate.getMonth())
+      else
+        dateHtmlText = @getMonthName(@settings.startDate.getMonth()) + ', ' + @getYearName(@settings.startDate.getFullYear())
+
+    dateHtml = '<div id="ats-current-date-container">' + dateHtmlText + '</div>'
+
     navHtml = previousWeekHtml + ' ' + dateHtml + ' ' + nextWeekHtml
 
     return navHtml

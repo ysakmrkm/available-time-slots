@@ -119,6 +119,7 @@
 }
 
 .ats-date-text {
+  text-transform: capitalize;
   font-size: x-small;
 }
 
