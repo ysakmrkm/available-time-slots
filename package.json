@@ -1,0 +1,17 @@
+{
+  "author": "ysakmrkm",
+  "dependencies": {},
+  "name": "available-time-slots",
+  "description": "![gif](https://github.com/ysakmrkm/available-time-slots/blob/main/image/screenshot.gif)",
+  "version": "0.0.2",
+  "main": "dist/js/main.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ysakmrkm/available-time-slots.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ysakmrkm/available-time-slots/issues"
+  },
+  "homepage": "https://github.com/ysakmrkm/available-time-slots#readme"
+}
