@@ -252,6 +252,8 @@ AvailableTimeSlots = class AvailableTimeSlots {
         if (target.classList.contains('is-selected')) {
           target.classList.remove('is-selected');
           idx = this.settings.selectedDates.indexOf(tmp);
+          localStorage.removeItem('ats_selected_date');
+          localStorage.removeItem('ats_selected_time');
           if (idx !== -1) {
             this.settings.selectedDates.splice(idx, 1);
           }
@@ -261,6 +263,8 @@ AvailableTimeSlots = class AvailableTimeSlots {
             this.settings.selectedDates.push(tmp);
           } else {
             this.settings.selectedDates.pop();
+            localStorage.setItem('ats_selected_date', date);
+            localStorage.setItem('ats_selected_time', time);
             if (!this.settings.selectedDates.length) {
               Array.from(document.getElementsByClassName('ats-time-slot__available')).forEach(function(target) {
                 return target.classList.remove('is-selected');
@@ -277,6 +281,24 @@ AvailableTimeSlots = class AvailableTimeSlots {
     });
   }
 
+  updateTimeSlot() {
+    var selectedDate, selectedTime;
+    selectedDate = localStorage.getItem('ats_selected_date');
+    selectedTime = localStorage.getItem('ats_selected_time');
+    if (selectedDate !== null && selectedTime !== null) {
+      return Array.from(document.getElementsByClassName('ats-time-slot')).forEach(function(target) {
+        if (target.getAttribute('data-date') === selectedDate && target.getAttribute('data-time') === selectedTime) {
+          if (target.classList.contains('ats-time-slot__available')) {
+            return target.classList.add('is-selected');
+          } else {
+            localStorage.removeItem('ats_selected_date');
+            return localStorage.removeItem('ats_selected_time');
+          }
+        }
+      });
+    }
+  }
+
   render() {
     var ret;
     ret = '<div id="ats-container"> <div id="ats-nav-container">' + this.getNavigation() + '</div> <div id="ats-week-container"> <div id="ats-times-container">' + this.getTimeLine() + '</div> <div id="ats-dates-container">' + this.getDatesHeader() + '</div> <div id="ats-available-time-container">' + this.getAvailableTimeSlots() + '</div> </div> </div>';
@@ -284,6 +306,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
     if (this.settings.holidays !== '') {
       this.updateHoliday();
     }
+    this.updateTimeSlot();
     this.clickPrevWeek();
     this.clickNextWeek();
     return this.clickAvailableTimeSlot();
