@@ -21,7 +21,7 @@
       
       settings = {
         businessHour: [8,  19],
-        availabileTimeSlotResource: 'json/data.json',
+        availabileTimeSlotResource: 'json/data.php?start='+date.toISOString().split('T')[0],
         startDate: date,
         holidays: 'https://holidays-jp.github.io/api/v1/date.json',
         onClickTimeSlot: function(data) {
