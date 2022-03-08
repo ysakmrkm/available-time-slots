@@ -242,6 +242,10 @@ class AvailableTimeSlots
         if target.classList.contains('is-selected')
           target.classList.remove('is-selected')
           idx = @settings.selectedDates.indexOf(tmp)
+
+          localStorage.removeItem('ats_selected_date')
+          localStorage.removeItem('ats_selected_time')
+
           if idx isnt -1
             @settings.selectedDates.splice(idx, 1)
         else
@@ -250,6 +254,10 @@ class AvailableTimeSlots
             @settings.selectedDates.push(tmp)
           else
             @settings.selectedDates.pop()
+
+            localStorage.setItem('ats_selected_date', date)
+            localStorage.setItem('ats_selected_time', time)
+
             if not @settings.selectedDates.length
               Array.from(document.getElementsByClassName('ats-time-slot__available')).forEach((target)->
                 target.classList.remove('is-selected')
@@ -262,6 +270,20 @@ class AvailableTimeSlots
           @onClickTimeSlot(@settings.selectedDates)
       )
     )
+
+  updateTimeSlot: ()->
+    selectedDate = localStorage.getItem('ats_selected_date')
+    selectedTime = localStorage.getItem('ats_selected_time')
+
+    if selectedDate isnt null and selectedTime isnt null
+      Array.from(document.getElementsByClassName('ats-time-slot')).forEach((target)->
+        if target.getAttribute('data-date') is selectedDate and target.getAttribute('data-time') is selectedTime
+          if target.classList.contains('ats-time-slot__available')
+            target.classList.add('is-selected')
+          else
+            localStorage.removeItem('ats_selected_date')
+            localStorage.removeItem('ats_selected_time')
+      )
 
   render: ()->
     ret = '<div id="ats-container">
@@ -277,6 +299,8 @@ class AvailableTimeSlots
 
     if @settings.holidays isnt ''
       @updateHoliday()
+
+    @updateTimeSlot()
 
     @clickPrevWeek()
     @clickNextWeek()
