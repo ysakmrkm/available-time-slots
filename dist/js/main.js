@@ -147,9 +147,9 @@ AvailableTimeSlots = class AvailableTimeSlots {
         isAvalable = false;
         isPast = false;
         className = 'ats-time-slot';
-        for (k = n = 0, ref2 = this.settings.availabileTimeSlots[i].length; (0 <= ref2 ? n < ref2 : n > ref2); k = 0 <= ref2 ? ++n : --n) {
-          availableDate = new Date(date.toISOString().split('T')[0] + 'T' + this.settings.availabileTimeSlots[i][k]);
-          slotDate = new Date(date.toISOString().split('T')[0] + 'T' + ('0' + this.getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + this.getCurrentTime(j).getMinutes()).slice(-2));
+        for (k = n = 0, ref2 = this.settings.availabileTimeSlots[i]['data'].length; (0 <= ref2 ? n < ref2 : n > ref2); k = 0 <= ref2 ? ++n : --n) {
+          availableDate = new Date(this.settings.availabileTimeSlots[i]['date'] + 'T' + this.settings.availabileTimeSlots[i]['data'][k]);
+          slotDate = new Date(this.settings.availabileTimeSlots[i]['date'] + 'T' + ('0' + this.getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + this.getCurrentTime(j).getMinutes()).slice(-2));
           if (availableDate.getTime() === slotDate.getTime()) {
             isAvalable = true;
           }
@@ -168,7 +168,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
           mark = '<img src="./image/circle.svg" />';
           className += ' ats-time-slot__available';
         }
-        tmpTimes += '<div class="' + className + '" data-time="' + ('0' + this.getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + this.getCurrentTime(j).getMinutes()).slice(-2) + '" data-date="' + this.formatDate(date) + '">' + mark + '</div>';
+        tmpTimes += '<div class="' + className + '" data-time="' + ('0' + slotDate.getHours()).slice(-2) + ':' + ('0' + slotDate.getMinutes()).slice(-2) + '" data-date="' + this.formatDate(date) + '">' + mark + '</div>';
       }
       className = 'ats-time-slot-container';
       if (date.getDay() === 0) {
@@ -191,9 +191,6 @@ AvailableTimeSlots = class AvailableTimeSlots {
       request.onload = () => {
         if (request.status >= 200 && request.status < 400) {
           data = JSON.parse(request.responseText);
-          data.data = data.data.sort(function() {
-            return Math.random() - 0.5;
-          });
           this.settings.availabileTimeSlots = data.data;
           return this.render();
         } else {

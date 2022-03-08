@@ -141,9 +141,9 @@ class AvailableTimeSlots
 
         className = 'ats-time-slot'
 
-        for k in [0...@settings.availabileTimeSlots[i].length]
-          availableDate = new Date(date.toISOString().split('T')[0] + 'T' + @settings.availabileTimeSlots[i][k])
-          slotDate = new Date(date.toISOString().split('T')[0] + 'T' + ('0' + @getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + @getCurrentTime(j).getMinutes()).slice(-2))
+        for k in [0...@settings.availabileTimeSlots[i]['data'].length]
+          availableDate = new Date(@settings.availabileTimeSlots[i]['date'] + 'T' + @settings.availabileTimeSlots[i]['data'][k])
+          slotDate = new Date(@settings.availabileTimeSlots[i]['date'] + 'T' + ('0' + @getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + @getCurrentTime(j).getMinutes()).slice(-2))
 
           if availableDate.getTime() is slotDate.getTime()
             isAvalable = true
@@ -162,7 +162,7 @@ class AvailableTimeSlots
           mark = '<img src="./image/circle.svg" />'
           className += ' ats-time-slot__available'
 
-        tmpTimes += '<div class="' + className + '" data-time="' + ('0' + @getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + @getCurrentTime(j).getMinutes()).slice(-2) + '" data-date="' + @formatDate(date) + '">' + mark + '</div>'
+        tmpTimes += '<div class="' + className + '" data-time="' + ('0' + slotDate.getHours()).slice(-2) + ':' + ('0' + slotDate.getMinutes()).slice(-2) + '" data-date="' + @formatDate(date) + '">' + mark + '</div>'
 
       className = 'ats-time-slot-container'
 
@@ -185,8 +185,6 @@ class AvailableTimeSlots
       request.onload = ()=>
         if request.status >= 200 and request.status < 400
           data = JSON.parse(request.responseText)
-
-          data.data = data.data.sort(()-> Math.random() - 0.5)
 
           @settings.availabileTimeSlots = data.data
 
