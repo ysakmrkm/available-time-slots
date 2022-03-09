@@ -149,7 +149,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
         className = 'ats-time-slot';
         for (k = n = 0, ref2 = this.settings.availabileTimeSlots[i]['data'].length; (0 <= ref2 ? n < ref2 : n > ref2); k = 0 <= ref2 ? ++n : --n) {
           availableDate = new Date(this.settings.availabileTimeSlots[i]['date'] + 'T' + this.settings.availabileTimeSlots[i]['data'][k]);
-          slotDate = new Date(this.settings.availabileTimeSlots[i]['date'] + 'T' + ('0' + this.getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + this.getCurrentTime(j).getMinutes()).slice(-2));
+          slotDate = new Date(date.toISOString().split('T')[0] + 'T' + ('0' + this.getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + this.getCurrentTime(j).getMinutes()).slice(-2));
           if (availableDate.getTime() === slotDate.getTime()) {
             isAvalable = true;
           }
@@ -184,7 +184,23 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   setAvailableTimeSlots(data) {
-    var request;
+    var queryStrings, request, sourceUrl;
+    queryStrings = new URLSearchParams(data.split('?')[1]);
+    sourceUrl = data.split('?')[0] + '?';
+    if (data.split('?')[1] !== void 0) {
+      queryStrings.forEach((val, key) => {
+        if (key === 'start') {
+          sourceUrl += key + '=' + this.setDate(0).toISOString().split('T')[0];
+        } else {
+          sourceUrl += key + '=' + val;
+        }
+        return sourceUrl += '&';
+      });
+      sourceUrl = sourceUrl.slice(0, -1);
+    } else {
+      sourceUrl += 'start=' + this.setDate(0).toISOString().split('T')[0];
+    }
+    data = sourceUrl;
     if (typeof data === 'string') {
       request = new XMLHttpRequest();
       request.open('GET', data, true);
