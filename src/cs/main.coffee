@@ -143,7 +143,7 @@ class AvailableTimeSlots
 
         for k in [0...@settings.availabileTimeSlots[i]['data'].length]
           availableDate = new Date(@settings.availabileTimeSlots[i]['date'] + 'T' + @settings.availabileTimeSlots[i]['data'][k])
-          slotDate = new Date(@settings.availabileTimeSlots[i]['date'] + 'T' + ('0' + @getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + @getCurrentTime(j).getMinutes()).slice(-2))
+          slotDate = new Date(date.toISOString().split('T')[0] + 'T' + ('0' + @getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + @getCurrentTime(j).getMinutes()).slice(-2))
 
           if availableDate.getTime() is slotDate.getTime()
             isAvalable = true
@@ -178,6 +178,26 @@ class AvailableTimeSlots
     return tmp
 
   setAvailableTimeSlots: (data)->
+    queryStrings = new URLSearchParams(data.split('?')[1])
+
+    sourceUrl = data.split('?')[0] + '?'
+
+    if data.split('?')[1] isnt undefined
+      queryStrings.forEach((val, key)=>
+        if key is 'start'
+          sourceUrl += key + '=' + @setDate(0).toISOString().split('T')[0]
+        else
+          sourceUrl += key + '=' + val
+
+        sourceUrl += '&'
+      )
+
+      sourceUrl = sourceUrl.slice(0, -1)
+    else
+      sourceUrl += 'start=' + @setDate(0).toISOString().split('T')[0]
+
+    data = sourceUrl
+
     if typeof data is 'string'
       request = new XMLHttpRequest()
       request.open('GET', data, true)
