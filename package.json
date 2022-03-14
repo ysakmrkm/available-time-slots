@@ -9,6 +9,17 @@
     "type": "git",
     "url": "git+https://github.com/ysakmrkm/available-time-slots.git"
   },
+  "keywords": [
+    "javascript",
+    "js",
+    "library",
+    "ui",
+    "user-interface",
+    "reservation",
+    "time-slots",
+    "time-slot-booking",
+    "time-slot-service"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ysakmrkm/available-time-slots/issues"
