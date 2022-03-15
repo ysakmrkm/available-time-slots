@@ -23,15 +23,34 @@
   width: 100%;
   grid-auto-columns: min-content auto;
   grid-auto-rows: min-content auto;
+  grid-template-columns: 1fr 5fr;
   border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+#ats-week-container.ats__scrollable {
+  overflow-y: scroll;
+}
+
+#ats-week-container.ats__scrollable #ats-empty-cell,
+#ats-week-container.ats__scrollable #ats-dates-container {
+  position: sticky;
+  top: 0;
 }
 
 #ats-times-container {
   box-sizing: border-box;
   grid-column: 1 / 2;
   grid-row: 2 / 3;
-  width: calc((100vw - 16px) / 8);
-  border-top: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+#ats-empty-cell, #ats-dates-container {
+  background-color: #fff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+#ats-empty-cell {
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
 }
 
 #ats-dates-container {
@@ -49,7 +68,6 @@
   width: 100%;
   grid-column: 2 / 3;
   grid-row: 2 / 3;
-  border-top: 1px solid rgba(0, 0, 0, 0.2);
   border-left: 1px solid rgba(0, 0, 0, 0.2);
 }
 

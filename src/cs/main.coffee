@@ -13,6 +13,7 @@ class AvailableTimeSlots
       slotSpan: 30
       businessHour: [0,  23]
       locale: 'en'
+      scrollable: false
     }
     @settings = Object.assign({}, @defaults, options)
     @startNum = (@settings.businessHour[0] * 60) / @settings.slotSpan
@@ -305,9 +306,15 @@ class AvailableTimeSlots
 
   render: ()->
     ret = '<div id="ats-container">
-      <div id="ats-nav-container">' + @getNavigation() + '</div>
-      <div id="ats-week-container">
-        <div id="ats-times-container">' + @getTimeLine() + '</div>
+      <div id="ats-nav-container">' + @getNavigation() + '</div>'
+    ret += '<div id="ats-week-container"'
+
+    if @settings.scrollable
+      ret += ' class="ats__scrollable"'
+
+    ret += '>'
+    ret += '<div id="ats-times-container">' + @getTimeLine() + '</div>
+        <div id="ats-empty-cell"></div>
         <div id="ats-dates-container">' + @getDatesHeader() + '</div>
         <div id="ats-available-time-container">' + @getAvailableTimeSlots() + '</div>
       </div>
@@ -323,6 +330,15 @@ class AvailableTimeSlots
     @clickPrevWeek()
     @clickNextWeek()
     @clickAvailableTimeSlot()
+
+    if @settings.scrollable
+      document.getElementById('ats-week-container').style.height = (
+        window.innerHeight -
+        Number(window.getComputedStyle(document.getElementsByTagName('body')[0]).marginTop.replace('px', '')) -
+        Number(window.getComputedStyle(document.getElementsByTagName('body')[0]).marginBottom.replace('px', '')) -
+        document.getElementById('ats-nav-container').clientHeight -
+        Number(window.getComputedStyle(document.getElementById('ats-nav-container')).marginBottom.replace('px', ''))
+      ) + 'px'
 
   updateHoliday: ()->
     request = new XMLHttpRequest()
