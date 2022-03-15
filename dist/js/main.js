@@ -14,7 +14,8 @@ AvailableTimeSlots = class AvailableTimeSlots {
       startDate: new Date(),
       slotSpan: 30,
       businessHour: [0, 23],
-      locale: 'en'
+      locale: 'en',
+      scrollable: false
     };
     this.settings = Object.assign({}, this.defaults, options);
     this.startNum = (this.settings.businessHour[0] * 60) / this.settings.slotSpan;
@@ -314,7 +315,13 @@ AvailableTimeSlots = class AvailableTimeSlots {
 
   render() {
     var ret;
-    ret = '<div id="ats-container"> <div id="ats-nav-container">' + this.getNavigation() + '</div> <div id="ats-week-container"> <div id="ats-times-container">' + this.getTimeLine() + '</div> <div id="ats-dates-container">' + this.getDatesHeader() + '</div> <div id="ats-available-time-container">' + this.getAvailableTimeSlots() + '</div> </div> </div>';
+    ret = '<div id="ats-container"> <div id="ats-nav-container">' + this.getNavigation() + '</div>';
+    ret += '<div id="ats-week-container"';
+    if (this.settings.scrollable) {
+      ret += ' class="ats__scrollable"';
+    }
+    ret += '>';
+    ret += '<div id="ats-times-container">' + this.getTimeLine() + '</div> <div id="ats-empty-cell"></div> <div id="ats-dates-container">' + this.getDatesHeader() + '</div> <div id="ats-available-time-container">' + this.getAvailableTimeSlots() + '</div> </div> </div>';
     this.target.innerHTML = ret;
     if (this.settings.holidays !== '') {
       this.updateHoliday();
@@ -322,7 +329,10 @@ AvailableTimeSlots = class AvailableTimeSlots {
     this.updateTimeSlot();
     this.clickPrevWeek();
     this.clickNextWeek();
-    return this.clickAvailableTimeSlot();
+    this.clickAvailableTimeSlot();
+    if (this.settings.scrollable) {
+      return document.getElementById('ats-week-container').style.height = (window.innerHeight - Number(window.getComputedStyle(document.getElementsByTagName('body')[0]).marginTop.replace('px', '')) - Number(window.getComputedStyle(document.getElementsByTagName('body')[0]).marginBottom.replace('px', '')) - document.getElementById('ats-nav-container').clientHeight - Number(window.getComputedStyle(document.getElementById('ats-nav-container')).marginBottom.replace('px', ''))) + 'px';
+    }
   }
 
   updateHoliday() {
