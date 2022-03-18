@@ -15,7 +15,8 @@ AvailableTimeSlots = class AvailableTimeSlots {
       slotSpan: 30,
       businessHour: [0, 23],
       locale: 'en',
-      scrollable: false
+      scrollable: false,
+      calendar: false
     };
     this.settings = Object.assign({}, this.defaults, options);
     this.startNum = (this.settings.businessHour[0] * 60) / this.settings.slotSpan;
@@ -26,6 +27,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
     this.localeData = locales.find((u) => {
       return u.code === this.settings.locale;
     });
+    this.initialStartDate = this.settings.startDate;
   }
 
   setDate(days) {
@@ -87,7 +89,11 @@ AvailableTimeSlots = class AvailableTimeSlots {
       default:
         dateHtmlText = this.getMonthName(this.settings.startDate.getMonth()) + ', ' + this.getYearName(this.settings.startDate.getFullYear());
     }
-    dateHtml = '<div id="ats-current-date-container">' + dateHtmlText + '</div>';
+    dateHtml = '<div id="ats-current-date-container"> <div class="ats-current-date__text">' + dateHtmlText + '</div>';
+    if (this.settings.calendar) {
+      dateHtml += '<div id="ats-calendar-container" class="ats-current-date__calendar"> <label id="ats-calendar" class="ats-calendar"><img id="ats-calendar-icon" class="ats-calendar__icon" src="./image/calendar.svg" data-toggle /><input id="ats-calendar-input" class="ats-calendar__input" name="ats-selected-date" type="text" value="' + this.formatDate(this.settings.startDate) + '" data-input></label> </div>';
+    }
+    dateHtml += '</div>';
     navHtml = previousWeekHtml + ' ' + dateHtml + ' ' + nextWeekHtml;
     return navHtml;
   }
@@ -313,6 +319,17 @@ AvailableTimeSlots = class AvailableTimeSlots {
     }
   }
 
+  clickCalendar() {
+    flatpickr('#ats-calendar', {
+      wrap: true,
+      minDate: this.formatDate(this.initialStartDate)
+    });
+    return document.getElementById('ats-calendar').addEventListener('change', (e) => {
+      this.settings.startDate = new Date(e.target.value);
+      return this.setAvailableTimeSlots(this.settings.availabileTimeSlotResource);
+    });
+  }
+
   render() {
     var ret;
     ret = '<div id="ats-container"> <div id="ats-nav-container">' + this.getNavigation() + '</div>';
@@ -331,7 +348,10 @@ AvailableTimeSlots = class AvailableTimeSlots {
     this.clickNextWeek();
     this.clickAvailableTimeSlot();
     if (this.settings.scrollable) {
-      return document.getElementById('ats-week-container').style.height = (window.innerHeight - Number(window.getComputedStyle(document.getElementsByTagName('body')[0]).marginTop.replace('px', '')) - Number(window.getComputedStyle(document.getElementsByTagName('body')[0]).marginBottom.replace('px', '')) - document.getElementById('ats-nav-container').clientHeight - Number(window.getComputedStyle(document.getElementById('ats-nav-container')).marginBottom.replace('px', ''))) + 'px';
+      document.getElementById('ats-week-container').style.height = (window.innerHeight - Number(window.getComputedStyle(document.getElementsByTagName('body')[0]).marginTop.replace('px', '')) - Number(window.getComputedStyle(document.getElementsByTagName('body')[0]).marginBottom.replace('px', '')) - document.getElementById('ats-nav-container').clientHeight - Number(window.getComputedStyle(document.getElementById('ats-nav-container')).marginBottom.replace('px', ''))) + 'px';
+    }
+    if (this.settings.calendar) {
+      return this.clickCalendar();
     }
   }
 

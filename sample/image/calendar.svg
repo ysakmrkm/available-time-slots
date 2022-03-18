@@ -1,0 +1,13 @@
+<svg id="Outline" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+    </style>
+  </defs>
+  <g>
+    <path d="M33,7H29V5a1,1,0,0,0-2,0V7H13V5a1,1,0,0,0-2,0V7H7a3.00328,3.00328,0,0,0-3,3V33a3.00328,3.00328,0,0,0,3,3H33a3.00328,3.00328,0,0,0,3-3V10A3.00328,3.00328,0,0,0,33,7ZM16,18v4H12V18Zm6,0v4H18V18Zm6,0v4H24V18Zm6,0v4H30V18ZM22,24v4H18V24ZM10,22H6V18h4ZM6,24h4v4H6Zm6,0h4v4H12Zm4,6v4H12V30Zm2,0h4v4H18Zm6,0h4v4H24Zm0-2V24h4v4Zm6-4h4v4H30ZM7,9h4v2a1,1,0,0,0,2,0V9H27v2a1,1,0,0,0,2,0V9h4a1.001,1.001,0,0,1,1,1v6H6V10A1.001,1.001,0,0,1,7,9ZM6,33V30h4v4H7A1.001,1.001,0,0,1,6,33Zm27,1H30V30h4v3A1.001,1.001,0,0,1,33,34Z"/>
+    <rect class="cls-1" width="40" height="40"/>
+  </g>
+</svg>

@@ -17,6 +17,12 @@
   font-size: x-large;
 }
 
+#ats-calendar-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 #ats-week-container {
   box-sizing: border-box;
   display: grid;
@@ -139,6 +145,25 @@
 .ats-date-text {
   text-transform: capitalize;
   font-size: x-small;
+}
+
+.ats-calendar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ats-calendar__icon {
+  cursor: pointer;
+}
+
+.ats-calendar__input {
+  width: 5.4em;
+  border: 0;
+  outline: none;
+  background: 0;
+  font-size: x-large;
+  color: inherit;
 }
 
 .ats-time-slot-container.ats__saturday {
