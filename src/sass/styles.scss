@@ -18,6 +18,12 @@
 		font-size: x-large;
 	}
 
+	&-calendar-container {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
 	&-week-container {
 		box-sizing: border-box;
 		display: grid;
@@ -146,6 +152,25 @@
 		&-text {
 			text-transform: capitalize;
 			font-size: x-small;
+		}
+	}
+
+	&-calendar {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		&__icon {
+			cursor: pointer;
+		}
+
+		&__input {
+			width: 5.4em;
+			border: 0;
+			outline: none;
+			background: 0;
+			font-size: x-large;
+			color: inherit;
 		}
 	}
 

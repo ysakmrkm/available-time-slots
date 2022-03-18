@@ -14,6 +14,7 @@ class AvailableTimeSlots
       businessHour: [0,  23]
       locale: 'en'
       scrollable: false
+      calendar: false
     }
     @settings = Object.assign({}, @defaults, options)
     @startNum = (@settings.businessHour[0] * 60) / @settings.slotSpan
@@ -22,6 +23,7 @@ class AvailableTimeSlots
     @onClickNavigator = @settings.onClickNavigator
     @target = target
     @localeData = locales.find((u)=> u.code is @settings.locale)
+    @initialStartDate = @settings.startDate
 
   setDate: (days)->
     date = new Date(@settings.startDate.valueOf())
@@ -72,7 +74,15 @@ class AvailableTimeSlots
       else
         dateHtmlText = @getMonthName(@settings.startDate.getMonth()) + ', ' + @getYearName(@settings.startDate.getFullYear())
 
-    dateHtml = '<div id="ats-current-date-container">' + dateHtmlText + '</div>'
+    dateHtml = '<div id="ats-current-date-container">
+    <div class="ats-current-date__text">' + dateHtmlText + '</div>'
+
+    if @settings.calendar
+      dateHtml += '<div id="ats-calendar-container" class="ats-current-date__calendar">
+      <label id="ats-calendar" class="ats-calendar"><img id="ats-calendar-icon" class="ats-calendar__icon" src="./image/calendar.svg" data-toggle /><input id="ats-calendar-input" class="ats-calendar__input" name="ats-selected-date" type="text" value="' + @formatDate(@settings.startDate) + '" data-input></label>
+      </div>'
+
+    dateHtml += '</div>'
 
     navHtml = previousWeekHtml + ' ' + dateHtml + ' ' + nextWeekHtml
 
@@ -304,6 +314,17 @@ class AvailableTimeSlots
             localStorage.removeItem('ats_selected_time')
       )
 
+  clickCalendar: ()->
+    flatpickr('#ats-calendar', {
+      wrap: true
+      minDate: @formatDate(@initialStartDate)
+    })
+
+    document.getElementById('ats-calendar').addEventListener('change', (e)=>
+      @settings.startDate = new Date(e.target.value)
+      @setAvailableTimeSlots(@settings.availabileTimeSlotResource)
+    )
+
   render: ()->
     ret = '<div id="ats-container">
       <div id="ats-nav-container">' + @getNavigation() + '</div>'
@@ -339,6 +360,9 @@ class AvailableTimeSlots
         document.getElementById('ats-nav-container').clientHeight -
         Number(window.getComputedStyle(document.getElementById('ats-nav-container')).marginBottom.replace('px', ''))
       ) + 'px'
+
+    if @settings.calendar
+      @clickCalendar()
 
   updateHoliday: ()->
     request = new XMLHttpRequest()
