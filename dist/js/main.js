@@ -49,7 +49,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
   getMonthName(index) {
     switch (this.localeData.code) {
       case 'ja':
-        return this.localeData.months[index] + '月';
+        return this.localeData.months[index];
       default:
         return this.localeData.months[index];
     }

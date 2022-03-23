@@ -40,7 +40,7 @@ class AvailableTimeSlots
   getMonthName: (index)->
     switch @localeData.code
       when 'ja'
-        return @localeData.months[index] + '月'
+        return @localeData.months[index]
       else
         return @localeData.months[index]
 
