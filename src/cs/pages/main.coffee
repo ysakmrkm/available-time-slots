@@ -325,6 +325,18 @@ class AvailableTimeSlots
       @setAvailableTimeSlots(@settings.availabileTimeSlotResource)
     )
 
+  changeContainerHeight: ()->
+    document.getElementById('ats-week-container').style.height = (
+      # window.innerHeight -
+      # Number(window.getComputedStyle(document.getElementsByTagName('body')[0]).marginTop.replace('px', '')) -
+      # Number(window.getComputedStyle(document.getElementsByTagName('body')[0]).marginBottom.replace('px', '')) -
+      # document.getElementById('ats-nav-container').clientHeight -
+      # Number(window.getComputedStyle(document.getElementById('ats-nav-container')).marginBottom.replace('px', ''))
+      window.innerHeight -
+      document.getElementById('ats-week-container').getBoundingClientRect().top -
+      document.getElementsByTagName('body')[0].getBoundingClientRect().x
+    ) + 'px'
+
   render: ()->
     ret = '<div id="ats-container">
       <div id="ats-nav-container">' + @getNavigation() + '</div>'
@@ -353,13 +365,7 @@ class AvailableTimeSlots
     @clickAvailableTimeSlot()
 
     if @settings.scrollable
-      document.getElementById('ats-week-container').style.height = (
-        window.innerHeight -
-        Number(window.getComputedStyle(document.getElementsByTagName('body')[0]).marginTop.replace('px', '')) -
-        Number(window.getComputedStyle(document.getElementsByTagName('body')[0]).marginBottom.replace('px', '')) -
-        document.getElementById('ats-nav-container').clientHeight -
-        Number(window.getComputedStyle(document.getElementById('ats-nav-container')).marginBottom.replace('px', ''))
-      ) + 'px'
+      @changeContainerHeight()
 
     if @settings.calendar
       @clickCalendar()

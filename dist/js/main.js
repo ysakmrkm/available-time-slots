@@ -330,6 +330,15 @@ AvailableTimeSlots = class AvailableTimeSlots {
     });
   }
 
+  changeContainerHeight() {
+    // window.innerHeight -
+    // Number(window.getComputedStyle(document.getElementsByTagName('body')[0]).marginTop.replace('px', '')) -
+    // Number(window.getComputedStyle(document.getElementsByTagName('body')[0]).marginBottom.replace('px', '')) -
+    // document.getElementById('ats-nav-container').clientHeight -
+    // Number(window.getComputedStyle(document.getElementById('ats-nav-container')).marginBottom.replace('px', ''))
+    return document.getElementById('ats-week-container').style.height = (window.innerHeight - document.getElementById('ats-week-container').getBoundingClientRect().top - document.getElementsByTagName('body')[0].getBoundingClientRect().x) + 'px';
+  }
+
   render() {
     var ret;
     ret = '<div id="ats-container"> <div id="ats-nav-container">' + this.getNavigation() + '</div>';
@@ -348,7 +357,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
     this.clickNextWeek();
     this.clickAvailableTimeSlot();
     if (this.settings.scrollable) {
-      document.getElementById('ats-week-container').style.height = (window.innerHeight - Number(window.getComputedStyle(document.getElementsByTagName('body')[0]).marginTop.replace('px', '')) - Number(window.getComputedStyle(document.getElementsByTagName('body')[0]).marginBottom.replace('px', '')) - document.getElementById('ats-nav-container').clientHeight - Number(window.getComputedStyle(document.getElementById('ats-nav-container')).marginBottom.replace('px', ''))) + 'px';
+      this.changeContainerHeight();
     }
     if (this.settings.calendar) {
       return this.clickCalendar();
