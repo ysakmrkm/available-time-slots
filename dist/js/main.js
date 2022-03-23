@@ -91,7 +91,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
     }
     dateHtml = '<div id="ats-current-date-container"> <div class="ats-current-date__text">' + dateHtmlText + '</div>';
     if (this.settings.calendar) {
-      dateHtml += '<div id="ats-calendar-container" class="ats-current-date__calendar"> <label id="ats-calendar" class="ats-calendar"><img id="ats-calendar-icon" class="ats-calendar__icon" src="./image/calendar.svg" data-toggle /><input id="ats-calendar-input" class="ats-calendar__input" name="ats-selected-date" type="text" value="' + this.formatDate(this.settings.startDate) + '" data-input></label> </div>';
+      dateHtml += '<div id="ats-calendar-container" class="ats-current-date__calendar"> <label id="ats-calendar" class="ats-calendar"><img id="ats-calendar-icon" class="ats-calendar__icon" src="./image/calendar.svg" width="40" height="40" data-toggle /><input id="ats-calendar-input" class="ats-calendar__input" name="ats-selected-date" type="text" value="' + this.formatDate(this.settings.startDate) + '" data-input></label> </div>';
     }
     dateHtml += '</div>';
     navHtml = previousWeekHtml + ' ' + dateHtml + ' ' + nextWeekHtml;
