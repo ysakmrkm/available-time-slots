@@ -326,16 +326,19 @@ class AvailableTimeSlots
     )
 
   changeContainerHeight: ()->
-    document.getElementById('ats-week-container').style.height = (
-      # window.innerHeight -
-      # Number(window.getComputedStyle(document.getElementsByTagName('body')[0]).marginTop.replace('px', '')) -
-      # Number(window.getComputedStyle(document.getElementsByTagName('body')[0]).marginBottom.replace('px', '')) -
-      # document.getElementById('ats-nav-container').clientHeight -
-      # Number(window.getComputedStyle(document.getElementById('ats-nav-container')).marginBottom.replace('px', ''))
-      window.innerHeight -
-      document.getElementById('ats-week-container').getBoundingClientRect().top -
-      document.getElementById('ats-week-container').getBoundingClientRect().x
-    ) + 'px'
+    if typeof @settings.scrollable is 'boolean'
+      document.getElementById('ats-week-container').style.height = (
+        # window.innerHeight -
+        # Number(window.getComputedStyle(document.getElementsByTagName('body')[0]).marginTop.replace('px', '')) -
+        # Number(window.getComputedStyle(document.getElementsByTagName('body')[0]).marginBottom.replace('px', '')) -
+        # document.getElementById('ats-nav-container').clientHeight -
+        # Number(window.getComputedStyle(document.getElementById('ats-nav-container')).marginBottom.replace('px', ''))
+        window.innerHeight -
+        document.getElementById('ats-week-container').getBoundingClientRect().top -
+        document.getElementById('ats-week-container').getBoundingClientRect().x
+      ) + 'px'
+    if typeof @settings.scrollable is 'string'
+      document.getElementById('ats-week-container').style.height = @settings.scrollable
 
   render: ()->
     ret = '<div id="ats-container">
