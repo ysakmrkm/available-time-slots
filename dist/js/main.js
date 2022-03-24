@@ -192,23 +192,23 @@ AvailableTimeSlots = class AvailableTimeSlots {
 
   setAvailableTimeSlots(data) {
     var queryStrings, request, sourceUrl;
-    queryStrings = new URLSearchParams(data.split('?')[1]);
-    sourceUrl = data.split('?')[0] + '?';
-    if (data.split('?')[1] !== void 0) {
-      queryStrings.forEach((val, key) => {
-        if (key === 'start') {
-          sourceUrl += key + '=' + this.setDate(0).toISOString().split('T')[0];
-        } else {
-          sourceUrl += key + '=' + val;
-        }
-        return sourceUrl += '&';
-      });
-      sourceUrl = sourceUrl.slice(0, -1);
-    } else {
-      sourceUrl += 'start=' + this.setDate(0).toISOString().split('T')[0];
-    }
-    data = sourceUrl;
     if (typeof data === 'string') {
+      queryStrings = new URLSearchParams(data.split('?')[1]);
+      sourceUrl = data.split('?')[0] + '?';
+      if (data.split('?')[1] !== void 0) {
+        queryStrings.forEach((val, key) => {
+          if (key === 'start') {
+            sourceUrl += key + '=' + this.setDate(0).toISOString().split('T')[0];
+          } else {
+            sourceUrl += key + '=' + val;
+          }
+          return sourceUrl += '&';
+        });
+        sourceUrl = sourceUrl.slice(0, -1);
+      } else {
+        sourceUrl += 'start=' + this.setDate(0).toISOString().split('T')[0];
+      }
+      data = sourceUrl;
       request = new XMLHttpRequest();
       request.open('GET', data, true);
       request.onload = () => {

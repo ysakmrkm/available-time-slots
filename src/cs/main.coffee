@@ -189,27 +189,27 @@ class AvailableTimeSlots
     return tmp
 
   setAvailableTimeSlots: (data)->
-    queryStrings = new URLSearchParams(data.split('?')[1])
-
-    sourceUrl = data.split('?')[0] + '?'
-
-    if data.split('?')[1] isnt undefined
-      queryStrings.forEach((val, key)=>
-        if key is 'start'
-          sourceUrl += key + '=' + @setDate(0).toISOString().split('T')[0]
-        else
-          sourceUrl += key + '=' + val
-
-        sourceUrl += '&'
-      )
-
-      sourceUrl = sourceUrl.slice(0, -1)
-    else
-      sourceUrl += 'start=' + @setDate(0).toISOString().split('T')[0]
-
-    data = sourceUrl
-
     if typeof data is 'string'
+      queryStrings = new URLSearchParams(data.split('?')[1])
+
+      sourceUrl = data.split('?')[0] + '?'
+
+      if data.split('?')[1] isnt undefined
+        queryStrings.forEach((val, key)=>
+          if key is 'start'
+            sourceUrl += key + '=' + @setDate(0).toISOString().split('T')[0]
+          else
+            sourceUrl += key + '=' + val
+
+          sourceUrl += '&'
+        )
+
+        sourceUrl = sourceUrl.slice(0, -1)
+      else
+        sourceUrl += 'start=' + @setDate(0).toISOString().split('T')[0]
+
+      data = sourceUrl
+
       request = new XMLHttpRequest()
       request.open('GET', data, true)
 
