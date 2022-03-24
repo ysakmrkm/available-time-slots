@@ -227,7 +227,7 @@ class AvailableTimeSlots
       request.send()
 
     if typeof data is 'object'
-      @settings.availabileTimeSlots = data
+      @settings.availabileTimeSlots = data.data
 
       @render()
 

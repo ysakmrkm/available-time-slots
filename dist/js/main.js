@@ -224,7 +224,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
       request.send();
     }
     if (typeof data === 'object') {
-      this.settings.availabileTimeSlots = data;
+      this.settings.availabileTimeSlots = data.data;
       return this.render();
     }
   }
