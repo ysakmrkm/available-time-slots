@@ -331,12 +331,12 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   changeContainerHeight() {
-    // window.innerHeight -
-    // Number(window.getComputedStyle(document.getElementsByTagName('body')[0]).marginTop.replace('px', '')) -
-    // Number(window.getComputedStyle(document.getElementsByTagName('body')[0]).marginBottom.replace('px', '')) -
-    // document.getElementById('ats-nav-container').clientHeight -
-    // Number(window.getComputedStyle(document.getElementById('ats-nav-container')).marginBottom.replace('px', ''))
-    return document.getElementById('ats-week-container').style.height = (window.innerHeight - document.getElementById('ats-week-container').getBoundingClientRect().top - document.getElementsByTagName('body')[0].getBoundingClientRect().x) + 'px';
+    if (typeof this.settings.scrollable === 'boolean') {
+      document.getElementById('ats-week-container').style.height = (window.innerHeight - document.getElementById('ats-week-container').getBoundingClientRect().top - document.getElementById('ats-week-container').getBoundingClientRect().x) + 'px';
+    }
+    if (typeof this.settings.scrollable === 'string') {
+      return document.getElementById('ats-week-container').style.height = this.settings.scrollable;
+    }
   }
 
   render() {
