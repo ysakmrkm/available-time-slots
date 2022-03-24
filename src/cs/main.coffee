@@ -334,7 +334,7 @@ class AvailableTimeSlots
       # Number(window.getComputedStyle(document.getElementById('ats-nav-container')).marginBottom.replace('px', ''))
       window.innerHeight -
       document.getElementById('ats-week-container').getBoundingClientRect().top -
-      document.getElementsByTagName('body')[0].getBoundingClientRect().x
+      document.getElementById('ats-week-container').getBoundingClientRect().x
     ) + 'px'
 
   render: ()->
