@@ -16,7 +16,23 @@ AvailableTimeSlots = class AvailableTimeSlots {
       businessHour: [0, 23],
       locale: 'en',
       scrollable: false,
-      calendar: false
+      calendar: false,
+      iconFilePath: './image/',
+      iconCalendar: {
+        fileName: 'calendar.svg',
+        width: 40,
+        height: 40
+      },
+      iconCross: {
+        fileName: 'cross.svg',
+        width: 20,
+        height: 20
+      },
+      iconCircle: {
+        fileName: 'circle.svg',
+        width: 20,
+        height: 20
+      }
     };
     this.settings = Object.assign({}, this.defaults, options);
     this.startNum = (this.settings.businessHour[0] * 60) / this.settings.slotSpan;
@@ -91,7 +107,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
     }
     dateHtml = '<div id="ats-current-date-container"> <div class="ats-current-date__text">' + dateHtmlText + '</div>';
     if (this.settings.calendar) {
-      dateHtml += '<div id="ats-calendar-container" class="ats-current-date__calendar"> <label id="ats-calendar" class="ats-calendar"><img id="ats-calendar-icon" class="ats-calendar__icon" src="./image/calendar.svg" width="40" height="40" data-toggle /><input id="ats-calendar-input" class="ats-calendar__input" name="ats-selected-date" type="text" value="' + this.formatDate(this.settings.startDate) + '" data-input></label> </div>';
+      dateHtml += '<div id="ats-calendar-container" class="ats-current-date__calendar"> <label id="ats-calendar" class="ats-calendar"><img id="ats-calendar-icon" class="ats-calendar__icon" src="' + this.settings.iconFilePath + this.settings.iconCalendar.fileName + '" width="' + this.settings.iconCalendar.width + '" height="' + this.settings.iconCalendar.height + '" data-toggle /><input id="ats-calendar-input" class="ats-calendar__input" name="ats-selected-date" type="text" value="' + this.formatDate(this.settings.startDate) + '" data-input></label> </div>';
     }
     dateHtml += '</div>';
     navHtml = previousWeekHtml + ' ' + dateHtml + ' ' + nextWeekHtml;
@@ -170,9 +186,9 @@ AvailableTimeSlots = class AvailableTimeSlots {
           isPast = false;
         }
         if (!isAvalable) {
-          mark = '<img src="./image/cross.svg" />';
+          mark = '<img src="' + this.settings.iconFilePath + this.settings.iconCross.fileName + '" width="' + this.settings.iconCross.width + '" height="' + this.settings.iconCross.height + '" />';
         } else {
-          mark = '<img src="./image/circle.svg" />';
+          mark = '<img src="' + this.settings.iconFilePath + this.settings.iconCircle.fileName + '" width="' + this.settings.iconCircle.width + '" height="' + this.settings.iconCircle.height + '" />';
           className += ' ats-time-slot__available';
         }
         tmpTimes += '<div class="' + className + '" data-time="' + ('0' + slotDate.getHours()).slice(-2) + ':' + ('0' + slotDate.getMinutes()).slice(-2) + '" data-date="' + this.formatDate(date) + '">' + mark + '</div>';
