@@ -29,12 +29,8 @@
   width: 100%;
   grid-auto-columns: min-content auto;
   grid-auto-rows: min-content auto;
-  grid-template-columns: 1fr 5fr;
+  grid-template-columns: 1.2fr repeat(7, 1fr);
   border: 1px solid rgba(0, 0, 0, 0.2);
-}
-
-#ats-week-container.ats__scrollable {
-  overflow-y: scroll;
 }
 
 #ats-week-container.ats__scrollable #ats-empty-cell,
@@ -43,38 +39,75 @@
   top: 0;
 }
 
-#ats-times-container {
-  box-sizing: border-box;
-  grid-column: 1 / 2;
-  grid-row: 2 / 3;
+#ats-week-container.ats__scrollable #ats-week-header,
+#ats-week-container.ats__scrollable #ats-week-body {
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 
-#ats-empty-cell, #ats-dates-container {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-  background-color: #fff;
-}
-
-#ats-empty-cell {
-  grid-column: 1 / 2;
+#ats-week-header {
+  grid-column: 1 / 9;
   grid-row: 1 / 2;
+}
+
+#ats-week-body {
+  display: grid;
+  grid-template-columns: 1.2fr repeat(7, 1fr);
+  grid-column: 1 / 9;
+  grid-row: 2 / 2;
 }
 
 #ats-dates-container {
-  box-sizing: border-box;
-  display: flex;
+  display: grid;
   width: 100%;
-  grid-column: 2 / 3;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  background-color: #fff;
+  box-sizing: border-box;
+  grid-template-columns: 1.2fr repeat(7, 1fr);
+  grid-column: 1 / 9;
   grid-row: 1 / 2;
-  border-left: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+#ats-date-heading-0 {
+  grid-column: 2 / 3;
+}
+
+#ats-date-heading-1 {
+  grid-column: 3 / 4;
+}
+
+#ats-date-heading-2 {
+  grid-column: 4 / 5;
+}
+
+#ats-date-heading-3 {
+  grid-column: 5 / 6;
+}
+
+#ats-date-heading-4 {
+  grid-column: 6 / 7;
+}
+
+#ats-date-heading-5 {
+  grid-column: 7 / 8;
+}
+
+#ats-date-heading-6 {
+  grid-column: 8 / 9;
+}
+
+#ats-times-container {
+  box-sizing: border-box;
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
 }
 
 #ats-available-time-container {
   box-sizing: border-box;
   display: flex;
   width: 100%;
-  grid-column: 2 / 3;
-  grid-row: 2 / 3;
-  border-left: 1px solid rgba(0, 0, 0, 0.2);
+  grid-column: 2 / 9;
+  grid-row: 1 / 2;
 }
 
 .ats-nav {
@@ -122,11 +155,11 @@
 
 .ats-date-heading, .ats-time-slot-container {
   box-sizing: border-box;
-  width: calc(100% / 7);
 }
 
 .ats-date-heading {
   padding: .25rem;
+  border-left: 1px solid rgba(0, 0, 0, 0.2);
   text-align: center;
 }
 
@@ -136,10 +169,6 @@
 
 .ats-date-heading.ats__sunday, .ats-date-heading.ats__holiday {
   color: #f00;
-}
-
-.ats-date-heading + .ats-date-heading {
-  border-left: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .ats-date-text {
@@ -166,16 +195,17 @@
   color: inherit;
 }
 
+.ats-time-slot-container {
+  flex: 1;
+  border-left: 1px solid rgba(0, 0, 0, 0.2);
+}
+
 .ats-time-slot-container.ats__saturday {
   background-color: rgba(0, 0, 255, 0.1);
 }
 
 .ats-time-slot-container.ats__sunday, .ats-time-slot-container.ats__holiday {
   background-color: rgba(255, 0, 0, 0.1);
-}
-
-.ats-time-slot-container + .ats-time-slot-container {
-  border-left: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .ats-time-line, .ats-time-slot {

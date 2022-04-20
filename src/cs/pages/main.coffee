@@ -360,11 +360,14 @@ class AvailableTimeSlots
       ret += ' class="ats__scrollable"'
 
     ret += '>'
-    ret += '<div id="ats-times-container">' + @getTimeLine() + '</div>
-        <div id="ats-empty-cell"></div>
-        <div id="ats-dates-container">' + @getDatesHeader() + '</div>
-        <div id="ats-available-time-container">' + @getAvailableTimeSlots() + '</div>
-      </div>
+    ret += '<div id="ats-week-header">
+    <div id="ats-dates-container">' + @getDatesHeader() + '</div>
+    </div>
+    <div id="ats-week-body">
+    <div id="ats-times-container">' + @getTimeLine() + '</div>
+    <div id="ats-available-time-container">' + @getAvailableTimeSlots() + '</div>
+    </div>
+    </div>
     </div>'
 
     @target.innerHTML = ret
