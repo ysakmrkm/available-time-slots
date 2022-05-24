@@ -6,6 +6,7 @@ class AvailableTimeSlots
       availabileTimeSlotResource: '',
       availabileTimeSlots: [[], [], [], [], [], [], []],
       isMultiple: false
+      navigation: true
       prevHtml: @prevHtml
       nextHtml: @nextHtml
       selectedDates: []
@@ -81,8 +82,12 @@ class AvailableTimeSlots
     return year + '-' + month + '-' + date
 
   getNavigation: ()->
-    previousWeekHtml = '<div id="ats-prev-week-container" class="ats-nav">' + @settings.prevHtml + '</div>'
-    nextWeekHtml = '<div id="ats-prev-week-container" class="ats-nav">' + @settings.nextHtml + '</div>'
+    if @settings.navigation
+      previousWeekHtml = '<div id="ats-prev-week-container" class="ats-nav">' + @settings.prevHtml + '</div>'
+      nextWeekHtml = '<div id="ats-prev-week-container" class="ats-nav">' + @settings.nextHtml + '</div>'
+    else
+      previousWeekHtml = ''
+      nextWeekHtml = ''
 
     switch @localeData.code
       when 'ja'
@@ -377,8 +382,10 @@ class AvailableTimeSlots
 
     @updateTimeSlot()
 
-    @clickPrevWeek()
-    @clickNextWeek()
+    if @settings.navigation
+      @clickPrevWeek()
+      @clickNextWeek()
+
     @clickAvailableTimeSlot()
 
     if @settings.scrollable

@@ -8,6 +8,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
       availabileTimeSlotResource: '',
       availabileTimeSlots: [[], [], [], [], [], [], []],
       isMultiple: false,
+      navigation: true,
       prevHtml: this.prevHtml,
       nextHtml: this.nextHtml,
       selectedDates: [],
@@ -96,8 +97,13 @@ AvailableTimeSlots = class AvailableTimeSlots {
 
   getNavigation() {
     var dateHtml, dateHtmlText, navHtml, nextWeekHtml, previousWeekHtml;
-    previousWeekHtml = '<div id="ats-prev-week-container" class="ats-nav">' + this.settings.prevHtml + '</div>';
-    nextWeekHtml = '<div id="ats-prev-week-container" class="ats-nav">' + this.settings.nextHtml + '</div>';
+    if (this.settings.navigation) {
+      previousWeekHtml = '<div id="ats-prev-week-container" class="ats-nav">' + this.settings.prevHtml + '</div>';
+      nextWeekHtml = '<div id="ats-prev-week-container" class="ats-nav">' + this.settings.nextHtml + '</div>';
+    } else {
+      previousWeekHtml = '';
+      nextWeekHtml = '';
+    }
     switch (this.localeData.code) {
       case 'ja':
         dateHtmlText = this.getYearName(this.settings.startDate.getFullYear()) + ' ' + this.getMonthName(this.settings.startDate.getMonth());
@@ -369,8 +375,10 @@ AvailableTimeSlots = class AvailableTimeSlots {
       this.updateHoliday();
     }
     this.updateTimeSlot();
-    this.clickPrevWeek();
-    this.clickNextWeek();
+    if (this.settings.navigation) {
+      this.clickPrevWeek();
+      this.clickNextWeek();
+    }
     this.clickAvailableTimeSlot();
     if (this.settings.scrollable) {
       this.changeContainerHeight();
