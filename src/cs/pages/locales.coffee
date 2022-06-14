@@ -1,3 +1,12 @@
+###
+available-time-slots
+
+Copyright (c) 2022 Yoshiaki Murakami(https://github.com/ysakmrkm)
+
+This software is released under the MIT License.
+http://opensource.org/licenses/mit-license.php
+###
+
 'use strict'
 
 en = {

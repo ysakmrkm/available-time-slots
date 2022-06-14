@@ -1,3 +1,12 @@
+###
+available-time-slots
+
+Copyright (c) 2022 Yoshiaki Murakami(https://github.com/ysakmrkm)
+
+This software is released under the MIT License.
+http://opensource.org/licenses/mit-license.php
+###
+
 class AvailableTimeSlots
   constructor: (target, options)->
     @prevHtml = '<div id="ats-prev-week" class="ats-nav__item ats-nav__item__prev"><</div>'
