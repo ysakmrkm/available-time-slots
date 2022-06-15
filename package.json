@@ -1,7 +1,27 @@
 {
   "author": "ysakmrkm",
+  "scripts": {
+    "start": "nodemon \"$(which gulp)\" --watch gulpfile.coffee"
+  },
   "dependencies": {
     "flatpickr": "^4.6.11"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.27.7",
+    "coffeescript": "^2.6.1",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^8.0.0",
+    "gulp-coffee": "^3.0.3",
+    "gulp-debug": "^4.0.0",
+    "gulp-notify": "^4.0.0",
+    "gulp-plumber": "^1.2.1",
+    "gulp-postcss": "^9.0.1",
+    "gulp-pug": "^5.0.0",
+    "gulp-sass": "^5.1.0",
+    "gulp-sourcemaps": "^3.0.0",
+    "gulp-watch": "^5.0.1",
+    "nodemon": "^2.0.6",
+    "sass": "^1.45.2"
   },
   "name": "available-time-slots",
   "description": "![gif](https://github.com/ysakmrkm/available-time-slots/blob/main/image/screenshot.gif)",
