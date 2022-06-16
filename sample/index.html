@@ -6,14 +6,15 @@
     <meta name="keywords" content="">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
-    <link rel="stylesheet" href="../dist/css/styles.css">
+    <link rel="stylesheet" href="dist/css/styles.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   </head>
   <body class="index home" itemscope="itemscope" itemtype="http://schema.org/WebPage" id="index">
     <div id="app"></div>
     <p>Selected:<br><span id="selected-date"></span></p>
-    <script src="../dist/js/main.js"></script>
-    <script src="../dist/js/locales.js"></script>
+    <script src="sample/js/data.js"></script>
+    <script src="dist/js/main.js"></script>
+    <script src="dist/js/locales.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
       target = document.getElementById('app')
@@ -23,12 +24,12 @@
       
       settings = {
         businessHour: [8,  24],
-        availabileTimeSlotResource: 'json/data.php?start='+date.toISOString().split('T')[0],
-        navigation: false,
+        availabileTimeSlotResource: sampleData(date),
         startDate: date,
         holidays: 'https://holidays-jp.github.io/api/v1/date.json',
         scrollable: true,
         calendar: true,
+        iconFilePath: 'sample/image/',
         onClickTimeSlot: function(data) {
           document.getElementById('selected-date').innerHTML = ''
       

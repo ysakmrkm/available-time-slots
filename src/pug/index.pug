@@ -7,7 +7,7 @@ block vars
   - var pageClass = page+' '+category
 
 block head
-  link(rel='stylesheet', href='../dist/css/styles.css')
+  link(rel='stylesheet', href='dist/css/styles.css')
   link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css')
 
 block tag
@@ -18,8 +18,9 @@ block tag
     span#selected-date
 
 block script
-  script(src='../dist/js/main.js')
-  script(src='../dist/js/locales.js')
+  script(src='sample/js/data.js')
+  script(src='dist/js/main.js')
+  script(src='dist/js/locales.js')
   script(src='https://cdn.jsdelivr.net/npm/flatpickr')
   script.
     target = document.getElementById('app')
@@ -29,12 +30,12 @@ block script
 
     settings = {
       businessHour: [8,  24],
-      availabileTimeSlotResource: 'json/data.php?start='+date.toISOString().split('T')[0],
-      navigation: false,
+      availabileTimeSlotResource: sampleData(date),
       startDate: date,
       holidays: 'https://holidays-jp.github.io/api/v1/date.json',
       scrollable: true,
       calendar: true,
+      iconFilePath: 'sample/image/',
       onClickTimeSlot: function(data) {
         document.getElementById('selected-date').innerHTML = ''
 

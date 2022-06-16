@@ -20,7 +20,8 @@ destPath = 'dist/'
 
 gulp.task 'webserver', (done)->
   browserSync.init(
-    server: 'sample'
+    server: ''
+    index: 'sample/index.html'
   )
 
   done()
