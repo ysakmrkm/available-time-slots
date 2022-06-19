@@ -271,23 +271,25 @@ AvailableTimeSlots = class AvailableTimeSlots {
       document.getElementById('ats-prev-week').classList.add('is-disable');
     }
     return document.getElementById('ats-prev-week').addEventListener('click', (e) => {
+      var direction;
       this.settings.startDate = this.setDate(-7);
       this.clearAvailableTimeSlots();
       this.setAvailableTimeSlots(this.settings.availabileTimeSlotResource);
       if (typeof this.onClickNavigator === 'function') {
-        return this.onClickNavigator();
+        return this.onClickNavigator(direction = 'prev');
       }
     });
   }
 
   clickNextWeek() {
     return document.getElementById('ats-next-week').addEventListener('click', (e) => {
+      var direction;
       this.settings.startDate = this.setDate(7);
       this.clearAvailableTimeSlots();
       this.setAvailableTimeSlots(this.settings.availabileTimeSlotResource);
       document.getElementById('ats-prev-week').classList.remove('is-disable');
       if (typeof this.onClickNavigator === 'function') {
-        return this.onClickNavigator();
+        return this.onClickNavigator(direction = 'next');
       }
     });
   }

@@ -42,6 +42,14 @@ block script
         data.forEach(function (data, index) {
           document.getElementById('selected-date').innerHTML += data+'<br>';
         });
+      },
+      onClickNavigator: function(direction) {
+        if(direction === 'next') {
+          AvailableTimeSlots.setAvailableTimeSlots(sampleData(date.setDate(date.getDate() + 7)))
+        }
+        if(direction === 'prev') {
+          AvailableTimeSlots.setAvailableTimeSlots(sampleData(date.setDate(date.getDate() - 7)))
+        }
       }
     }
 

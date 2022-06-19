@@ -277,7 +277,7 @@ class AvailableTimeSlots
       @setAvailableTimeSlots(@settings.availabileTimeSlotResource)
 
       if typeof @onClickNavigator is 'function'
-        @onClickNavigator()
+        @onClickNavigator(direction = 'prev')
     )
 
   clickNextWeek: ()->
@@ -289,7 +289,7 @@ class AvailableTimeSlots
       document.getElementById('ats-prev-week').classList.remove('is-disable')
 
       if typeof @onClickNavigator is 'function'
-        @onClickNavigator()
+        @onClickNavigator(direction = 'next')
     )
 
   clickAvailableTimeSlot: ()->
