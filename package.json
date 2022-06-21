@@ -1,7 +1,7 @@
 {
   "author": "ysakmrkm",
   "scripts": {
-    "start": "nodemon \"$(which gulp)\" --watch gulpfile.coffee"
+    "start": "node sample/js/data.js & nodemon \"$(which gulp)\" --watch gulpfile.coffee"
   },
   "dependencies": {
     "flatpickr": "^4.6.11"
@@ -9,6 +9,8 @@
   "devDependencies": {
     "browser-sync": "^2.27.7",
     "coffeescript": "^2.6.1",
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^8.0.0",
     "gulp-coffee": "^3.0.3",

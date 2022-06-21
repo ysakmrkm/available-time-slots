@@ -12,7 +12,6 @@
   <body class="index home" itemscope="itemscope" itemtype="http://schema.org/WebPage" id="index">
     <div id="app"></div>
     <p>Selected:<br><span id="selected-date"></span></p>
-    <script src="sample/js/data.js"></script>
     <script src="dist/js/main.js"></script>
     <script src="dist/js/locales.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -24,7 +23,7 @@
       
       settings = {
         businessHour: [8,  24],
-        availabileTimeSlotResource: sampleData(date),
+        availabileTimeSlotResource: 'http://localhost:3001/json?start='+date.toISOString().split('T')[0],
         startDate: date,
         holidays: 'https://holidays-jp.github.io/api/v1/date.json',
         scrollable: true,
@@ -37,14 +36,6 @@
             document.getElementById('selected-date').innerHTML += data+'<br>';
           });
         },
-        onClickNavigator: function(direction) {
-          if(direction === 'next') {
-            AvailableTimeSlots.setAvailableTimeSlots(sampleData(date.setDate(date.getDate() + 7)))
-          }
-          if(direction === 'prev') {
-            AvailableTimeSlots.setAvailableTimeSlots(sampleData(date.setDate(date.getDate() - 7)))
-          }
-        }
       }
       
       AvailableTimeSlots = new AvailableTimeSlots(target, settings)

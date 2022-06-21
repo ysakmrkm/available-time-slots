@@ -18,7 +18,6 @@ block tag
     span#selected-date
 
 block script
-  script(src='sample/js/data.js')
   script(src='dist/js/main.js')
   script(src='dist/js/locales.js')
   script(src='https://cdn.jsdelivr.net/npm/flatpickr')
@@ -30,7 +29,7 @@ block script
 
     settings = {
       businessHour: [8,  24],
-      availabileTimeSlotResource: sampleData(date),
+      availabileTimeSlotResource: 'http://localhost:3001/json?start='+date.toISOString().split('T')[0],
       startDate: date,
       holidays: 'https://holidays-jp.github.io/api/v1/date.json',
       scrollable: true,
@@ -43,14 +42,6 @@ block script
           document.getElementById('selected-date').innerHTML += data+'<br>';
         });
       },
-      onClickNavigator: function(direction) {
-        if(direction === 'next') {
-          AvailableTimeSlots.setAvailableTimeSlots(sampleData(date.setDate(date.getDate() + 7)))
-        }
-        if(direction === 'prev') {
-          AvailableTimeSlots.setAvailableTimeSlots(sampleData(date.setDate(date.getDate() - 7)))
-        }
-      }
     }
 
     AvailableTimeSlots = new AvailableTimeSlots(target, settings)
