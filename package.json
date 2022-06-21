@@ -27,7 +27,7 @@
   },
   "name": "available-time-slots",
   "description": "![gif](https://github.com/ysakmrkm/available-time-slots/blob/main/image/screenshot.gif)",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "main": "dist/js/main.js",
   "repository": {
     "type": "git",
