@@ -38,18 +38,18 @@ nextHtml = '<div id="ats-next-week" class="ats-nav__item ats-nav__item__next">><
 {
 	availabileTimeSlotResource: '',
 	availabileTimeSlots: [[], [], [], [], [], [], []],
-	isMultiple: false
-	navigation: true
-	prevHtml: prevHtml
-	nextHtml: nextHtml
-	selectedDates: []
-	startDate: new Date()
-	slotSpan: 30
-	businessHour: [0,  23]
-	locale: 'en'
-	scrollable: false
-	calendar: false
-	iconFilePath: './image/'
+	isMultiple: false,
+	navigation: true,
+	prevHtml: prevHtml,
+	nextHtml: nextHtml,
+	selectedDates: [],
+	startDate: new Date(),
+	slotSpan: 30,
+	businessHour: [0,  23],
+	locale: 'en',
+	scrollable: false,
+	calendar: false,
+	iconFilePath: './image/',
 	iconCalendar: {
 		fileName: 'calendar.svg',
 		width: 40,
