@@ -8,7 +8,7 @@ UI library of selectable available time slots
 
 ## Usage
 
-```
+```html
 <link rel="stylesheet" href="../dist/css/styles.css">
 <!-- if calendar option is true -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -26,6 +26,48 @@ UI library of selectable available time slots
 
 	AvailableTimeSlots.init();
 </script>
+```
+
+## Options
+
+Default options are following.
+
+```javascript
+prevHtml = '<div id="ats-prev-week" class="ats-nav__item ats-nav__item__prev"><</div>';
+nextHtml = '<div id="ats-next-week" class="ats-nav__item ats-nav__item__next">></div>';
+{
+	availabileTimeSlotResource: '',
+	availabileTimeSlots: [[], [], [], [], [], [], []],
+	isMultiple: false
+	navigation: true
+	prevHtml: prevHtml
+	nextHtml: nextHtml
+	selectedDates: []
+	startDate: new Date()
+	slotSpan: 30
+	businessHour: [0,  23]
+	locale: 'en'
+	scrollable: false
+	calendar: false
+	iconFilePath: './image/'
+	iconCalendar: {
+		fileName: 'calendar.svg',
+		width: 40,
+		height: 40
+	},
+	iconCross: {
+		fileName: 'cross.svg',
+		width: 20,
+		height: 20
+	},
+	iconCircle: {
+		fileName: 'circle.svg',
+		width: 20,
+		height: 20
+	},
+	onClickTimeSlot: function(selectedDateArray){},
+	onClickNavigator: function(clickNavigationDirection){}
+}
 ```
 
 ## Dependency
