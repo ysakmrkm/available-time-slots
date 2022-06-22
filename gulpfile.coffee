@@ -117,4 +117,6 @@ gulp.task 'watch', (done)->
 
   done()
 
+gulp.task 'build', gulp.series('sass', 'autoprefixer', 'pug', 'coffee')
+
 gulp.task 'default', gulp.parallel('webserver', 'watch')

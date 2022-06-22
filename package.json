@@ -1,7 +1,8 @@
 {
   "author": "ysakmrkm",
   "scripts": {
-    "start": "node sample/js/data.js & nodemon \"$(which gulp)\" --watch gulpfile.coffee"
+    "develop": "node sample/js/data.js & nodemon \"$(which gulp)\" --watch gulpfile.coffee",
+    "build": "gulp build"
   },
   "dependencies": {
     "flatpickr": "^4.6.11"
