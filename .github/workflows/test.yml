@@ -24,3 +24,4 @@ jobs:
       - if: ${{ steps.node_modules_cache_id.outputs.cache-hit != 'true' }}
         run: npm install
       - run: npm ls --depth=0
+      - run: npm start
