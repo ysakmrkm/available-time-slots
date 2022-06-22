@@ -40,13 +40,13 @@ class AvailableTimeSlots
         fileName: 'circle.svg',
         width: 20,
         height: 20
-      }
+      },
+      onClickTimeSlot: ()->
+      onClickNavigator: ()->
     }
     @settings = Object.assign({}, @defaults, options)
     @startNum = (@settings.businessHour[0] * 60) / @settings.slotSpan
     @endNum = (@settings.businessHour[1] * 60) / @settings.slotSpan
-    @onClickTimeSlot = @settings.onClickTimeSlot
-    @onClickNavigator = @settings.onClickNavigator
     @target = target
     @localeData = locales.find((u)=> u.code is @settings.locale)
     @initialStartDate = @settings.startDate
@@ -276,8 +276,8 @@ class AvailableTimeSlots
       @clearAvailableTimeSlots()
       @setAvailableTimeSlots(@settings.availabileTimeSlotResource)
 
-      if typeof @onClickNavigator is 'function'
-        @onClickNavigator(direction = 'prev')
+      if typeof @settings.onClickNavigator is 'function'
+        @settings.onClickNavigator(direction = 'prev')
     )
 
   clickNextWeek: ()->
@@ -288,8 +288,8 @@ class AvailableTimeSlots
 
       document.getElementById('ats-prev-week').classList.remove('is-disable')
 
-      if typeof @onClickNavigator is 'function'
-        @onClickNavigator(direction = 'next')
+      if typeof @settings.onClickNavigator is 'function'
+        @settings.onClickNavigator(direction = 'next')
     )
 
   clickAvailableTimeSlot: ()->
@@ -325,8 +325,8 @@ class AvailableTimeSlots
               target.classList.add('is-selected')
               @settings.selectedDates.push(tmp)
 
-        if typeof @onClickTimeSlot is 'function'
-          @onClickTimeSlot(@settings.selectedDates)
+        if typeof @settings.onClickTimeSlot is 'function'
+          @settings.onClickTimeSlot(@settings.selectedDates)
       )
     )
 

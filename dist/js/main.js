@@ -41,13 +41,13 @@ AvailableTimeSlots = class AvailableTimeSlots {
         fileName: 'circle.svg',
         width: 20,
         height: 20
-      }
+      },
+      onClickTimeSlot: function() {},
+      onClickNavigator: function() {}
     };
     this.settings = Object.assign({}, this.defaults, options);
     this.startNum = (this.settings.businessHour[0] * 60) / this.settings.slotSpan;
     this.endNum = (this.settings.businessHour[1] * 60) / this.settings.slotSpan;
-    this.onClickTimeSlot = this.settings.onClickTimeSlot;
-    this.onClickNavigator = this.settings.onClickNavigator;
     this.target = target;
     this.localeData = locales.find((u) => {
       return u.code === this.settings.locale;
@@ -275,8 +275,8 @@ AvailableTimeSlots = class AvailableTimeSlots {
       this.settings.startDate = this.setDate(-7);
       this.clearAvailableTimeSlots();
       this.setAvailableTimeSlots(this.settings.availabileTimeSlotResource);
-      if (typeof this.onClickNavigator === 'function') {
-        return this.onClickNavigator(direction = 'prev');
+      if (typeof this.settings.onClickNavigator === 'function') {
+        return this.settings.onClickNavigator(direction = 'prev');
       }
     });
   }
@@ -288,8 +288,8 @@ AvailableTimeSlots = class AvailableTimeSlots {
       this.clearAvailableTimeSlots();
       this.setAvailableTimeSlots(this.settings.availabileTimeSlotResource);
       document.getElementById('ats-prev-week').classList.remove('is-disable');
-      if (typeof this.onClickNavigator === 'function') {
-        return this.onClickNavigator(direction = 'next');
+      if (typeof this.settings.onClickNavigator === 'function') {
+        return this.settings.onClickNavigator(direction = 'next');
       }
     });
   }
@@ -326,8 +326,8 @@ AvailableTimeSlots = class AvailableTimeSlots {
             }
           }
         }
-        if (typeof this.onClickTimeSlot === 'function') {
-          return this.onClickTimeSlot(this.settings.selectedDates);
+        if (typeof this.settings.onClickTimeSlot === 'function') {
+          return this.settings.onClickTimeSlot(this.settings.selectedDates);
         }
       });
     });
