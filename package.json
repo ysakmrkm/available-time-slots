@@ -23,6 +23,7 @@
     "gulp-sourcemaps": "^3.0.0",
     "gulp-watch": "^5.0.1",
     "nodemon": "^2.0.6",
+    "pug": "^3.0.2",
     "sass": "^1.45.2"
   },
   "name": "available-time-slots",

@@ -6,7 +6,7 @@ sourcemaps = require('gulp-sourcemaps')
 plumber = require('gulp-plumber')
 debug = require('gulp-debug')
 pug = require('gulp-pug')
-pugRef = require('gulp-pug/node_modules/pug')
+pugRef = require('pug')
 notify = require('gulp-notify')
 browserSync = require('browser-sync').create()
 
