@@ -1,5 +1,7 @@
 # available-time-slots
 
+[![Build](https://github.com/ysakmrkm/available-time-slots/actions/workflows/test.yml/badge.svg)](https://github.com/ysakmrkm/available-time-slots/actions/workflows/test.yml)
+
 ![gif](https://github.com/ysakmrkm/available-time-slots/blob/main/image/screenshot.gif)
 
 ## Overview
