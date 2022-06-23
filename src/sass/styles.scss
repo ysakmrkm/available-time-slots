@@ -245,5 +245,9 @@ http://opensource.org/licenses/mit-license.php
 		&__past {
 			background-color: rgba(#000, .1);
 		}
+
+		&:not(&__past):not(&__business-hours) {
+			background-color: rgba(#000, .05);
+		}
 	}
 }

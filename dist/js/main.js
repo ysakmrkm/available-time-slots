@@ -10,6 +10,7 @@ var AvailableTimeSlots;
 
 AvailableTimeSlots = class AvailableTimeSlots {
   constructor(target, options) {
+    var businessHoursEnd, businessHoursStart, slotBaseTime, slotMaxTime, slotMaxTimeArray, slotMinTime, slotMinTimeArray;
     this.prevHtml = '<div id="ats-prev-week" class="ats-nav__item ats-nav__item__prev"><</div>';
     this.nextHtml = '<div id="ats-next-week" class="ats-nav__item ats-nav__item__next">></div>';
     this.defaults = {
@@ -21,8 +22,10 @@ AvailableTimeSlots = class AvailableTimeSlots {
       nextHtml: this.nextHtml,
       selectedDates: [],
       startDate: new Date(),
+      slotMinTime: '00:00',
+      slotMaxTime: '24:00',
       slotSpan: 30,
-      businessHour: [0, 23],
+      businessHours: [0, 23],
       locale: 'en',
       scrollable: false,
       calendar: false,
@@ -46,8 +49,22 @@ AvailableTimeSlots = class AvailableTimeSlots {
       onClickNavigator: function() {}
     };
     this.settings = Object.assign({}, this.defaults, options);
-    this.startNum = (this.settings.businessHour[0] * 60) / this.settings.slotSpan;
-    this.endNum = (this.settings.businessHour[1] * 60) / this.settings.slotSpan;
+    slotBaseTime = new Date();
+    slotBaseTime.setHours(0, 0, 0, 0);
+    slotMinTime = new Date();
+    slotMinTimeArray = this.settings.slotMinTime.replace(/0+(?=[0-9])/g, '').split(':');
+    slotMinTime.setHours(slotMinTimeArray[0], slotMinTimeArray[1], 0, 0);
+    slotMaxTime = new Date();
+    slotMaxTimeArray = this.settings.slotMaxTime.replace(/0+(?=[0-9])/g, '').split(':');
+    slotMaxTime.setHours(slotMaxTimeArray[0], slotMaxTimeArray[1], 0, 0);
+    businessHoursStart = new Date();
+    businessHoursStart.setHours(this.settings.businessHours[0], 0, 0, 0);
+    this.businessHoursStart = businessHoursStart;
+    businessHoursEnd = new Date();
+    businessHoursEnd.setHours(this.settings.businessHours[1], 0, 0, 0);
+    this.businessHoursEnd = businessHoursEnd;
+    this.startNum = Math.floor((slotMinTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / this.settings.slotSpan;
+    this.endNum = Math.floor((slotMaxTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / this.settings.slotSpan;
     this.target = target;
     this.localeData = locales.find((u) => {
       return u.code === this.settings.locale;
@@ -173,7 +190,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   getAvailableTimeSlots() {
-    var availableDate, className, date, i, isAvalable, isPast, j, k, l, m, mark, n, now, ref, ref1, ref2, slotDate, tmp, tmpTimes;
+    var availableDate, className, date, i, isAvalable, isBusinessHours, isPast, j, k, l, m, mark, n, now, ref, ref1, ref2, slotDate, tmp, tmpTimes;
     tmp = '';
     now = new Date();
     for (i = l = 0; l < 7; i = ++l) {
@@ -183,10 +200,11 @@ AvailableTimeSlots = class AvailableTimeSlots {
       for (j = m = ref = this.startNum, ref1 = this.endNum; (ref <= ref1 ? m < ref1 : m > ref1); j = ref <= ref1 ? ++m : --m) {
         isAvalable = false;
         isPast = false;
+        isBusinessHours = false;
         className = 'ats-time-slot';
         for (k = n = 0, ref2 = this.settings.availabileTimeSlots[i]['data'].length; (0 <= ref2 ? n < ref2 : n > ref2); k = 0 <= ref2 ? ++n : --n) {
-          availableDate = new Date(this.settings.availabileTimeSlots[i]['date'] + 'T' + this.settings.availabileTimeSlots[i]['data'][k]);
-          slotDate = new Date(date.toISOString().split('T')[0] + 'T' + ('0' + this.getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + this.getCurrentTime(j).getMinutes()).slice(-2));
+          availableDate = new Date(this.settings.availabileTimeSlots[i]['date'] + 'T' + this.settings.availabileTimeSlots[i]['data'][k] + ':00');
+          slotDate = new Date(date.toISOString().split('T')[0] + 'T' + ('0' + this.getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + this.getCurrentTime(j).getMinutes()).slice(-2) + ':00');
           if (availableDate.getTime() === slotDate.getTime()) {
             isAvalable = true;
           }
@@ -194,10 +212,24 @@ AvailableTimeSlots = class AvailableTimeSlots {
             isAvalable = false;
             isPast = true;
           }
+          this.businessHoursStart.setDate(date.toISOString().split('T')[0].split('-')[2]);
+          this.businessHoursEnd.setDate(date.toISOString().split('T')[0].split('-')[2]);
+          if (slotDate.getTime() - this.businessHoursStart.getTime() >= 0) {
+            isBusinessHours = true;
+          } else {
+            isAvalable = false;
+          }
+          if (slotDate.getTime() - this.businessHoursEnd.getTime() >= 0) {
+            isBusinessHours = false;
+            isAvalable = false;
+          }
         }
         if (isPast) {
           className += ' ats-time-slot__past';
           isPast = false;
+        }
+        if (isBusinessHours) {
+          className += ' ats-time-slot__business-hours';
         }
         if (!isAvalable) {
           mark = '<img src="' + this.settings.iconFilePath + this.settings.iconCross.fileName + '" width="' + this.settings.iconCross.width + '" height="' + this.settings.iconCross.height + '" />';

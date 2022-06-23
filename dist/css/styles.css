@@ -209,3 +209,6 @@ http://opensource.org/licenses/mit-license.php
 .ats-time-slot__past {
   background-color: rgba(0, 0, 0, 0.1);
 }
+.ats-time-slot:not(.ats-time-slot__past):not(.ats-time-slot__business-hours) {
+  background-color: rgba(0, 0, 0, 0.05);
+}

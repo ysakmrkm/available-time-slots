@@ -20,8 +20,10 @@ class AvailableTimeSlots
       nextHtml: @nextHtml
       selectedDates: []
       startDate: new Date()
+      slotMinTime: '00:00'
+      slotMaxTime: '24:00'
       slotSpan: 30
-      businessHour: [0,  23]
+      businessHours: [0,  23]
       locale: 'en'
       scrollable: false
       calendar: false
@@ -45,8 +47,28 @@ class AvailableTimeSlots
       onClickNavigator: ()->
     }
     @settings = Object.assign({}, @defaults, options)
-    @startNum = (@settings.businessHour[0] * 60) / @settings.slotSpan
-    @endNum = (@settings.businessHour[1] * 60) / @settings.slotSpan
+
+    slotBaseTime = new Date()
+    slotBaseTime.setHours(0, 0, 0, 0)
+
+    slotMinTime = new Date()
+    slotMinTimeArray = @settings.slotMinTime.replace(/0+(?=[0-9])/g, '').split(':')
+    slotMinTime.setHours(slotMinTimeArray[0], slotMinTimeArray[1], 0, 0)
+
+    slotMaxTime = new Date()
+    slotMaxTimeArray = @settings.slotMaxTime.replace(/0+(?=[0-9])/g, '').split(':')
+    slotMaxTime.setHours(slotMaxTimeArray[0], slotMaxTimeArray[1], 0, 0)
+
+    businessHoursStart = new Date()
+    businessHoursStart.setHours(@settings.businessHours[0], 0, 0, 0)
+    @businessHoursStart = businessHoursStart
+
+    businessHoursEnd = new Date()
+    businessHoursEnd.setHours(@settings.businessHours[1], 0, 0, 0)
+    @businessHoursEnd = businessHoursEnd
+
+    @startNum = Math.floor((slotMinTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / @settings.slotSpan
+    @endNum = Math.floor((slotMaxTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / @settings.slotSpan
     @target = target
     @localeData = locales.find((u)=> u.code is @settings.locale)
     @initialStartDate = @settings.startDate
@@ -179,12 +201,13 @@ class AvailableTimeSlots
       for j in [@startNum...@endNum]
         isAvalable = false
         isPast = false
+        isBusinessHours = false
 
         className = 'ats-time-slot'
 
         for k in [0...@settings.availabileTimeSlots[i]['data'].length]
-          availableDate = new Date(@settings.availabileTimeSlots[i]['date'] + 'T' + @settings.availabileTimeSlots[i]['data'][k])
-          slotDate = new Date(date.toISOString().split('T')[0] + 'T' + ('0' + @getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + @getCurrentTime(j).getMinutes()).slice(-2))
+          availableDate = new Date(@settings.availabileTimeSlots[i]['date'] + 'T' + @settings.availabileTimeSlots[i]['data'][k]+':00')
+          slotDate = new Date(date.toISOString().split('T')[0] + 'T' + ('0' + @getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + @getCurrentTime(j).getMinutes()).slice(-2)+':00')
 
           if availableDate.getTime() is slotDate.getTime()
             isAvalable = true
@@ -193,9 +216,24 @@ class AvailableTimeSlots
             isAvalable = false
             isPast = true
 
+          @businessHoursStart.setDate(date.toISOString().split('T')[0].split('-')[2])
+          @businessHoursEnd.setDate(date.toISOString().split('T')[0].split('-')[2])
+
+          if slotDate.getTime() - @businessHoursStart.getTime() >= 0
+            isBusinessHours = true
+          else
+            isAvalable = false
+
+          if slotDate.getTime() - @businessHoursEnd.getTime() >= 0
+            isBusinessHours = false
+            isAvalable = false
+
         if isPast
           className += ' ats-time-slot__past'
           isPast = false
+
+        if isBusinessHours
+          className += ' ats-time-slot__business-hours'
 
         if not isAvalable
           mark = '<img src="' + @settings.iconFilePath + @settings.iconCross.fileName + '" width="' + @settings.iconCross.width + '" height="' + @settings.iconCross.height + '" />'
