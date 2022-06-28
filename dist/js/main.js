@@ -190,7 +190,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   getAvailableTimeSlots() {
-    var availableDate, className, date, i, isAvalable, isBusinessHours, isPast, j, k, l, m, mark, n, now, ref, ref1, ref2, slotDate, tmp, tmpTimes;
+    var availableDate, businessHoursDate, businessHoursMonth, className, date, i, isAvalable, isBusinessHours, isPast, j, k, l, m, mark, n, now, ref, ref1, ref2, slotDate, tmp, tmpTimes;
     tmp = '';
     now = new Date();
     for (i = l = 0; l < 7; i = ++l) {
@@ -212,8 +212,12 @@ AvailableTimeSlots = class AvailableTimeSlots {
             isAvalable = false;
             isPast = true;
           }
-          this.businessHoursStart.setDate(date.toISOString().split('T')[0].split('-')[2]);
-          this.businessHoursEnd.setDate(date.toISOString().split('T')[0].split('-')[2]);
+          businessHoursMonth = date.toISOString().split('T')[0].split('-')[1] - 1;
+          businessHoursDate = date.toISOString().split('T')[0].split('-')[2];
+          this.businessHoursStart.setMonth(businessHoursMonth);
+          this.businessHoursStart.setDate(businessHoursDate);
+          this.businessHoursEnd.setMonth(businessHoursMonth);
+          this.businessHoursEnd.setDate(businessHoursDate);
           if (slotDate.getTime() - this.businessHoursStart.getTime() >= 0) {
             isBusinessHours = true;
           } else {
@@ -236,6 +240,9 @@ AvailableTimeSlots = class AvailableTimeSlots {
         } else {
           mark = '<img src="' + this.settings.iconFilePath + this.settings.iconCircle.fileName + '" width="' + this.settings.iconCircle.width + '" height="' + this.settings.iconCircle.height + '" />';
           className += ' ats-time-slot__available';
+        }
+        if (!isBusinessHours) {
+          mark = '';
         }
         tmpTimes += '<div class="' + className + '" data-time="' + ('0' + slotDate.getHours()).slice(-2) + ':' + ('0' + slotDate.getMinutes()).slice(-2) + '" data-date="' + this.formatDate(date) + '">' + mark + '</div>';
       }

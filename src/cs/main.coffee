@@ -216,8 +216,13 @@ class AvailableTimeSlots
             isAvalable = false
             isPast = true
 
-          @businessHoursStart.setDate(date.toISOString().split('T')[0].split('-')[2])
-          @businessHoursEnd.setDate(date.toISOString().split('T')[0].split('-')[2])
+          businessHoursMonth = date.toISOString().split('T')[0].split('-')[1] - 1
+          businessHoursDate = date.toISOString().split('T')[0].split('-')[2]
+
+          @businessHoursStart.setMonth(businessHoursMonth)
+          @businessHoursStart.setDate(businessHoursDate)
+          @businessHoursEnd.setMonth(businessHoursMonth)
+          @businessHoursEnd.setDate(businessHoursDate)
 
           if slotDate.getTime() - @businessHoursStart.getTime() >= 0
             isBusinessHours = true
@@ -240,6 +245,9 @@ class AvailableTimeSlots
         else
           mark = '<img src="' + @settings.iconFilePath + @settings.iconCircle.fileName + '" width="' + @settings.iconCircle.width + '" height="' + @settings.iconCircle.height + '" />'
           className += ' ats-time-slot__available'
+
+        if not isBusinessHours
+          mark = ''
 
         tmpTimes += '<div class="' + className + '" data-time="' + ('0' + slotDate.getHours()).slice(-2) + ':' + ('0' + slotDate.getMinutes()).slice(-2) + '" data-date="' + @formatDate(date) + '">' + mark + '</div>'
 
