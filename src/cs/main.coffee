@@ -59,13 +59,13 @@ class AvailableTimeSlots
     slotMaxTimeArray = @settings.slotMaxTime.replace(/0+(?=[0-9])/g, '').split(':')
     slotMaxTime.setHours(slotMaxTimeArray[0], slotMaxTimeArray[1], 0, 0)
 
-    businessHoursStart = new Date()
-    businessHoursStart.setHours(@settings.businessHours[0], 0, 0, 0)
-    @businessHoursStart = businessHoursStart
+    if typeof @settings.businessHours[0] is 'number' or 'string'
+      @businessHours = [[@settings.businessHours[0], 0, 0, 0], [@settings.businessHours[1], 0, 0, 0]]
 
-    businessHoursEnd = new Date()
-    businessHoursEnd.setHours(@settings.businessHours[1], 0, 0, 0)
-    @businessHoursEnd = businessHoursEnd
+    if typeof @settings.businessHours[0] is 'object'
+      @settings.businessHours.forEach((elem, index)=>
+        @businessHours[index] = [[elem[0], 0, 0, 0], [elem[1], 0, 0, 0]]
+      )
 
     @startNum = Math.floor((slotMinTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / @settings.slotSpan
     @endNum = Math.floor((slotMaxTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / @settings.slotSpan
@@ -205,6 +205,9 @@ class AvailableTimeSlots
 
         className = 'ats-time-slot'
 
+        if typeof @settings.businessHours[0] is 'object'
+          l = 0
+
         for k in [0...@settings.availabileTimeSlots[i]['data'].length]
           availableDate = new Date(@settings.availabileTimeSlots[i]['date'] + 'T' + @settings.availabileTimeSlots[i]['data'][k]+':00')
           slotDate = new Date(date.toISOString().split('T')[0] + 'T' + ('0' + @getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + @getCurrentTime(j).getMinutes()).slice(-2)+':00')
@@ -216,29 +219,44 @@ class AvailableTimeSlots
             isAvalable = false
             isPast = true
 
+          businessHoursStart = new Date()
+          businessHoursEnd = new Date()
+
+          if typeof @settings.businessHours[0] is 'number' or typeof @settings.businessHours[0] is 'string'
+            businessHoursStart.setHours(@businessHours[0][0], @businessHours[0][1], @businessHours[0][2], @businessHours[0][3])
+            businessHoursEnd.setHours(@businessHours[1][0], @businessHours[1][1], @businessHours[1][2], @businessHours[1][3])
+
+          if typeof @settings.businessHours[0] is 'object'
+            if l < @businessHours.length
+              businessHoursStart.setHours(@businessHours[l][0][0], @businessHours[l][0][1], @businessHours[l][0][2], @businessHours[l][0][3])
+              businessHoursEnd.setHours(@businessHours[l][1][0], @businessHours[l][1][1], @businessHours[l][1][2], @businessHours[l][1][3])
+
           businessHoursMonth = date.toISOString().split('T')[0].split('-')[1] - 1
           businessHoursDate = date.toISOString().split('T')[0].split('-')[2]
 
-          @businessHoursStart.setMonth(businessHoursMonth)
-          @businessHoursStart.setDate(businessHoursDate)
-          @businessHoursEnd.setMonth(businessHoursMonth)
-          @businessHoursEnd.setDate(businessHoursDate)
+          businessHoursStart.setMonth(businessHoursMonth)
+          businessHoursStart.setDate(businessHoursDate)
+          businessHoursEnd.setMonth(businessHoursMonth)
+          businessHoursEnd.setDate(businessHoursDate)
 
-          if slotDate.getTime() - @businessHoursStart.getTime() >= 0
+          if slotDate.getTime() - businessHoursStart.getTime() >= 0
             isBusinessHours = true
           else
-            isAvalable = false
-
-          if slotDate.getTime() - @businessHoursEnd.getTime() >= 0
             isBusinessHours = false
-            isAvalable = false
+
+          if slotDate.getTime() - businessHoursEnd.getTime() >= 0
+            isBusinessHours = false
+
+          if typeof @settings.businessHours[0] is 'object'
+            if slotDate.getTime() > businessHoursEnd.getTime()
+              l++
+
+        if isBusinessHours
+          className += ' ats-time-slot__business-hours'
 
         if isPast
           className += ' ats-time-slot__past'
           isPast = false
-
-        if isBusinessHours
-          className += ' ats-time-slot__business-hours'
 
         if not isAvalable
           mark = '<img src="' + @settings.iconFilePath + @settings.iconCross.fileName + '" width="' + @settings.iconCross.width + '" height="' + @settings.iconCross.height + '" />'
