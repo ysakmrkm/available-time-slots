@@ -229,6 +229,14 @@ class AvailableTimeSlots
           businessHoursStart = new Date()
           businessHoursEnd = new Date()
 
+          businessHoursMonth = date.toISOString().split('T')[0].split('-')[1] - 1
+          businessHoursDate = date.toISOString().split('T')[0].split('-')[2]
+
+          businessHoursStart.setMonth(businessHoursMonth)
+          businessHoursStart.setDate(businessHoursDate)
+          businessHoursEnd.setMonth(businessHoursMonth)
+          businessHoursEnd.setDate(businessHoursDate)
+
           if typeof @businessHours[0] is 'number' or typeof @businessHours[0] is 'string'
             businessHoursStart.setHours(@businessHours[0][0], @businessHours[0][1], @businessHours[0][2], @businessHours[0][3])
             businessHoursEnd.setHours(@businessHours[1][0], @businessHours[1][1], @businessHours[1][2], @businessHours[1][3])
@@ -246,14 +254,6 @@ class AvailableTimeSlots
               if l < @businessHours.length
                 businessHoursStart.setHours(currentBusinessHours[0][0], currentBusinessHours[0][1], currentBusinessHours[0][2], currentBusinessHours[0][3])
                 businessHoursEnd.setHours(currentBusinessHours[1][0], currentBusinessHours[1][1], currentBusinessHours[1][2], currentBusinessHours[1][3])
-
-          businessHoursMonth = date.toISOString().split('T')[0].split('-')[1] - 1
-          businessHoursDate = date.toISOString().split('T')[0].split('-')[2]
-
-          businessHoursStart.setMonth(businessHoursMonth)
-          businessHoursStart.setDate(businessHoursDate)
-          businessHoursEnd.setMonth(businessHoursMonth)
-          businessHoursEnd.setDate(businessHoursDate)
 
           if slotDate.getTime() - businessHoursStart.getTime() >= 0
             isBusinessHours = true

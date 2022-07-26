@@ -226,6 +226,12 @@ AvailableTimeSlots = class AvailableTimeSlots {
           }
           businessHoursStart = new Date();
           businessHoursEnd = new Date();
+          businessHoursMonth = date.toISOString().split('T')[0].split('-')[1] - 1;
+          businessHoursDate = date.toISOString().split('T')[0].split('-')[2];
+          businessHoursStart.setMonth(businessHoursMonth);
+          businessHoursStart.setDate(businessHoursDate);
+          businessHoursEnd.setMonth(businessHoursMonth);
+          businessHoursEnd.setDate(businessHoursDate);
           if (typeof this.businessHours[0] === 'number' || typeof this.businessHours[0] === 'string') {
             businessHoursStart.setHours(this.businessHours[0][0], this.businessHours[0][1], this.businessHours[0][2], this.businessHours[0][3]);
             businessHoursEnd.setHours(this.businessHours[1][0], this.businessHours[1][1], this.businessHours[1][2], this.businessHours[1][3]);
@@ -245,12 +251,6 @@ AvailableTimeSlots = class AvailableTimeSlots {
               }
             }
           }
-          businessHoursMonth = date.toISOString().split('T')[0].split('-')[1] - 1;
-          businessHoursDate = date.toISOString().split('T')[0].split('-')[2];
-          businessHoursStart.setMonth(businessHoursMonth);
-          businessHoursStart.setDate(businessHoursDate);
-          businessHoursEnd.setMonth(businessHoursMonth);
-          businessHoursEnd.setDate(businessHoursDate);
           if (slotDate.getTime() - businessHoursStart.getTime() >= 0) {
             isBusinessHours = true;
           } else {
