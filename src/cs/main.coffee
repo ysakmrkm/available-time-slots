@@ -64,7 +64,14 @@ class AvailableTimeSlots
 
     if typeof @settings.businessHours[0] is 'object'
       @settings.businessHours.forEach((elem, index)=>
-        @businessHours[index] = [[elem[0], 0, 0, 0], [elem[1], 0, 0, 0]]
+        if @settings.businessHours.length is 7
+          @businessHours[index] = []
+
+          elem.forEach((elem2, index2)=>
+            @businessHours[index][index2] = [[elem2[0], 0, 0, 0], [elem2[1], 0, 0, 0]]
+          )
+        else
+          @businessHours[index] = [[elem[0], 0, 0, 0], [elem[1], 0, 0, 0]]
       )
 
     @startNum = Math.floor((slotMinTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / @settings.slotSpan
@@ -222,15 +229,6 @@ class AvailableTimeSlots
           businessHoursStart = new Date()
           businessHoursEnd = new Date()
 
-          if typeof @settings.businessHours[0] is 'number' or typeof @settings.businessHours[0] is 'string'
-            businessHoursStart.setHours(@businessHours[0][0], @businessHours[0][1], @businessHours[0][2], @businessHours[0][3])
-            businessHoursEnd.setHours(@businessHours[1][0], @businessHours[1][1], @businessHours[1][2], @businessHours[1][3])
-
-          if typeof @settings.businessHours[0] is 'object'
-            if l < @businessHours.length
-              businessHoursStart.setHours(@businessHours[l][0][0], @businessHours[l][0][1], @businessHours[l][0][2], @businessHours[l][0][3])
-              businessHoursEnd.setHours(@businessHours[l][1][0], @businessHours[l][1][1], @businessHours[l][1][2], @businessHours[l][1][3])
-
           businessHoursMonth = date.toISOString().split('T')[0].split('-')[1] - 1
           businessHoursDate = date.toISOString().split('T')[0].split('-')[2]
 
@@ -238,6 +236,24 @@ class AvailableTimeSlots
           businessHoursStart.setDate(businessHoursDate)
           businessHoursEnd.setMonth(businessHoursMonth)
           businessHoursEnd.setDate(businessHoursDate)
+
+          if typeof @businessHours[0] is 'number' or typeof @businessHours[0] is 'string'
+            businessHoursStart.setHours(@businessHours[0][0], @businessHours[0][1], @businessHours[0][2], @businessHours[0][3])
+            businessHoursEnd.setHours(@businessHours[1][0], @businessHours[1][1], @businessHours[1][2], @businessHours[1][3])
+
+          if typeof @businessHours[0] is 'object'
+            if @businessHours.length is 7
+              currentBusinessHours = @businessHours[i][l]
+
+              if currentBusinessHours isnt undefined and l < @businessHours[i].length
+                businessHoursStart.setHours(currentBusinessHours[0][0], currentBusinessHours[0][1], currentBusinessHours[0][2], currentBusinessHours[0][3])
+                businessHoursEnd.setHours(currentBusinessHours[1][0], currentBusinessHours[1][1], currentBusinessHours[1][2], currentBusinessHours[1][3])
+            else
+              currentBusinessHours = @businessHours[l]
+
+              if l < @businessHours.length
+                businessHoursStart.setHours(currentBusinessHours[0][0], currentBusinessHours[0][1], currentBusinessHours[0][2], currentBusinessHours[0][3])
+                businessHoursEnd.setHours(currentBusinessHours[1][0], currentBusinessHours[1][1], currentBusinessHours[1][2], currentBusinessHours[1][3])
 
           if slotDate.getTime() - businessHoursStart.getTime() >= 0
             isBusinessHours = true
@@ -247,9 +263,15 @@ class AvailableTimeSlots
           if slotDate.getTime() - businessHoursEnd.getTime() >= 0
             isBusinessHours = false
 
-          if typeof @settings.businessHours[0] is 'object'
-            if slotDate.getTime() > businessHoursEnd.getTime()
-              l++
+          if typeof @businessHours[0] is 'object'
+            if slotDate.getTime() >= businessHoursEnd.getTime()
+              if currentBusinessHours isnt undefined
+                if @businessHours.length is 7
+                  if l < @businessHours[i].length
+                    l++
+                else
+                  if l < @businessHours.length
+                    l++
 
         if isBusinessHours
           className += ' ats-time-slot__business-hours'

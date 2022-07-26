@@ -62,7 +62,14 @@ AvailableTimeSlots = class AvailableTimeSlots {
     }
     if (typeof this.settings.businessHours[0] === 'object') {
       this.settings.businessHours.forEach((elem, index) => {
-        return this.businessHours[index] = [[elem[0], 0, 0, 0], [elem[1], 0, 0, 0]];
+        if (this.settings.businessHours.length === 7) {
+          this.businessHours[index] = [];
+          return elem.forEach((elem2, index2) => {
+            return this.businessHours[index][index2] = [[elem2[0], 0, 0, 0], [elem2[1], 0, 0, 0]];
+          });
+        } else {
+          return this.businessHours[index] = [[elem[0], 0, 0, 0], [elem[1], 0, 0, 0]];
+        }
       });
     }
     this.startNum = Math.floor((slotMinTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / this.settings.slotSpan;
@@ -192,7 +199,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   getAvailableTimeSlots() {
-    var availableDate, businessHoursDate, businessHoursEnd, businessHoursMonth, businessHoursStart, className, date, i, isAvalable, isBusinessHours, isPast, j, k, l, m, mark, n, now, o, ref, ref1, ref2, slotDate, tmp, tmpTimes;
+    var availableDate, businessHoursDate, businessHoursEnd, businessHoursMonth, businessHoursStart, className, currentBusinessHours, date, i, isAvalable, isBusinessHours, isPast, j, k, l, m, mark, n, now, o, ref, ref1, ref2, slotDate, tmp, tmpTimes;
     tmp = '';
     now = new Date();
     for (i = m = 0; m < 7; i = ++m) {
@@ -219,22 +226,31 @@ AvailableTimeSlots = class AvailableTimeSlots {
           }
           businessHoursStart = new Date();
           businessHoursEnd = new Date();
-          if (typeof this.settings.businessHours[0] === 'number' || typeof this.settings.businessHours[0] === 'string') {
-            businessHoursStart.setHours(this.businessHours[0][0], this.businessHours[0][1], this.businessHours[0][2], this.businessHours[0][3]);
-            businessHoursEnd.setHours(this.businessHours[1][0], this.businessHours[1][1], this.businessHours[1][2], this.businessHours[1][3]);
-          }
-          if (typeof this.settings.businessHours[0] === 'object') {
-            if (l < this.businessHours.length) {
-              businessHoursStart.setHours(this.businessHours[l][0][0], this.businessHours[l][0][1], this.businessHours[l][0][2], this.businessHours[l][0][3]);
-              businessHoursEnd.setHours(this.businessHours[l][1][0], this.businessHours[l][1][1], this.businessHours[l][1][2], this.businessHours[l][1][3]);
-            }
-          }
           businessHoursMonth = date.toISOString().split('T')[0].split('-')[1] - 1;
           businessHoursDate = date.toISOString().split('T')[0].split('-')[2];
           businessHoursStart.setMonth(businessHoursMonth);
           businessHoursStart.setDate(businessHoursDate);
           businessHoursEnd.setMonth(businessHoursMonth);
           businessHoursEnd.setDate(businessHoursDate);
+          if (typeof this.businessHours[0] === 'number' || typeof this.businessHours[0] === 'string') {
+            businessHoursStart.setHours(this.businessHours[0][0], this.businessHours[0][1], this.businessHours[0][2], this.businessHours[0][3]);
+            businessHoursEnd.setHours(this.businessHours[1][0], this.businessHours[1][1], this.businessHours[1][2], this.businessHours[1][3]);
+          }
+          if (typeof this.businessHours[0] === 'object') {
+            if (this.businessHours.length === 7) {
+              currentBusinessHours = this.businessHours[i][l];
+              if (currentBusinessHours !== void 0 && l < this.businessHours[i].length) {
+                businessHoursStart.setHours(currentBusinessHours[0][0], currentBusinessHours[0][1], currentBusinessHours[0][2], currentBusinessHours[0][3]);
+                businessHoursEnd.setHours(currentBusinessHours[1][0], currentBusinessHours[1][1], currentBusinessHours[1][2], currentBusinessHours[1][3]);
+              }
+            } else {
+              currentBusinessHours = this.businessHours[l];
+              if (l < this.businessHours.length) {
+                businessHoursStart.setHours(currentBusinessHours[0][0], currentBusinessHours[0][1], currentBusinessHours[0][2], currentBusinessHours[0][3]);
+                businessHoursEnd.setHours(currentBusinessHours[1][0], currentBusinessHours[1][1], currentBusinessHours[1][2], currentBusinessHours[1][3]);
+              }
+            }
+          }
           if (slotDate.getTime() - businessHoursStart.getTime() >= 0) {
             isBusinessHours = true;
           } else {
@@ -243,9 +259,19 @@ AvailableTimeSlots = class AvailableTimeSlots {
           if (slotDate.getTime() - businessHoursEnd.getTime() >= 0) {
             isBusinessHours = false;
           }
-          if (typeof this.settings.businessHours[0] === 'object') {
-            if (slotDate.getTime() > businessHoursEnd.getTime()) {
-              l++;
+          if (typeof this.businessHours[0] === 'object') {
+            if (slotDate.getTime() >= businessHoursEnd.getTime()) {
+              if (currentBusinessHours !== void 0) {
+                if (this.businessHours.length === 7) {
+                  if (l < this.businessHours[i].length) {
+                    l++;
+                  }
+                } else {
+                  if (l < this.businessHours.length) {
+                    l++;
+                  }
+                }
+              }
             }
           }
         }
