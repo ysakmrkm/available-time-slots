@@ -34,14 +34,18 @@ app.get('/json', (req, res) => {
 	const dataArray = [];
 
 	for(var i = 0 ; i < 7; i++) {
-		const date = req.query.start;
-		const now = new Date(date);
+    const startDate = req.query.start;
+    const now = new Date(startDate);
 
 		now.setDate(now.getDate() + i);
 
+    const year = now.getFullYear();
+    const month = ('0' + (now.getMonth() + 1)).slice(-2);
+    const date = ('0' + now.getDate()).slice(-2);
+
 		dataArray[i] = {
-			'date': now.toISOString().split('T')[0],
-			'data': newArray[i]
+      'date': year+'-'+month+'-'+date,
+      'data': newTimes[i]
 		}
 	}
 
