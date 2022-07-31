@@ -230,6 +230,8 @@ http://opensource.org/licenses/mit-license.php
 	}
 
 	&-time-slot {
+		flex-direction: column;
+
 		&__available {
 			cursor: pointer;
 
@@ -249,5 +251,23 @@ http://opensource.org/licenses/mit-license.php
 		&:not(&__past):not(&__business-hours) {
 			background-color: rgba(#000, .05);
 		}
+	}
+
+	&-icon ,
+	&-count {
+		margin: 0;
+	}
+
+	&-icon {
+		line-height: 0;
+
+		&-image {
+			vertical-align: top;
+		}
+	}
+
+	&-count {
+		margin-top: 0.25em;
+		font-size: x-small;
 	}
 }

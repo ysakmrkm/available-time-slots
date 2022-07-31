@@ -25,13 +25,13 @@ settings = {
 	scrollable: true,
 	calendar: true,
 	iconFilePath: 'sample/image/',
+	displayAvailableCount: true,
 	onClickTimeSlot: (data)->
 		document.getElementById('selected-date').innerHTML = ''
 
 		data.forEach( (data, index)->
 			document.getElementById('selected-date').innerHTML += data+'<br>'
 		)
-	,
 }
 
 AvailableTimeSlots = new AvailableTimeSlots(target, settings)
