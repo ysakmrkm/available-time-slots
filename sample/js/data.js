@@ -39,8 +39,10 @@ app.get('/json', (req, res) => {
     return array;
   }
 
-  const newTimes = shuffle(times);
-  const newCounts = shuffle(counts);
+  // const newTimes = shuffle(times);
+  // const newCounts = shuffle(counts);
+  const newTimes = times;
+  const newCounts = counts;
 
   const dataArray = [];
 

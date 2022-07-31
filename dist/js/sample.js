@@ -20,6 +20,7 @@ settings = {
   scrollable: true,
   calendar: true,
   iconFilePath: 'sample/image/',
+  displayAvailableCount: true,
   onClickTimeSlot: function(data) {
     document.getElementById('selected-date').innerHTML = '';
     return data.forEach(function(data, index) {

@@ -197,6 +197,9 @@ http://opensource.org/licenses/mit-license.php
 .ats-time-line-number {
   font-size: small;
 }
+.ats-time-slot {
+  flex-direction: column;
+}
 .ats-time-slot__available {
   cursor: pointer;
 }
@@ -211,4 +214,17 @@ http://opensource.org/licenses/mit-license.php
 }
 .ats-time-slot:not(.ats-time-slot__past):not(.ats-time-slot__business-hours) {
   background-color: rgba(0, 0, 0, 0.05);
+}
+.ats-icon, .ats-count {
+  margin: 0;
+}
+.ats-icon {
+  line-height: 0;
+}
+.ats-icon-image {
+  vertical-align: top;
+}
+.ats-count {
+  margin-top: 0.25em;
+  font-size: x-small;
 }
