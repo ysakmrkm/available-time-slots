@@ -43,6 +43,7 @@ class AvailableTimeSlots
         width: 20,
         height: 20
       },
+      displayAvailableCount: false,
       onClickTimeSlot: ()->
       onClickNavigator: ()->
     }
@@ -215,6 +216,10 @@ class AvailableTimeSlots
           if availableDate.getTime() is slotDate.getTime()
             isAvalable = true
 
+            if @settings.displayAvailableCount is true
+              if @settings.availabileTimeSlots[i]['count'] isnt undefined
+                count = @settings.availabileTimeSlots[i]['count'][k]
+
           if slotDate.getTime() - now.getTime() < 0
             isAvalable = false
             isPast = true
@@ -274,9 +279,14 @@ class AvailableTimeSlots
           isPast = false
 
         if not isAvalable
-          mark = '<img src="' + @settings.iconFilePath + @settings.iconCross.fileName + '" width="' + @settings.iconCross.width + '" height="' + @settings.iconCross.height + '" />'
+          mark = '<p class="ats-icon"><img class="ats-icon-image" src="' + @settings.iconFilePath + @settings.iconCross.fileName + '" width="' + @settings.iconCross.width + '" height="' + @settings.iconCross.height + '" /></p>'
         else
-          mark = '<img src="' + @settings.iconFilePath + @settings.iconCircle.fileName + '" width="' + @settings.iconCircle.width + '" height="' + @settings.iconCircle.height + '" />'
+          mark = '<p class="ats-icon"><img class="ats-icon-image" src="' + @settings.iconFilePath + @settings.iconCircle.fileName + '" width="' + @settings.iconCircle.width + '" height="' + @settings.iconCircle.height + '" /></p>'
+
+          if @settings.displayAvailableCount is true
+            if @settings.availabileTimeSlots[i]['count'] isnt undefined
+              mark += '<p class="ats-count">(' + count + ')</p>'
+
           className += ' ats-time-slot__available'
 
         if not isBusinessHours

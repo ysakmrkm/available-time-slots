@@ -45,6 +45,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
         width: 20,
         height: 20
       },
+      displayAvailableCount: false,
       onClickTimeSlot: function() {},
       onClickNavigator: function() {}
     };
@@ -192,7 +193,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   getAvailableTimeSlots() {
-    var availableDate, businessHoursDate, businessHoursEnd, businessHoursMonth, businessHoursStart, className, currentBusinessHours, date, i, isAvalable, isBusinessHours, isPast, j, k, l, m, mark, n, now, o, ref, ref1, ref2, slotDate, tmp, tmpTimes;
+    var availableDate, businessHoursDate, businessHoursEnd, businessHoursMonth, businessHoursStart, className, count, currentBusinessHours, date, i, isAvalable, isBusinessHours, isPast, j, k, l, m, mark, n, now, o, ref, ref1, ref2, slotDate, tmp, tmpTimes;
     tmp = '';
     now = new Date();
     for (i = m = 0; m < 7; i = ++m) {
@@ -212,6 +213,11 @@ AvailableTimeSlots = class AvailableTimeSlots {
           slotDate = new Date(this.formatDate(date) + 'T' + ('0' + this.getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + this.getCurrentTime(j).getMinutes()).slice(-2) + ':00');
           if (availableDate.getTime() === slotDate.getTime()) {
             isAvalable = true;
+            if (this.settings.displayAvailableCount === true) {
+              if (this.settings.availabileTimeSlots[i]['count'] !== void 0) {
+                count = this.settings.availabileTimeSlots[i]['count'][k];
+              }
+            }
           }
           if (slotDate.getTime() - now.getTime() < 0) {
             isAvalable = false;
@@ -276,9 +282,14 @@ AvailableTimeSlots = class AvailableTimeSlots {
           isPast = false;
         }
         if (!isAvalable) {
-          mark = '<img src="' + this.settings.iconFilePath + this.settings.iconCross.fileName + '" width="' + this.settings.iconCross.width + '" height="' + this.settings.iconCross.height + '" />';
+          mark = '<p class="ats-icon"><img class="ats-icon-image" src="' + this.settings.iconFilePath + this.settings.iconCross.fileName + '" width="' + this.settings.iconCross.width + '" height="' + this.settings.iconCross.height + '" /></p>';
         } else {
-          mark = '<img src="' + this.settings.iconFilePath + this.settings.iconCircle.fileName + '" width="' + this.settings.iconCircle.width + '" height="' + this.settings.iconCircle.height + '" />';
+          mark = '<p class="ats-icon"><img class="ats-icon-image" src="' + this.settings.iconFilePath + this.settings.iconCircle.fileName + '" width="' + this.settings.iconCircle.width + '" height="' + this.settings.iconCircle.height + '" /></p>';
+          if (this.settings.displayAvailableCount === true) {
+            if (this.settings.availabileTimeSlots[i]['count'] !== void 0) {
+              mark += '<p class="ats-count">(' + count + ')</p>';
+            }
+          }
           className += ' ats-time-slot__available';
         }
         if (!isBusinessHours) {
