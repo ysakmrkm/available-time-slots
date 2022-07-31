@@ -117,15 +117,9 @@ AvailableTimeSlots = class AvailableTimeSlots {
 
   formatDate(data) {
     var date, month, year;
-    date = '' + data.getDate();
-    month = '' + (data.getMonth() + 1);
     year = data.getFullYear();
-    if (date.length < 2) {
-      date = '0' + date;
-    }
-    if (month.length < 2) {
-      month = '0' + month;
-    }
+    month = ('0' + (data.getMonth() + 1)).slice(-2);
+    date = ('0' + data.getDate()).slice(-2);
     return year + '-' + month + '-' + date;
   }
 
@@ -155,10 +149,9 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   getCurrentDate() {
-    var now, nowDate, nowDateTime;
+    var now, nowDate;
     now = new Date();
-    nowDateTime = now.toISOString();
-    nowDate = nowDateTime.split('T')[0];
+    nowDate = this.formatDate(now);
     return nowDate;
   }
 
@@ -216,7 +209,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
         }
         for (k = o = 0, ref2 = this.settings.availabileTimeSlots[i]['data'].length; (0 <= ref2 ? o < ref2 : o > ref2); k = 0 <= ref2 ? ++o : --o) {
           availableDate = new Date(this.settings.availabileTimeSlots[i]['date'] + 'T' + this.settings.availabileTimeSlots[i]['data'][k] + ':00');
-          slotDate = new Date(date.toISOString().split('T')[0] + 'T' + ('0' + this.getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + this.getCurrentTime(j).getMinutes()).slice(-2) + ':00');
+          slotDate = new Date(this.formatDate(date) + 'T' + ('0' + this.getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + this.getCurrentTime(j).getMinutes()).slice(-2) + ':00');
           if (availableDate.getTime() === slotDate.getTime()) {
             isAvalable = true;
           }
@@ -226,8 +219,8 @@ AvailableTimeSlots = class AvailableTimeSlots {
           }
           businessHoursStart = new Date();
           businessHoursEnd = new Date();
-          businessHoursMonth = date.toISOString().split('T')[0].split('-')[1] - 1;
-          businessHoursDate = date.toISOString().split('T')[0].split('-')[2];
+          businessHoursMonth = this.formatDate(date).split('-')[1] - 1;
+          businessHoursDate = this.formatDate(date).split('-')[2];
           businessHoursStart.setMonth(businessHoursMonth);
           businessHoursStart.setDate(businessHoursDate);
           businessHoursEnd.setMonth(businessHoursMonth);
@@ -314,7 +307,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
       if (data.split('?')[1] !== void 0) {
         queryStrings.forEach((val, key) => {
           if (key === 'start') {
-            sourceUrl += key + '=' + this.setDate(0).toISOString().split('T')[0];
+            sourceUrl += key + '=' + this.formatDate(this.setDate(0));
           } else {
             sourceUrl += key + '=' + val;
           }
@@ -322,7 +315,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
         });
         sourceUrl = sourceUrl.slice(0, -1);
       } else {
-        sourceUrl += 'start=' + this.setDate(0).toISOString().split('T')[0];
+        sourceUrl += 'start=' + this.formatDate(this.setDate(0));
       }
       data = sourceUrl;
       request = new XMLHttpRequest();

@@ -107,15 +107,9 @@ class AvailableTimeSlots
         return @localeData.weekdays[index]
 
   formatDate: (data)->
-    date = '' + data.getDate()
-    month = '' + (data.getMonth() + 1)
     year = data.getFullYear()
-
-    if date.length < 2
-      date = '0' + date
-
-    if month.length < 2
-      month = '0' + month
+    month = ('0' + (data.getMonth() + 1)).slice(-2)
+    date = ('0' + data.getDate()).slice(-2)
 
     return year + '-' + month + '-' + date
 
@@ -149,8 +143,7 @@ class AvailableTimeSlots
 
   getCurrentDate: ()->
     now = new Date()
-    nowDateTime = now.toISOString()
-    nowDate = nowDateTime.split('T')[0]
+    nowDate = @formatDate(now)
 
     return nowDate
 
@@ -217,7 +210,7 @@ class AvailableTimeSlots
 
         for k in [0...@settings.availabileTimeSlots[i]['data'].length]
           availableDate = new Date(@settings.availabileTimeSlots[i]['date'] + 'T' + @settings.availabileTimeSlots[i]['data'][k]+':00')
-          slotDate = new Date(date.toISOString().split('T')[0] + 'T' + ('0' + @getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + @getCurrentTime(j).getMinutes()).slice(-2)+':00')
+          slotDate = new Date(@formatDate(date) + 'T' + ('0' + @getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + @getCurrentTime(j).getMinutes()).slice(-2)+':00')
 
           if availableDate.getTime() is slotDate.getTime()
             isAvalable = true
@@ -229,8 +222,8 @@ class AvailableTimeSlots
           businessHoursStart = new Date()
           businessHoursEnd = new Date()
 
-          businessHoursMonth = date.toISOString().split('T')[0].split('-')[1] - 1
-          businessHoursDate = date.toISOString().split('T')[0].split('-')[2]
+          businessHoursMonth = @formatDate(date).split('-')[1] - 1
+          businessHoursDate = @formatDate(date).split('-')[2]
 
           businessHoursStart.setMonth(businessHoursMonth)
           businessHoursStart.setDate(businessHoursDate)
@@ -313,7 +306,7 @@ class AvailableTimeSlots
       if data.split('?')[1] isnt undefined
         queryStrings.forEach((val, key)=>
           if key is 'start'
-            sourceUrl += key + '=' + @setDate(0).toISOString().split('T')[0]
+            sourceUrl += key + '=' + @formatDate(@setDate(0))
           else
             sourceUrl += key + '=' + val
 
@@ -322,7 +315,7 @@ class AvailableTimeSlots
 
         sourceUrl = sourceUrl.slice(0, -1)
       else
-        sourceUrl += 'start=' + @setDate(0).toISOString().split('T')[0]
+        sourceUrl += 'start=' + @formatDate(@setDate(0))
 
       data = sourceUrl
 
