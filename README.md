@@ -42,8 +42,8 @@ nextHtml = '<div id="ats-next-week" class="ats-nav__item ats-nav__item__next">><
 	availabileTimeSlots: [[], [], [], [], [], [], []],
 	isMultiple: false,
 	navigation: true,
-	prevHtml: prevHtml,
-	nextHtml: nextHtml,
+	prevElem: '',
+	nextElem: '',
 	selectedDates: [],
 	startDate: new Date(),
 	slotMinTime: '00:00',
@@ -69,6 +69,7 @@ nextHtml = '<div id="ats-next-week" class="ats-nav__item ats-nav__item__next">><
 		width: 20,
 		height: 20
 	},
+	displayAvailableCount: false,
 	onClickTimeSlot: function(selectedDateArray){},
 	onClickNavigator: function(clickNavigationDirection){}
 }
