@@ -16,8 +16,8 @@ class AvailableTimeSlots
       availabileTimeSlots: [[], [], [], [], [], [], []],
       isMultiple: false
       navigation: true
-      prevHtml: @prevHtml
-      nextHtml: @nextHtml
+      prevElem: ''
+      nextElem: ''
       selectedDates: []
       startDate: new Date()
       slotMinTime: '00:00'
@@ -48,6 +48,24 @@ class AvailableTimeSlots
       onClickNavigator: ()->
     }
     @settings = Object.assign({}, @defaults, options)
+    @initialFlg = true
+    @defaultNav = true
+
+    if @settings.prevElem is ''
+      dom = document.createElement('div')
+      dom.innerHTML = @prevHtml
+      @prevElem = dom.firstChild
+    else if typeof @settings.prevElem is 'string'
+      @prevElem = document.querySelector(@settings.prevElem)
+      @defaultNav = false
+
+    if @settings.nextElem is ''
+      dom = document.createElement('div')
+      dom.innerHTML = @nextHtml
+      @nextElem = dom.firstChild
+    else if typeof @settings.nextElem is 'string'
+      @nextElem = document.querySelector(@settings.nextElem)
+      @defaultNav = false
 
     slotBaseTime = new Date()
     slotBaseTime.setHours(0, 0, 0, 0)
@@ -116,8 +134,12 @@ class AvailableTimeSlots
 
   getNavigation: ()->
     if @settings.navigation
-      previousWeekHtml = '<div id="ats-prev-week-container" class="ats-nav">' + @settings.prevHtml + '</div>'
-      nextWeekHtml = '<div id="ats-prev-week-container" class="ats-nav">' + @settings.nextHtml + '</div>'
+      previousWeekHtml = '<div id="ats-prev-week-container" class="ats-nav">' + @prevElem.outerHTML + '</div>'
+      nextWeekHtml = '<div id="ats-next-week-container" class="ats-nav">' + @nextElem.outerHTML + '</div>'
+
+      if not @defaultNav
+        previousWeekHtml = ''
+        nextWeekHtml = ''
     else
       previousWeekHtml = ''
       nextWeekHtml = ''
@@ -339,6 +361,10 @@ class AvailableTimeSlots
           @settings.availabileTimeSlots = data.data
 
           @render()
+
+          @initialFlg = false
+
+          return
         else
 
       request.onerror = ()->
@@ -350,6 +376,10 @@ class AvailableTimeSlots
 
       @render()
 
+      @initialFlg = false
+
+      return
+
   clearAvailableTimeSlots: ()->
     @settings.availabileTimeSlots = [[], [], [], [], [], [], []]
 
@@ -357,10 +387,17 @@ class AvailableTimeSlots
     currentDateTime = new Date(@getCurrentDate()).getTime()
     startDateTime = new Date(document.getElementById('ats-date-heading-0').getAttribute('data-date')).getTime()
 
-    if startDateTime - currentDateTime < 0
-      document.getElementById('ats-prev-week').classList.add('is-disable')
+    if startDateTime - currentDateTime <= 0
+      document.getElementById(@prevElem.id).classList.add('is-disable')
 
-    document.getElementById('ats-prev-week').addEventListener('click', (e)=>
+    document.getElementById(@prevElem.id).addEventListener('click', (e)=>
+      currentDateTime = new Date(@getCurrentDate()).getTime()
+      startDateTime = new Date(document.getElementById('ats-date-heading-0').getAttribute('data-date')).getTime()
+
+      if startDateTime - currentDateTime <= 0
+        document.getElementById(@prevElem.id).classList.add('is-disable')
+        return false
+
       @settings.startDate = @setDate(-7)
       @clearAvailableTimeSlots()
       @setAvailableTimeSlots(@settings.availabileTimeSlotResource)
@@ -370,12 +407,12 @@ class AvailableTimeSlots
     )
 
   clickNextWeek: ()->
-    document.getElementById('ats-next-week').addEventListener('click', (e)=>
+    document.getElementById(@nextElem.id).addEventListener('click', (e)=>
       @settings.startDate = @setDate(7)
       @clearAvailableTimeSlots()
       @setAvailableTimeSlots(@settings.availabileTimeSlotResource)
 
-      document.getElementById('ats-prev-week').classList.remove('is-disable')
+      document.getElementById(@prevElem.id).classList.remove('is-disable')
 
       if typeof @settings.onClickNavigator is 'function'
         @settings.onClickNavigator(direction = 'next')
@@ -481,8 +518,9 @@ class AvailableTimeSlots
     @updateTimeSlot()
 
     if @settings.navigation
-      @clickPrevWeek()
-      @clickNextWeek()
+      if @initialFlg or @defaultNav
+        @clickPrevWeek()
+        @clickNextWeek()
 
     @clickAvailableTimeSlot()
 
