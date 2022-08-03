@@ -21,6 +21,8 @@ settings = {
   calendar: true,
   iconFilePath: 'sample/image/',
   displayAvailableCount: true,
+  prevElem: '#prev',
+  nextElem: '#next',
   onClickTimeSlot: function(data) {
     document.getElementById('selected-date').innerHTML = '';
     return data.forEach(function(data, index) {

@@ -26,6 +26,8 @@ settings = {
 	calendar: true,
 	iconFilePath: 'sample/image/',
 	displayAvailableCount: true,
+	prevElem: '#prev'
+	nextElem: '#next'
 	onClickTimeSlot: (data)->
 		document.getElementById('selected-date').innerHTML = ''
 
