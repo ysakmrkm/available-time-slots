@@ -10,7 +10,7 @@ var AvailableTimeSlots;
 
 AvailableTimeSlots = class AvailableTimeSlots {
   constructor(target, options) {
-    var slotBaseTime, slotMaxTime, slotMaxTimeArray, slotMinTime, slotMinTimeArray;
+    var dom, slotBaseTime, slotMaxTime, slotMaxTimeArray, slotMinTime, slotMinTimeArray;
     this.prevHtml = '<div id="ats-prev-week" class="ats-nav__item ats-nav__item__prev"><</div>';
     this.nextHtml = '<div id="ats-next-week" class="ats-nav__item ats-nav__item__next">></div>';
     this.defaults = {
@@ -18,8 +18,8 @@ AvailableTimeSlots = class AvailableTimeSlots {
       availabileTimeSlots: [[], [], [], [], [], [], []],
       isMultiple: false,
       navigation: true,
-      prevHtml: this.prevHtml,
-      nextHtml: this.nextHtml,
+      prevElem: '',
+      nextElem: '',
       selectedDates: [],
       startDate: new Date(),
       slotMinTime: '00:00',
@@ -50,6 +50,24 @@ AvailableTimeSlots = class AvailableTimeSlots {
       onClickNavigator: function() {}
     };
     this.settings = Object.assign({}, this.defaults, options);
+    this.initialFlg = true;
+    this.defaultNav = true;
+    if (this.settings.prevElem === '') {
+      dom = document.createElement('div');
+      dom.innerHTML = this.prevHtml;
+      this.prevElem = dom.firstChild;
+    } else if (typeof this.settings.prevElem === 'string') {
+      this.prevElem = document.querySelector(this.settings.prevElem);
+      this.defaultNav = false;
+    }
+    if (this.settings.nextElem === '') {
+      dom = document.createElement('div');
+      dom.innerHTML = this.nextHtml;
+      this.nextElem = dom.firstChild;
+    } else if (typeof this.settings.nextElem === 'string') {
+      this.nextElem = document.querySelector(this.settings.nextElem);
+      this.defaultNav = false;
+    }
     slotBaseTime = new Date();
     slotBaseTime.setHours(0, 0, 0, 0);
     slotMinTime = new Date();
@@ -127,8 +145,12 @@ AvailableTimeSlots = class AvailableTimeSlots {
   getNavigation() {
     var dateHtml, dateHtmlText, navHtml, nextWeekHtml, previousWeekHtml;
     if (this.settings.navigation) {
-      previousWeekHtml = '<div id="ats-prev-week-container" class="ats-nav">' + this.settings.prevHtml + '</div>';
-      nextWeekHtml = '<div id="ats-prev-week-container" class="ats-nav">' + this.settings.nextHtml + '</div>';
+      previousWeekHtml = '<div id="ats-prev-week-container" class="ats-nav">' + this.prevElem.outerHTML + '</div>';
+      nextWeekHtml = '<div id="ats-next-week-container" class="ats-nav">' + this.nextElem.outerHTML + '</div>';
+      if (!this.defaultNav) {
+        previousWeekHtml = '';
+        nextWeekHtml = '';
+      }
     } else {
       previousWeekHtml = '';
       nextWeekHtml = '';
@@ -335,7 +357,8 @@ AvailableTimeSlots = class AvailableTimeSlots {
         if (request.status >= 200 && request.status < 400) {
           data = JSON.parse(request.responseText);
           this.settings.availabileTimeSlots = data.data;
-          return this.render();
+          this.render();
+          this.initialFlg = false;
         } else {
 
         }
@@ -345,7 +368,8 @@ AvailableTimeSlots = class AvailableTimeSlots {
     }
     if (typeof data === 'object') {
       this.settings.availabileTimeSlots = data.data;
-      return this.render();
+      this.render();
+      this.initialFlg = false;
     }
   }
 
@@ -357,11 +381,17 @@ AvailableTimeSlots = class AvailableTimeSlots {
     var currentDateTime, startDateTime;
     currentDateTime = new Date(this.getCurrentDate()).getTime();
     startDateTime = new Date(document.getElementById('ats-date-heading-0').getAttribute('data-date')).getTime();
-    if (startDateTime - currentDateTime < 0) {
-      document.getElementById('ats-prev-week').classList.add('is-disable');
+    if (startDateTime - currentDateTime <= 0) {
+      document.getElementById(this.prevElem.id).classList.add('is-disable');
     }
-    return document.getElementById('ats-prev-week').addEventListener('click', (e) => {
+    return document.getElementById(this.prevElem.id).addEventListener('click', (e) => {
       var direction;
+      currentDateTime = new Date(this.getCurrentDate()).getTime();
+      startDateTime = new Date(document.getElementById('ats-date-heading-0').getAttribute('data-date')).getTime();
+      if (startDateTime - currentDateTime <= 0) {
+        document.getElementById(this.prevElem.id).classList.add('is-disable');
+        return false;
+      }
       this.settings.startDate = this.setDate(-7);
       this.clearAvailableTimeSlots();
       this.setAvailableTimeSlots(this.settings.availabileTimeSlotResource);
@@ -372,12 +402,12 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   clickNextWeek() {
-    return document.getElementById('ats-next-week').addEventListener('click', (e) => {
+    return document.getElementById(this.nextElem.id).addEventListener('click', (e) => {
       var direction;
       this.settings.startDate = this.setDate(7);
       this.clearAvailableTimeSlots();
       this.setAvailableTimeSlots(this.settings.availabileTimeSlotResource);
-      document.getElementById('ats-prev-week').classList.remove('is-disable');
+      document.getElementById(this.prevElem.id).classList.remove('is-disable');
       if (typeof this.settings.onClickNavigator === 'function') {
         return this.settings.onClickNavigator(direction = 'next');
       }
@@ -476,8 +506,10 @@ AvailableTimeSlots = class AvailableTimeSlots {
     }
     this.updateTimeSlot();
     if (this.settings.navigation) {
-      this.clickPrevWeek();
-      this.clickNextWeek();
+      if (this.initialFlg || this.defaultNav) {
+        this.clickPrevWeek();
+        this.clickNextWeek();
+      }
     }
     this.clickAvailableTimeSlot();
     if (this.settings.scrollable) {
