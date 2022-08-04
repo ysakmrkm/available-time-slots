@@ -52,6 +52,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
     this.settings = Object.assign({}, this.defaults, options);
     this.initialFlg = true;
     this.defaultNav = true;
+    this.target = target;
     if (this.settings.prevElem === '') {
       dom = document.createElement('div');
       dom.innerHTML = this.prevHtml;
@@ -68,6 +69,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
       this.nextElem = document.querySelector(this.settings.nextElem);
       this.defaultNav = false;
     }
+    this.initialStartDate = this.settings.startDate;
     slotBaseTime = new Date();
     slotBaseTime.setHours(0, 0, 0, 0);
     slotMinTime = new Date();
@@ -93,11 +95,9 @@ AvailableTimeSlots = class AvailableTimeSlots {
     }
     this.startNum = Math.floor((slotMinTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / this.settings.slotSpan;
     this.endNum = Math.floor((slotMaxTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / this.settings.slotSpan;
-    this.target = target;
     this.localeData = locales.find((u) => {
       return u.code === this.settings.locale;
     });
-    this.initialStartDate = this.settings.startDate;
   }
 
   setDate(days) {

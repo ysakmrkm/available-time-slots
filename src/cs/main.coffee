@@ -51,6 +51,8 @@ class AvailableTimeSlots
     @initialFlg = true
     @defaultNav = true
 
+    @target = target
+
     if @settings.prevElem is ''
       dom = document.createElement('div')
       dom.innerHTML = @prevHtml
@@ -66,6 +68,8 @@ class AvailableTimeSlots
     else if typeof @settings.nextElem is 'string'
       @nextElem = document.querySelector(@settings.nextElem)
       @defaultNav = false
+
+    @initialStartDate = @settings.startDate
 
     slotBaseTime = new Date()
     slotBaseTime.setHours(0, 0, 0, 0)
@@ -95,9 +99,7 @@ class AvailableTimeSlots
 
     @startNum = Math.floor((slotMinTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / @settings.slotSpan
     @endNum = Math.floor((slotMaxTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / @settings.slotSpan
-    @target = target
     @localeData = locales.find((u)=> u.code is @settings.locale)
-    @initialStartDate = @settings.startDate
 
   setDate: (days)->
     date = new Date(@settings.startDate.valueOf())
