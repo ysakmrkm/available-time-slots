@@ -8,7 +8,7 @@ date.setDate(date.getDate() - 1);
 
 settings = {
   businessHour: [8, 24],
-  availabileTimeSlotResource: 'http://localhost:3001/json?start=' + date.toISOString().split('T')[0],
+  availabileTimeSlotResource: 'http://localhost:3001/json?start=' + date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2),
   startDate: date,
   slotMinTime: '08:00',
   slotMaxTime: '24:00',
