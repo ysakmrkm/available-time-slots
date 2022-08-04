@@ -69,6 +69,7 @@ class AvailableTimeSlots
       @nextElem = document.querySelector(@settings.nextElem)
       @defaultNav = false
 
+    @settings.startDate.setHours(0, 0, 0)
     @initialStartDate = @settings.startDate
 
     slotBaseTime = new Date()

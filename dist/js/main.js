@@ -69,6 +69,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
       this.nextElem = document.querySelector(this.settings.nextElem);
       this.defaultNav = false;
     }
+    this.settings.startDate.setHours(0, 0, 0);
     this.initialStartDate = this.settings.startDate;
     slotBaseTime = new Date();
     slotBaseTime.setHours(0, 0, 0, 0);
