@@ -507,7 +507,7 @@ class AvailableTimeSlots
     <div id="ats-dates-container">' + @getDatesHeader() + '</div>
     </div>
     <div id="ats-week-body">
-    <div id="ats-times-container">' + @getTimeLine() + '</div>
+    <div id="ats-times-container" class="ats-time-line-container">' + @getTimeLine() + '</div>
     <div id="ats-available-time-container">' + @getAvailableTimeSlots() + '</div>
     </div>
     </div>
