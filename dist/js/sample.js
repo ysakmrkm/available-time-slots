@@ -18,6 +18,7 @@ settings = {
   businessHours: [[[10, 14], [16, 22]], [[10, 14], [16, 22]], [[10, 14], [16, 22]], [[10, 14], [16, 22]], [[10, 14], [16, 22]], [[10, 24]], [[10, 24]]],
   holidays: 'https://holidays-jp.github.io/api/v1/date.json',
   scrollable: true,
+  resizable: true,
   calendar: true,
   iconFilePath: 'sample/image/',
   displayAvailableCount: true,
