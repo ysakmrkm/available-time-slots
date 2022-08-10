@@ -26,6 +26,7 @@ class AvailableTimeSlots
       businessHours: [0,  23]
       locale: 'en'
       scrollable: false
+      resizable: false,
       calendar: false
       iconFilePath: './image/'
       iconCalendar: {
@@ -494,6 +495,16 @@ class AvailableTimeSlots
     if typeof @settings.scrollable is 'string'
       document.getElementById('ats-week-container').style.height = @settings.scrollable
 
+  resizeContainerHeight: ()->
+    window.addEventListener('resize', ()=>
+      setTimeout(()=>
+        @changeContainerHeight()
+        return
+      , 100)
+      return
+    )
+    return
+
   render: ()->
     ret = '<div id="ats-container">
       <div id="ats-nav-container">' + @getNavigation() + '</div>'
@@ -529,6 +540,10 @@ class AvailableTimeSlots
 
     if @settings.scrollable
       @changeContainerHeight()
+
+    if @settings.resizable
+      if @initialFlg
+        @resizeContainerHeight()
 
     if @settings.calendar
       @clickCalendar()

@@ -28,6 +28,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
       businessHours: [0, 23],
       locale: 'en',
       scrollable: false,
+      resizable: false,
       calendar: false,
       iconFilePath: './image/',
       iconCalendar: {
@@ -492,6 +493,14 @@ AvailableTimeSlots = class AvailableTimeSlots {
     }
   }
 
+  resizeContainerHeight() {
+    window.addEventListener('resize', () => {
+      setTimeout(() => {
+        this.changeContainerHeight();
+      }, 100);
+    });
+  }
+
   render() {
     var ret;
     ret = '<div id="ats-container"> <div id="ats-nav-container">' + this.getNavigation() + '</div>';
@@ -515,6 +524,11 @@ AvailableTimeSlots = class AvailableTimeSlots {
     this.clickAvailableTimeSlot();
     if (this.settings.scrollable) {
       this.changeContainerHeight();
+    }
+    if (this.settings.resizable) {
+      if (this.initialFlg) {
+        this.resizeContainerHeight();
+      }
     }
     if (this.settings.calendar) {
       return this.clickCalendar();
