@@ -49,7 +49,6 @@ class AvailableTimeSlots
       onClickNavigator: ()->
     }
     @settings = Object.assign({}, @defaults, options)
-    @initialFlg = true
     @defaultNav = true
 
     @target = target
@@ -366,8 +365,6 @@ class AvailableTimeSlots
 
           @render()
 
-          @initialFlg = false
-
           return
         else
 
@@ -380,12 +377,25 @@ class AvailableTimeSlots
 
       @render()
 
-      @initialFlg = false
-
       return
 
   clearAvailableTimeSlots: ()->
     @settings.availabileTimeSlots = [[], [], [], [], [], [], []]
+
+  clickPrevWeekHandler: ()=>
+    currentDateTime = new Date(@getCurrentDate()).getTime()
+    startDateTime = new Date(document.getElementById('ats-date-heading-0').getAttribute('data-date')).getTime()
+
+    if startDateTime - currentDateTime <= 0
+      document.getElementById(@prevElem.id).classList.add('is-disable')
+      return false
+
+    @settings.startDate = @setDate(-7)
+    @clearAvailableTimeSlots()
+    @setAvailableTimeSlots(@settings.availabileTimeSlotResource)
+
+    if typeof @settings.onClickNavigator is 'function'
+      @settings.onClickNavigator(direction = 'prev')
 
   clickPrevWeek: ()->
     currentDateTime = new Date(@getCurrentDate()).getTime()
@@ -394,33 +404,20 @@ class AvailableTimeSlots
     if startDateTime - currentDateTime <= 0
       document.getElementById(@prevElem.id).classList.add('is-disable')
 
-    document.getElementById(@prevElem.id).addEventListener('click', (e)=>
-      currentDateTime = new Date(@getCurrentDate()).getTime()
-      startDateTime = new Date(document.getElementById('ats-date-heading-0').getAttribute('data-date')).getTime()
+    document.getElementById(@prevElem.id).addEventListener('click', @clickPrevWeekHandler, false)
 
-      if startDateTime - currentDateTime <= 0
-        document.getElementById(@prevElem.id).classList.add('is-disable')
-        return false
+  clickNextWeekHander: ()=>
+    @settings.startDate = @setDate(7)
+    @clearAvailableTimeSlots()
+    @setAvailableTimeSlots(@settings.availabileTimeSlotResource)
 
-      @settings.startDate = @setDate(-7)
-      @clearAvailableTimeSlots()
-      @setAvailableTimeSlots(@settings.availabileTimeSlotResource)
+    document.getElementById(@prevElem.id).classList.remove('is-disable')
 
-      if typeof @settings.onClickNavigator is 'function'
-        @settings.onClickNavigator(direction = 'prev')
-    )
+    if typeof @settings.onClickNavigator is 'function'
+      @settings.onClickNavigator(direction = 'next')
 
   clickNextWeek: ()->
-    document.getElementById(@nextElem.id).addEventListener('click', (e)=>
-      @settings.startDate = @setDate(7)
-      @clearAvailableTimeSlots()
-      @setAvailableTimeSlots(@settings.availabileTimeSlotResource)
-
-      document.getElementById(@prevElem.id).classList.remove('is-disable')
-
-      if typeof @settings.onClickNavigator is 'function'
-        @settings.onClickNavigator(direction = 'next')
-    )
+    document.getElementById(@nextElem.id).addEventListener('click', @clickNextWeekHander, false)
 
   clickAvailableTimeSlot: ()->
     Array.from(document.getElementsByClassName('ats-time-slot__available')).forEach((target)=>
@@ -475,7 +472,7 @@ class AvailableTimeSlots
       )
 
   clickCalendar: ()->
-    flatpickr('#ats-calendar', {
+    @datePicker = flatpickr('#ats-calendar', {
       wrap: true
       minDate: @formatDate(@initialStartDate)
     })
@@ -495,15 +492,15 @@ class AvailableTimeSlots
     if typeof @settings.scrollable is 'string'
       document.getElementById('ats-week-container').style.height = @settings.scrollable
 
-  resizeContainerHeight: ()->
-    window.addEventListener('resize', ()=>
-      setTimeout(()=>
-        @changeContainerHeight()
-        return
-      , 100)
+  resizeContainerHeightHandler: ()=>
+    setTimeout(()=>
+      @changeContainerHeight()
       return
-    )
+    , 100)
     return
+
+  resizeContainerHeight: ()->
+    window.addEventListener('resize', @resizeContainerHeightHandler, false)
 
   render: ()->
     ret = '<div id="ats-container">
@@ -532,9 +529,11 @@ class AvailableTimeSlots
     @updateTimeSlot()
 
     if @settings.navigation
-      if @initialFlg or @defaultNav
-        @clickPrevWeek()
-        @clickNextWeek()
+      document.getElementById(@prevElem.id).removeEventListener('click', @clickPrevWeekHandler, false)
+      document.getElementById(@nextElem.id).addEventListener('click', @clickNextWeekHander, false)
+
+      @clickPrevWeek()
+      @clickNextWeek()
 
     @clickAvailableTimeSlot()
 
@@ -542,10 +541,14 @@ class AvailableTimeSlots
       @changeContainerHeight()
 
     if @settings.resizable
-      if @initialFlg
-        @resizeContainerHeight()
+      window.removeEventListener('resize', @resizeContainerHeightHandler, false)
+
+      @resizeContainerHeight()
 
     if @settings.calendar
+      if @datePicker isnt undefined
+        @datePicker.destroy()
+
       @clickCalendar()
 
   updateHoliday: ()->

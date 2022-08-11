@@ -11,6 +11,9 @@ var AvailableTimeSlots;
 AvailableTimeSlots = class AvailableTimeSlots {
   constructor(target, options) {
     var dom, slotBaseTime, slotMaxTime, slotMaxTimeArray, slotMinTime, slotMinTimeArray;
+    this.clickPrevWeekHandler = this.clickPrevWeekHandler.bind(this);
+    this.clickNextWeekHander = this.clickNextWeekHander.bind(this);
+    this.resizeContainerHeightHandler = this.resizeContainerHeightHandler.bind(this);
     this.prevHtml = '<div id="ats-prev-week" class="ats-nav__item ats-nav__item__prev"><</div>';
     this.nextHtml = '<div id="ats-next-week" class="ats-nav__item ats-nav__item__next">></div>';
     this.defaults = {
@@ -51,7 +54,6 @@ AvailableTimeSlots = class AvailableTimeSlots {
       onClickNavigator: function() {}
     };
     this.settings = Object.assign({}, this.defaults, options);
-    this.initialFlg = true;
     this.defaultNav = true;
     this.target = target;
     if (this.settings.prevElem === '') {
@@ -360,7 +362,6 @@ AvailableTimeSlots = class AvailableTimeSlots {
           data = JSON.parse(request.responseText);
           this.settings.availabileTimeSlots = data.data;
           this.render();
-          this.initialFlg = false;
         } else {
 
         }
@@ -371,12 +372,27 @@ AvailableTimeSlots = class AvailableTimeSlots {
     if (typeof data === 'object') {
       this.settings.availabileTimeSlots = data.data;
       this.render();
-      this.initialFlg = false;
     }
   }
 
   clearAvailableTimeSlots() {
     return this.settings.availabileTimeSlots = [[], [], [], [], [], [], []];
+  }
+
+  clickPrevWeekHandler() {
+    var currentDateTime, direction, startDateTime;
+    currentDateTime = new Date(this.getCurrentDate()).getTime();
+    startDateTime = new Date(document.getElementById('ats-date-heading-0').getAttribute('data-date')).getTime();
+    if (startDateTime - currentDateTime <= 0) {
+      document.getElementById(this.prevElem.id).classList.add('is-disable');
+      return false;
+    }
+    this.settings.startDate = this.setDate(-7);
+    this.clearAvailableTimeSlots();
+    this.setAvailableTimeSlots(this.settings.availabileTimeSlotResource);
+    if (typeof this.settings.onClickNavigator === 'function') {
+      return this.settings.onClickNavigator(direction = 'prev');
+    }
   }
 
   clickPrevWeek() {
@@ -386,34 +402,22 @@ AvailableTimeSlots = class AvailableTimeSlots {
     if (startDateTime - currentDateTime <= 0) {
       document.getElementById(this.prevElem.id).classList.add('is-disable');
     }
-    return document.getElementById(this.prevElem.id).addEventListener('click', (e) => {
-      var direction;
-      currentDateTime = new Date(this.getCurrentDate()).getTime();
-      startDateTime = new Date(document.getElementById('ats-date-heading-0').getAttribute('data-date')).getTime();
-      if (startDateTime - currentDateTime <= 0) {
-        document.getElementById(this.prevElem.id).classList.add('is-disable');
-        return false;
-      }
-      this.settings.startDate = this.setDate(-7);
-      this.clearAvailableTimeSlots();
-      this.setAvailableTimeSlots(this.settings.availabileTimeSlotResource);
-      if (typeof this.settings.onClickNavigator === 'function') {
-        return this.settings.onClickNavigator(direction = 'prev');
-      }
-    });
+    return document.getElementById(this.prevElem.id).addEventListener('click', this.clickPrevWeekHandler, false);
+  }
+
+  clickNextWeekHander() {
+    var direction;
+    this.settings.startDate = this.setDate(7);
+    this.clearAvailableTimeSlots();
+    this.setAvailableTimeSlots(this.settings.availabileTimeSlotResource);
+    document.getElementById(this.prevElem.id).classList.remove('is-disable');
+    if (typeof this.settings.onClickNavigator === 'function') {
+      return this.settings.onClickNavigator(direction = 'next');
+    }
   }
 
   clickNextWeek() {
-    return document.getElementById(this.nextElem.id).addEventListener('click', (e) => {
-      var direction;
-      this.settings.startDate = this.setDate(7);
-      this.clearAvailableTimeSlots();
-      this.setAvailableTimeSlots(this.settings.availabileTimeSlotResource);
-      document.getElementById(this.prevElem.id).classList.remove('is-disable');
-      if (typeof this.settings.onClickNavigator === 'function') {
-        return this.settings.onClickNavigator(direction = 'next');
-      }
-    });
+    return document.getElementById(this.nextElem.id).addEventListener('click', this.clickNextWeekHander, false);
   }
 
   clickAvailableTimeSlot() {
@@ -474,7 +478,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   clickCalendar() {
-    flatpickr('#ats-calendar', {
+    this.datePicker = flatpickr('#ats-calendar', {
       wrap: true,
       minDate: this.formatDate(this.initialStartDate)
     });
@@ -493,12 +497,14 @@ AvailableTimeSlots = class AvailableTimeSlots {
     }
   }
 
+  resizeContainerHeightHandler() {
+    setTimeout(() => {
+      this.changeContainerHeight();
+    }, 100);
+  }
+
   resizeContainerHeight() {
-    window.addEventListener('resize', () => {
-      setTimeout(() => {
-        this.changeContainerHeight();
-      }, 100);
-    });
+    return window.addEventListener('resize', this.resizeContainerHeightHandler, false);
   }
 
   render() {
@@ -516,21 +522,23 @@ AvailableTimeSlots = class AvailableTimeSlots {
     }
     this.updateTimeSlot();
     if (this.settings.navigation) {
-      if (this.initialFlg || this.defaultNav) {
-        this.clickPrevWeek();
-        this.clickNextWeek();
-      }
+      document.getElementById(this.prevElem.id).removeEventListener('click', this.clickPrevWeekHandler, false);
+      document.getElementById(this.nextElem.id).addEventListener('click', this.clickNextWeekHander, false);
+      this.clickPrevWeek();
+      this.clickNextWeek();
     }
     this.clickAvailableTimeSlot();
     if (this.settings.scrollable) {
       this.changeContainerHeight();
     }
     if (this.settings.resizable) {
-      if (this.initialFlg) {
-        this.resizeContainerHeight();
-      }
+      window.removeEventListener('resize', this.resizeContainerHeightHandler, false);
+      this.resizeContainerHeight();
     }
     if (this.settings.calendar) {
+      if (this.datePicker !== void 0) {
+        this.datePicker.destroy();
+      }
       return this.clickCalendar();
     }
   }
