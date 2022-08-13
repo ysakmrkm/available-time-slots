@@ -46,7 +46,7 @@ app.get('/json', (req, res) => {
 
   const dataArray = [];
 
-  for(var i = 0 ; i < 7; i++) {
+  for(var i = 0 ; i < 365; i++) {
     const startDate = req.query.start;
     const now = new Date(startDate);
 
@@ -55,11 +55,12 @@ app.get('/json', (req, res) => {
     const year = now.getFullYear();
     const month = ('0' + (now.getMonth() + 1)).slice(-2);
     const date = ('0' + now.getDate()).slice(-2);
+    const arrayNum = Math.floor( Math.random() * 7 )
 
     dataArray[i] = {
       'date': year+'-'+month+'-'+date,
-      'data': newTimes[i],
-      'count': newCounts[i]
+      'data': newTimes[arrayNum],
+      'count': newCounts[arrayNum]
     }
   }
 
