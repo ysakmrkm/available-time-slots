@@ -45,6 +45,7 @@ class AvailableTimeSlots
         height: 20
       },
       displayAvailableCount: false,
+      displayDateCount: 7,
       onClickTimeSlot: ()->
       onClickNavigator: ()->
     }
@@ -194,7 +195,7 @@ class AvailableTimeSlots
   getDatesHeader: ()->
     tmp = ''
 
-    for i in [0...7]
+    for i in [0...@settings.displayDateCount]
       date = @setDate(i)
 
       className = 'ats-date-heading'
@@ -219,7 +220,7 @@ class AvailableTimeSlots
     tmp = ''
     now = new Date()
 
-    for i in [0...7]
+    for i in [0...@settings.displayDateCount]
       tmpTimes = ''
       mark = ''
       date = @setDate(i)
@@ -390,7 +391,7 @@ class AvailableTimeSlots
       document.getElementById(@prevElem.id).classList.add('is-disable')
       return false
 
-    @settings.startDate = @setDate(-7)
+    @settings.startDate = @setDate(@settings.displayDateCount * -1)
     @clearAvailableTimeSlots()
     @setAvailableTimeSlots(@settings.availabileTimeSlotResource)
 
@@ -407,7 +408,7 @@ class AvailableTimeSlots
     document.getElementById(@prevElem.id).addEventListener('click', @clickPrevWeekHandler, false)
 
   clickNextWeekHander: ()=>
-    @settings.startDate = @setDate(7)
+    @settings.startDate = @setDate(@settings.displayDateCount)
     @clearAvailableTimeSlots()
     @setAvailableTimeSlots(@settings.availabileTimeSlotResource)
 
