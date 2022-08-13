@@ -89,7 +89,7 @@ class AvailableTimeSlots
 
     if typeof @settings.businessHours[0] is 'object'
       @settings.businessHours.forEach((elem, index)=>
-        if @settings.businessHours.length is 7
+        if @settings.businessHours.length >= 7
           @businessHours[index] = []
 
           elem.forEach((elem2, index2)=>
@@ -102,6 +102,7 @@ class AvailableTimeSlots
     @startNum = Math.floor((slotMinTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / @settings.slotSpan
     @endNum = Math.floor((slotMaxTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / @settings.slotSpan
     @localeData = locales.find((u)=> u.code is @settings.locale)
+    @daysPerWeek = 7
 
   setDate: (days)->
     date = new Date(@settings.startDate.valueOf())
@@ -225,6 +226,8 @@ class AvailableTimeSlots
       mark = ''
       date = @setDate(i)
 
+      m = date.getDay()
+
       for j in [@startNum...@endNum]
         isAvalable = false
         isPast = false
@@ -266,10 +269,10 @@ class AvailableTimeSlots
             businessHoursEnd.setHours(@businessHours[1][0], @businessHours[1][1], @businessHours[1][2], @businessHours[1][3])
 
           if typeof @businessHours[0] is 'object'
-            if @businessHours.length is 7
-              currentBusinessHours = @businessHours[i][l]
+            if @businessHours.length >= @daysPerWeek
+              currentBusinessHours = @businessHours[m][l]
 
-              if currentBusinessHours isnt undefined and l < @businessHours[i].length
+              if currentBusinessHours isnt undefined and l < @businessHours[m].length
                 businessHoursStart.setHours(currentBusinessHours[0][0], currentBusinessHours[0][1], currentBusinessHours[0][2], currentBusinessHours[0][3])
                 businessHoursEnd.setHours(currentBusinessHours[1][0], currentBusinessHours[1][1], currentBusinessHours[1][2], currentBusinessHours[1][3])
             else
@@ -290,8 +293,8 @@ class AvailableTimeSlots
           if typeof @businessHours[0] is 'object'
             if slotDate.getTime() >= businessHoursEnd.getTime()
               if currentBusinessHours isnt undefined
-                if @businessHours.length is 7
-                  if l < @businessHours[i].length
+                if @businessHours.length >= @daysPerWeek
+                  if l < @businessHours[m].length
                     l++
                 else
                   if l < @businessHours.length
@@ -310,7 +313,7 @@ class AvailableTimeSlots
           mark = '<p class="ats-icon"><img class="ats-icon-image" src="' + @settings.iconFilePath + @settings.iconCircle.fileName + '" width="' + @settings.iconCircle.width + '" height="' + @settings.iconCircle.height + '" /></p>'
 
           if @settings.displayAvailableCount is true
-            if @settings.availabileTimeSlots[i]['count'] isnt undefined
+            if @settings.availabileTimeSlots[m]['count'] isnt undefined
               mark += '<p class="ats-count">(' + count + ')</p>'
 
           className += ' ats-time-slot__available'
