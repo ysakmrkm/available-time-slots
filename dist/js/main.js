@@ -50,6 +50,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
         height: 20
       },
       displayAvailableCount: false,
+      displayDateCount: 7,
       onClickTimeSlot: function() {},
       onClickNavigator: function() {}
     };
@@ -200,9 +201,9 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   getDatesHeader() {
-    var className, date, i, m, ret, tmp;
+    var className, date, i, m, ref, ret, tmp;
     tmp = '';
-    for (i = m = 0; m < 7; i = ++m) {
+    for (i = m = 0, ref = this.settings.displayDateCount; (0 <= ref ? m < ref : m > ref); i = 0 <= ref ? ++m : --m) {
       date = this.setDate(i);
       className = 'ats-date-heading';
       if (date.getDay() === 0) {
@@ -219,14 +220,14 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   getAvailableTimeSlots() {
-    var availableDate, businessHoursDate, businessHoursEnd, businessHoursMonth, businessHoursStart, className, count, currentBusinessHours, date, i, isAvalable, isBusinessHours, isPast, j, k, l, m, mark, n, now, o, ref, ref1, ref2, slotDate, tmp, tmpTimes;
+    var availableDate, businessHoursDate, businessHoursEnd, businessHoursMonth, businessHoursStart, className, count, currentBusinessHours, date, i, isAvalable, isBusinessHours, isPast, j, k, l, m, mark, n, now, o, ref, ref1, ref2, ref3, slotDate, tmp, tmpTimes;
     tmp = '';
     now = new Date();
-    for (i = m = 0; m < 7; i = ++m) {
+    for (i = m = 0, ref = this.settings.displayDateCount; (0 <= ref ? m < ref : m > ref); i = 0 <= ref ? ++m : --m) {
       tmpTimes = '';
       mark = '';
       date = this.setDate(i);
-      for (j = n = ref = this.startNum, ref1 = this.endNum; (ref <= ref1 ? n < ref1 : n > ref1); j = ref <= ref1 ? ++n : --n) {
+      for (j = n = ref1 = this.startNum, ref2 = this.endNum; (ref1 <= ref2 ? n < ref2 : n > ref2); j = ref1 <= ref2 ? ++n : --n) {
         isAvalable = false;
         isPast = false;
         isBusinessHours = false;
@@ -234,7 +235,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
         if (typeof this.settings.businessHours[0] === 'object') {
           l = 0;
         }
-        for (k = o = 0, ref2 = this.settings.availabileTimeSlots[i]['data'].length; (0 <= ref2 ? o < ref2 : o > ref2); k = 0 <= ref2 ? ++o : --o) {
+        for (k = o = 0, ref3 = this.settings.availabileTimeSlots[i]['data'].length; (0 <= ref3 ? o < ref3 : o > ref3); k = 0 <= ref3 ? ++o : --o) {
           availableDate = new Date(this.settings.availabileTimeSlots[i]['date'] + 'T' + this.settings.availabileTimeSlots[i]['data'][k] + ':00');
           slotDate = new Date(this.formatDate(date) + 'T' + ('0' + this.getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + this.getCurrentTime(j).getMinutes()).slice(-2) + ':00');
           if (availableDate.getTime() === slotDate.getTime()) {
@@ -387,7 +388,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
       document.getElementById(this.prevElem.id).classList.add('is-disable');
       return false;
     }
-    this.settings.startDate = this.setDate(-7);
+    this.settings.startDate = this.setDate(this.settings.displayDateCount * -1);
     this.clearAvailableTimeSlots();
     this.setAvailableTimeSlots(this.settings.availabileTimeSlotResource);
     if (typeof this.settings.onClickNavigator === 'function') {
@@ -407,7 +408,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
 
   clickNextWeekHander() {
     var direction;
-    this.settings.startDate = this.setDate(7);
+    this.settings.startDate = this.setDate(this.settings.displayDateCount);
     this.clearAvailableTimeSlots();
     this.setAvailableTimeSlots(this.settings.availabileTimeSlotResource);
     document.getElementById(this.prevElem.id).classList.remove('is-disable');

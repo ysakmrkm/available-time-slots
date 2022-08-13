@@ -28,6 +28,11 @@ http://opensource.org/licenses/mit-license.php
   align-items: center;
   justify-content: center;
 }
+#ats-week-header::before, #ats-times-container {
+  box-sizing: border-box;
+  grid-column: 1/2;
+  grid-row: 1/2;
+}
 #ats-week-container {
   box-sizing: border-box;
   display: grid;
@@ -47,53 +52,26 @@ http://opensource.org/licenses/mit-license.php
   overflow-x: hidden;
   overflow-y: scroll;
 }
-#ats-week-header {
+#ats-week-header, #ats-week-body {
+  display: grid;
+  grid-template-columns: 1.2fr repeat(7, 1fr);
   grid-column: 1/9;
+}
+#ats-week-header {
   grid-row: 1/2;
+}
+#ats-week-header::before {
+  content: "";
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 }
 #ats-week-body {
-  display: grid;
-  grid-template-columns: 1.2fr repeat(7, 1fr);
-  grid-column: 1/9;
-  grid-row: 2/2;
+  grid-row: 2/3;
 }
 #ats-dates-container {
-  display: grid;
-  width: 100%;
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   background-color: #fff;
-  box-sizing: border-box;
-  grid-template-columns: 1.2fr repeat(7, 1fr);
-  grid-column: 1/9;
-  grid-row: 1/2;
 }
-#ats-date-heading-0 {
-  grid-column: 2/3;
-}
-#ats-date-heading-1 {
-  grid-column: 3/4;
-}
-#ats-date-heading-2 {
-  grid-column: 4/5;
-}
-#ats-date-heading-3 {
-  grid-column: 5/6;
-}
-#ats-date-heading-4 {
-  grid-column: 6/7;
-}
-#ats-date-heading-5 {
-  grid-column: 7/8;
-}
-#ats-date-heading-6 {
-  grid-column: 8/9;
-}
-#ats-times-container {
-  box-sizing: border-box;
-  grid-column: 1/2;
-  grid-row: 1/2;
-}
-#ats-available-time-container {
+#ats-dates-container, #ats-available-time-container {
   box-sizing: border-box;
   display: flex;
   width: 100%;
@@ -140,10 +118,11 @@ http://opensource.org/licenses/mit-license.php
 }
 .ats-date-heading, .ats-time-slot-container {
   box-sizing: border-box;
+  flex: 1;
+  border-left: 1px solid rgba(0, 0, 0, 0.2);
 }
 .ats-date-heading {
   padding: 0.25rem;
-  border-left: 1px solid rgba(0, 0, 0, 0.2);
   text-align: center;
 }
 .ats-date-heading.ats__saturday {
@@ -175,10 +154,6 @@ http://opensource.org/licenses/mit-license.php
 .ats-time-line-container, .ats-time-slot-container {
   display: flex;
   flex-direction: column;
-}
-.ats-time-slot-container {
-  flex: 1;
-  border-left: 1px solid rgba(0, 0, 0, 0.2);
 }
 .ats-time-slot-container.ats__saturday {
   background-color: rgba(0, 0, 255, 0.1);

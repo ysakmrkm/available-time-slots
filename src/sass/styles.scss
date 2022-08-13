@@ -34,6 +34,13 @@ http://opensource.org/licenses/mit-license.php
 		justify-content: center;
 	}
 
+	&-week-header::before ,
+	&-times-container {
+		box-sizing: border-box;
+		grid-column: 1 / 2;
+		grid-row: 1 / 2;
+	}
+
 	&-week {
 		&-container {
 			box-sizing: border-box;
@@ -59,42 +66,39 @@ http://opensource.org/licenses/mit-license.php
 			}
 		}
 
-		&-header {
-			grid-column: 1 / 9;
-			grid-row: 1 / 2;
-		}
-
+		&-header ,
 		&-body {
 			display: grid;
 			grid-template-columns: 1.2fr repeat(7, 1fr);
 			grid-column: 1 / 9;
-			grid-row: 2 / 2;
+		}
+
+		&-header {
+			grid-row: 1 / 2;
+
+			&::before {
+				content: '';
+				border-bottom: 1px solid rgba(#000, .2);
+			}
+		}
+
+		&-body {
+			grid-row: 2 / 3;
 		}
 	}
 
 	&-dates-container {
-		display: grid;
-		width: 100%;
 		border-bottom: 1px solid rgba(#000, .2);
 		background-color: #fff;
-		box-sizing: border-box;
-		grid-template-columns: 1.2fr repeat(7, 1fr);
-		grid-column: 1 / 9;
-		grid-row: 1 / 2;
 	}
 
 	@for $i from 0 to 7 {
 		&-date-heading-#{$i} {
-			grid-column: #{$i + 2} / #{$i + 3};
+			// grid-column: #{$i + 2} / #{$i + 3};
 		}
 	}
 
-	&-times-container {
-		box-sizing: border-box;
-		grid-column: 1 / 2;
-		grid-row: 1 / 2;
-	}
-
+	&-dates-container ,
 	&-available-time-container {
 		box-sizing: border-box;
 		display: flex;
@@ -151,12 +155,13 @@ http://opensource.org/licenses/mit-license.php
 	&-date-heading ,
 	&-time-slot-container {
 		box-sizing: border-box;
+		flex: 1;
+		border-left: 1px solid rgba(#000, .2);
 	}
 
 	&-date {
 		&-heading {
 			padding: .25rem;
-			border-left: 1px solid rgba(#000, .2);
 			text-align: center;
 
 			&.ats__saturday {
@@ -201,9 +206,6 @@ http://opensource.org/licenses/mit-license.php
 	}
 
 	&-time-slot-container {
-		flex: 1;
-		border-left: 1px solid rgba(#000, .2);
-
 		&.ats__saturday {
 			background-color: rgba(#00f, .1);
 		}
