@@ -319,7 +319,9 @@ AvailableTimeSlots = class AvailableTimeSlots {
               mark += '<p class="ats-count">(' + count + ')</p>';
             }
           }
-          className += ' ats-time-slot__available';
+          if (isBusinessHours) {
+            className += ' ats-time-slot__available';
+          }
         }
         if (!isBusinessHours) {
           mark = '';
