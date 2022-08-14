@@ -264,11 +264,11 @@ class AvailableTimeSlots
           businessHoursEnd.setMonth(businessHoursMonth)
           businessHoursEnd.setDate(businessHoursDate)
 
-          if typeof @businessHours[0] is 'number' or typeof @businessHours[0] is 'string'
+          if typeof @settings.businessHours[0] is 'number' or typeof @settings.businessHours[0] is 'string'
             businessHoursStart.setHours(@businessHours[0][0], @businessHours[0][1], @businessHours[0][2], @businessHours[0][3])
             businessHoursEnd.setHours(@businessHours[1][0], @businessHours[1][1], @businessHours[1][2], @businessHours[1][3])
 
-          if typeof @businessHours[0] is 'object'
+          if typeof @settings.businessHours[0] is 'object'
             if @businessHours.length >= @daysPerWeek
               currentBusinessHours = @businessHours[m][l]
 
@@ -290,7 +290,7 @@ class AvailableTimeSlots
           if slotDate.getTime() - businessHoursEnd.getTime() >= 0
             isBusinessHours = false
 
-          if typeof @businessHours[0] is 'object'
+          if typeof @settings.businessHours[0] is 'object'
             if slotDate.getTime() >= businessHoursEnd.getTime()
               if currentBusinessHours isnt undefined
                 if @businessHours.length >= @daysPerWeek
