@@ -260,11 +260,11 @@ AvailableTimeSlots = class AvailableTimeSlots {
           businessHoursStart.setDate(businessHoursDate);
           businessHoursEnd.setMonth(businessHoursMonth);
           businessHoursEnd.setDate(businessHoursDate);
-          if (typeof this.businessHours[0] === 'number' || typeof this.businessHours[0] === 'string') {
+          if (typeof this.settings.businessHours[0] === 'number' || typeof this.settings.businessHours[0] === 'string') {
             businessHoursStart.setHours(this.businessHours[0][0], this.businessHours[0][1], this.businessHours[0][2], this.businessHours[0][3]);
             businessHoursEnd.setHours(this.businessHours[1][0], this.businessHours[1][1], this.businessHours[1][2], this.businessHours[1][3]);
           }
-          if (typeof this.businessHours[0] === 'object') {
+          if (typeof this.settings.businessHours[0] === 'object') {
             if (this.businessHours.length >= this.daysPerWeek) {
               currentBusinessHours = this.businessHours[m][l];
               if (currentBusinessHours !== void 0 && l < this.businessHours[m].length) {
@@ -287,7 +287,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
           if (slotDate.getTime() - businessHoursEnd.getTime() >= 0) {
             isBusinessHours = false;
           }
-          if (typeof this.businessHours[0] === 'object') {
+          if (typeof this.settings.businessHours[0] === 'object') {
             if (slotDate.getTime() >= businessHoursEnd.getTime()) {
               if (currentBusinessHours !== void 0) {
                 if (this.businessHours.length >= this.daysPerWeek) {
