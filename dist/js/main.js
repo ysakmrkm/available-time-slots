@@ -88,7 +88,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
     }
     if (typeof this.settings.businessHours[0] === 'object') {
       this.settings.businessHours.forEach((elem, index) => {
-        if (this.settings.businessHours.length === 7) {
+        if (this.settings.businessHours.length >= 7) {
           this.businessHours[index] = [];
           return elem.forEach((elem2, index2) => {
             return this.businessHours[index][index2] = [[elem2[0], 0, 0, 0], [elem2[1], 0, 0, 0]];
@@ -103,6 +103,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
     this.localeData = locales.find((u) => {
       return u.code === this.settings.locale;
     });
+    this.daysPerWeek = 7;
   }
 
   setDate(days) {
@@ -191,9 +192,9 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   getTimeLine() {
-    var i, m, ref, ref1, ret, tmp;
+    var i, n, ref, ref1, ret, tmp;
     tmp = '';
-    for (i = m = ref = this.startNum, ref1 = this.endNum; (ref <= ref1 ? m < ref1 : m > ref1); i = ref <= ref1 ? ++m : --m) {
+    for (i = n = ref = this.startNum, ref1 = this.endNum; (ref <= ref1 ? n < ref1 : n > ref1); i = ref <= ref1 ? ++n : --n) {
       tmp += '<div id="ats-time-line-' + i + '" class="ats-time-line"> <div class="ats-time-line-number">' + ('0' + this.getCurrentTime(i).getHours()).slice(-2) + ':' + ('0' + this.getCurrentTime(i).getMinutes()).slice(-2) + '</div> </div>';
     }
     ret = tmp;
@@ -201,9 +202,9 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   getDatesHeader() {
-    var className, date, i, m, ref, ret, tmp;
+    var className, date, i, n, ref, ret, tmp;
     tmp = '';
-    for (i = m = 0, ref = this.settings.displayDateCount; (0 <= ref ? m < ref : m > ref); i = 0 <= ref ? ++m : --m) {
+    for (i = n = 0, ref = this.settings.displayDateCount; (0 <= ref ? n < ref : n > ref); i = 0 <= ref ? ++n : --n) {
       date = this.setDate(i);
       className = 'ats-date-heading';
       if (date.getDay() === 0) {
@@ -220,14 +221,15 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   getAvailableTimeSlots() {
-    var availableDate, businessHoursDate, businessHoursEnd, businessHoursMonth, businessHoursStart, className, count, currentBusinessHours, date, i, isAvalable, isBusinessHours, isPast, j, k, l, m, mark, n, now, o, ref, ref1, ref2, ref3, slotDate, tmp, tmpTimes;
+    var availableDate, businessHoursDate, businessHoursEnd, businessHoursMonth, businessHoursStart, className, count, currentBusinessHours, date, i, isAvalable, isBusinessHours, isPast, j, k, l, m, mark, n, now, o, p, ref, ref1, ref2, ref3, slotDate, tmp, tmpTimes;
     tmp = '';
     now = new Date();
-    for (i = m = 0, ref = this.settings.displayDateCount; (0 <= ref ? m < ref : m > ref); i = 0 <= ref ? ++m : --m) {
+    for (i = n = 0, ref = this.settings.displayDateCount; (0 <= ref ? n < ref : n > ref); i = 0 <= ref ? ++n : --n) {
       tmpTimes = '';
       mark = '';
       date = this.setDate(i);
-      for (j = n = ref1 = this.startNum, ref2 = this.endNum; (ref1 <= ref2 ? n < ref2 : n > ref2); j = ref1 <= ref2 ? ++n : --n) {
+      m = date.getDay();
+      for (j = o = ref1 = this.startNum, ref2 = this.endNum; (ref1 <= ref2 ? o < ref2 : o > ref2); j = ref1 <= ref2 ? ++o : --o) {
         isAvalable = false;
         isPast = false;
         isBusinessHours = false;
@@ -235,7 +237,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
         if (typeof this.settings.businessHours[0] === 'object') {
           l = 0;
         }
-        for (k = o = 0, ref3 = this.settings.availabileTimeSlots[i]['data'].length; (0 <= ref3 ? o < ref3 : o > ref3); k = 0 <= ref3 ? ++o : --o) {
+        for (k = p = 0, ref3 = this.settings.availabileTimeSlots[i]['data'].length; (0 <= ref3 ? p < ref3 : p > ref3); k = 0 <= ref3 ? ++p : --p) {
           availableDate = new Date(this.settings.availabileTimeSlots[i]['date'] + 'T' + this.settings.availabileTimeSlots[i]['data'][k] + ':00');
           slotDate = new Date(this.formatDate(date) + 'T' + ('0' + this.getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + this.getCurrentTime(j).getMinutes()).slice(-2) + ':00');
           if (availableDate.getTime() === slotDate.getTime()) {
@@ -263,9 +265,9 @@ AvailableTimeSlots = class AvailableTimeSlots {
             businessHoursEnd.setHours(this.businessHours[1][0], this.businessHours[1][1], this.businessHours[1][2], this.businessHours[1][3]);
           }
           if (typeof this.businessHours[0] === 'object') {
-            if (this.businessHours.length === 7) {
-              currentBusinessHours = this.businessHours[i][l];
-              if (currentBusinessHours !== void 0 && l < this.businessHours[i].length) {
+            if (this.businessHours.length >= this.daysPerWeek) {
+              currentBusinessHours = this.businessHours[m][l];
+              if (currentBusinessHours !== void 0 && l < this.businessHours[m].length) {
                 businessHoursStart.setHours(currentBusinessHours[0][0], currentBusinessHours[0][1], currentBusinessHours[0][2], currentBusinessHours[0][3]);
                 businessHoursEnd.setHours(currentBusinessHours[1][0], currentBusinessHours[1][1], currentBusinessHours[1][2], currentBusinessHours[1][3]);
               }
@@ -288,8 +290,8 @@ AvailableTimeSlots = class AvailableTimeSlots {
           if (typeof this.businessHours[0] === 'object') {
             if (slotDate.getTime() >= businessHoursEnd.getTime()) {
               if (currentBusinessHours !== void 0) {
-                if (this.businessHours.length === 7) {
-                  if (l < this.businessHours[i].length) {
+                if (this.businessHours.length >= this.daysPerWeek) {
+                  if (l < this.businessHours[m].length) {
                     l++;
                   }
                 } else {
@@ -313,7 +315,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
         } else {
           mark = '<p class="ats-icon"><img class="ats-icon-image" src="' + this.settings.iconFilePath + this.settings.iconCircle.fileName + '" width="' + this.settings.iconCircle.width + '" height="' + this.settings.iconCircle.height + '" /></p>';
           if (this.settings.displayAvailableCount === true) {
-            if (this.settings.availabileTimeSlots[i]['count'] !== void 0) {
+            if (this.settings.availabileTimeSlots[m]['count'] !== void 0) {
               mark += '<p class="ats-count">(' + count + ')</p>';
             }
           }
