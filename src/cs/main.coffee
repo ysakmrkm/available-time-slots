@@ -28,6 +28,7 @@ class AvailableTimeSlots
       scrollable: false
       resizable: false,
       calendar: false
+      view: 'availableTimeSlots'
       iconFilePath: './image/'
       iconCalendar: {
         fileName: 'calendar.svg',
@@ -199,16 +200,18 @@ class AvailableTimeSlots
     for i in [0...@settings.displayDateCount]
       date = @setDate(i)
 
-      className = 'ats-date-heading'
+      classList = []
+
+      classList.push('ats-date-heading')
 
       if date.getDay() is 0
-        className += ' ats__sunday'
+        classList.push('ats__sunday')
       else if date.getDay() is 6
-        className += ' ats__saturday'
+        classList.push('ats__saturday')
       else
-        className += ' ats__weekday'
+        classList.push('ats__weekday')
 
-      tmp += '<div id="ats-date-heading-' + i + '" class="' + className + '" data-date="' + @formatDate(date) + '">
+      tmp += '<div id="ats-date-heading-' + i + '" class="' + classList.join(' ') + '" data-date="' + @formatDate(date) + '">
         <div class="ats-date-number">' + date.getDate() + '</div>
         <div class="ats-date-text">' + @getWeekdayName(date.getDay()) + '</div>
       </div>'
@@ -387,6 +390,47 @@ class AvailableTimeSlots
   clearAvailableTimeSlots: ()->
     @settings.availabileTimeSlots = [[], [], [], [], [], [], []]
 
+  getAvailableTimes: ()->
+    tmp = ''
+    now = new Date()
+
+    for i in [0...@settings.displayDateCount]
+      tmpTimes = ''
+      mark = ''
+      date = @setDate(i)
+      isPast = false
+
+      m = date.getDay()
+
+      containerClassList = ['ats-time-slot-container']
+
+      if date.getDay() is 0
+        containerClassList.push('ats__sunday')
+      else if date.getDay() is 6
+        containerClassList.push('ats__saturday')
+      else
+        containerClassList.push('ats__weekday')
+
+      tmp += '<div class="' + containerClassList.join(' ') + '">'
+
+      @settings.availabileTimeSlots[i]['data'].forEach((elem, index)=>
+        slotClassList = ['ats-time-slot']
+
+        if new Date(@formatDate(date) + 'T' + elem).getTime() - now.getTime() < 0
+          slotClassList.push('ats-time-slot__past')
+          isPast = true
+        else
+          slotClassList.push('ats-time-slot__available')
+          isPast = false
+
+        if isPast isnt true
+          tmp += '<div class="' + slotClassList.join(' ') + '" data-time="' + elem + '" data-date="' + @formatDate(date) + '">' + elem + '</div>'
+      )
+
+      tmp += '</div>'
+
+    return tmp
+
   clickPrevWeekHandler: ()=>
     currentDateTime = new Date(@getCurrentDate()).getTime()
     startDateTime = new Date(document.getElementById('ats-date-heading-0').getAttribute('data-date')).getTime()
@@ -512,17 +556,34 @@ class AvailableTimeSlots
       <div id="ats-nav-container">' + @getNavigation() + '</div>'
     ret += '<div id="ats-week-container"'
 
+    classList = []
+
+    if @settings.view is 'availableTimeSlots'
+      classList.push('ats-view__available-time-slots')
+
+    if @settings.view is 'onlyAvailableTimes'
+      classList.push('ats-view__only-available-times')
+
     if @settings.scrollable
-      ret += ' class="ats__scrollable"'
+      classList.push('ats__scrollable')
+
+    ret += ' class="' + classList.join(' ') + '"'
 
     ret += '>'
     ret += '<div id="ats-week-header">
-    <div id="ats-dates-container">' + @getDatesHeader() + '</div>
+    <div id="ats-dates-container">'
+    ret += @getDatesHeader() + '</div>
     </div>
-    <div id="ats-week-body">
-    <div id="ats-times-container" class="ats-time-line-container">' + @getTimeLine() + '</div>
-    <div id="ats-available-time-container">' + @getAvailableTimeSlots() + '</div>
-    </div>
+    <div id="ats-week-body">'
+
+    if @settings.view is 'availableTimeSlots'
+      ret += '<div id="ats-times-container" class="ats-time-line-container">' + @getTimeLine() + '</div>
+      <div id="ats-available-time-container">' + @getAvailableTimeSlots() + '</div>'
+
+    if @settings.view is 'onlyAvailableTimes'
+      ret += '<div id="ats-available-time-container">' + @getAvailableTimes() + '</div>'
+
+    ret += '</div>
     </div>
     </div>'
 
