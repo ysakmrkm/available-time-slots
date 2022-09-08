@@ -79,6 +79,10 @@ nextHtml = '<div id="ats-next-week" class="ats-nav__item ats-nav__item__next">><
 
 If `calendar` option is `true`, nedd to use [flatpickr](https://github.com/flatpickr/flatpickr)
 
+## More information
+
+Official Site is [here](https://ysakmrkm.github.io/available-time-slots/)
+
 ## Author
 
 [twitter](https://twitter.com/ysakmrkm)
