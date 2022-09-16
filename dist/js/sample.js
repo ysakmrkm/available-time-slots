@@ -20,6 +20,7 @@ settings = {
   scrollable: true,
   resizable: true,
   calendar: true,
+  view: 'onlyAvailableTimes',
   iconFilePath: 'sample/image/',
   displayAvailableCount: true,
   prevElem: '#prev',

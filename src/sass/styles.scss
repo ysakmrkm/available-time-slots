@@ -75,21 +75,14 @@ http://opensource.org/licenses/mit-license.php
 
 		&-header {
 			grid-row: 1 / 2;
-
-			&::before {
-				content: '';
-				border-bottom: 1px solid rgba(#000, .2);
-			}
+			border-bottom: 1px solid rgba(#000, .2);
+			background-color: #fff;
 		}
 
 		&-body {
+			margin-bottom: -1px;
 			grid-row: 2 / 3;
 		}
-	}
-
-	&-dates-container {
-		border-bottom: 1px solid rgba(#000, .2);
-		background-color: #fff;
 	}
 
 	@for $i from 0 to 7 {
@@ -103,7 +96,6 @@ http://opensource.org/licenses/mit-license.php
 		box-sizing: border-box;
 		display: flex;
 		width: 100%;
-		grid-column: 2 / 9;
 		grid-row: 1 / 2;
 	}
 }
@@ -156,7 +148,11 @@ http://opensource.org/licenses/mit-license.php
 	&-time-slot-container {
 		box-sizing: border-box;
 		flex: 1;
-		border-left: 1px solid rgba(#000, .2);
+		border-right: 1px solid rgba(#000, .2);
+
+		&:last-child {
+			border-right: 0;
+		}
 	}
 
 	&-date {
@@ -223,15 +219,10 @@ http://opensource.org/licenses/mit-license.php
 		align-items: center;
 		justify-content: center;
 		padding: .25rem 0;
-		min-height: calc(5.3333333334vw + .5rem);
-		height: 100%;
+		min-height: calc(5.3333333334vw + .5rem + 1px);
+		border-bottom: 1px solid rgba(#000, .2);
 		text-align: center;
 		line-height: 1;
-
-		& + & {
-			min-height: calc(5.3333333334vw + .5rem + 1px);
-			border-top: 1px solid rgba(#000, .2);
-		}
 	}
 
 	&-time-line {
@@ -252,14 +243,6 @@ http://opensource.org/licenses/mit-license.php
 				background-color: rgba(#0f0, .2);
 			}
 		}
-
-		&__past {
-			background-color: rgba(#000, .1);
-		}
-
-		&:not(&__past):not(&__business-hours) {
-			background-color: rgba(#000, .05);
-		}
 	}
 
 	&-icon ,
@@ -278,5 +261,54 @@ http://opensource.org/licenses/mit-license.php
 	&-count {
 		margin-top: 0.25em;
 		font-size: x-small;
+	}
+
+	&-view {
+		&__available-time-slots {
+			#ats-week-header {
+				&::before {
+					content: '';
+				}
+			}
+
+			.ats-date-heading ,
+			.ats-time-slot-container {
+				&:first-child {
+					border-left: 1px solid rgba(#000, .2);
+				}
+			}
+
+			#ats-dates-container ,
+			#ats-available-time-container {
+				grid-column: 2 / 9;
+			}
+
+			.ats-time-line ,
+			.ats-time-slot {
+				height: 100%;
+			}
+
+			.ats-time-slot {
+				&__past {
+					background-color: rgba(#000, .1);
+				}
+
+				&:not(&__past):not(&__business-hours) {
+					background-color: rgba(#000, .05);
+				}
+			}
+		}
+
+		&__only-available-times {
+			#ats-dates-container ,
+			#ats-available-time-container {
+				grid-column: 1 / 9;
+			}
+
+			.ats-date-heading ,
+			.ats-time-slot-container {
+				min-width: 0;
+			}
+		}
 	}
 }

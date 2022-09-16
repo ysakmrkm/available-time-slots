@@ -59,23 +59,17 @@ http://opensource.org/licenses/mit-license.php
 }
 #ats-week-header {
   grid-row: 1/2;
-}
-#ats-week-header::before {
-  content: "";
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-}
-#ats-week-body {
-  grid-row: 2/3;
-}
-#ats-dates-container {
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   background-color: #fff;
+}
+#ats-week-body {
+  margin-bottom: -1px;
+  grid-row: 2/3;
 }
 #ats-dates-container, #ats-available-time-container {
   box-sizing: border-box;
   display: flex;
   width: 100%;
-  grid-column: 2/9;
   grid-row: 1/2;
 }
 
@@ -119,7 +113,10 @@ http://opensource.org/licenses/mit-license.php
 .ats-date-heading, .ats-time-slot-container {
   box-sizing: border-box;
   flex: 1;
-  border-left: 1px solid rgba(0, 0, 0, 0.2);
+  border-right: 1px solid rgba(0, 0, 0, 0.2);
+}
+.ats-date-heading:last-child, .ats-time-slot-container:last-child {
+  border-right: 0;
 }
 .ats-date-heading {
   padding: 0.25rem;
@@ -167,14 +164,10 @@ http://opensource.org/licenses/mit-license.php
   align-items: center;
   justify-content: center;
   padding: 0.25rem 0;
-  min-height: calc(5.3333333334vw + 0.5rem);
-  height: 100%;
+  min-height: calc(5.3333333334vw + 0.5rem + 1px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   text-align: center;
   line-height: 1;
-}
-.ats-time-line + .ats-time-line, .ats-time-line + .ats-time-slot, .ats-time-slot + .ats-time-line, .ats-time-slot + .ats-time-slot {
-  min-height: calc(5.3333333334vw + 0.5rem + 1px);
-  border-top: 1px solid rgba(0, 0, 0, 0.2);
 }
 .ats-time-line-number {
   font-size: small;
@@ -188,12 +181,6 @@ http://opensource.org/licenses/mit-license.php
 .ats-time-slot__available.is-selected {
   background-color: rgba(0, 255, 0, 0.2);
 }
-.ats-time-slot__past {
-  background-color: rgba(0, 0, 0, 0.1);
-}
-.ats-time-slot:not(.ats-time-slot__past):not(.ats-time-slot__business-hours) {
-  background-color: rgba(0, 0, 0, 0.05);
-}
 .ats-icon, .ats-count {
   margin: 0;
 }
@@ -206,4 +193,33 @@ http://opensource.org/licenses/mit-license.php
 .ats-count {
   margin-top: 0.25em;
   font-size: x-small;
+}
+.ats-view__available-time-slots #ats-week-header::before {
+  content: "";
+}
+.ats-view__available-time-slots .ats-date-heading:first-child,
+.ats-view__available-time-slots .ats-time-slot-container:first-child {
+  border-left: 1px solid rgba(0, 0, 0, 0.2);
+}
+.ats-view__available-time-slots #ats-dates-container,
+.ats-view__available-time-slots #ats-available-time-container {
+  grid-column: 2/9;
+}
+.ats-view__available-time-slots .ats-time-line,
+.ats-view__available-time-slots .ats-time-slot {
+  height: 100%;
+}
+.ats-view__available-time-slots .ats-time-slot__past {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.ats-view__available-time-slots .ats-time-slot:not(.ats-view__available-time-slots .ats-time-slot__past):not(.ats-view__available-time-slots .ats-time-slot__business-hours) {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.ats-view__only-available-times #ats-dates-container,
+.ats-view__only-available-times #ats-available-time-container {
+  grid-column: 1/9;
+}
+.ats-view__only-available-times .ats-date-heading,
+.ats-view__only-available-times .ats-time-slot-container {
+  min-width: 0;
 }

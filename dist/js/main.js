@@ -33,6 +33,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
       scrollable: false,
       resizable: false,
       calendar: false,
+      view: 'availableTimeSlots',
       iconFilePath: './image/',
       iconCalendar: {
         fileName: 'calendar.svg',
@@ -202,19 +203,20 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   getDatesHeader() {
-    var className, date, i, n, ref, ret, tmp;
+    var classList, date, i, n, ref, ret, tmp;
     tmp = '';
     for (i = n = 0, ref = this.settings.displayDateCount; (0 <= ref ? n < ref : n > ref); i = 0 <= ref ? ++n : --n) {
       date = this.setDate(i);
-      className = 'ats-date-heading';
+      classList = [];
+      classList.push('ats-date-heading');
       if (date.getDay() === 0) {
-        className += ' ats__sunday';
+        classList.push('ats__sunday');
       } else if (date.getDay() === 6) {
-        className += ' ats__saturday';
+        classList.push('ats__saturday');
       } else {
-        className += ' ats__weekday';
+        classList.push('ats__weekday');
       }
-      tmp += '<div id="ats-date-heading-' + i + '" class="' + className + '" data-date="' + this.formatDate(date) + '"> <div class="ats-date-number">' + date.getDate() + '</div> <div class="ats-date-text">' + this.getWeekdayName(date.getDay()) + '</div> </div>';
+      tmp += '<div id="ats-date-heading-' + i + '" class="' + classList.join(' ') + '" data-date="' + this.formatDate(date) + '"> <div class="ats-date-number">' + date.getDate() + '</div> <div class="ats-date-text">' + this.getWeekdayName(date.getDay()) + '</div> </div>';
     }
     ret = tmp;
     return ret;
@@ -384,6 +386,52 @@ AvailableTimeSlots = class AvailableTimeSlots {
     return this.settings.availabileTimeSlots = [[], [], [], [], [], [], []];
   }
 
+  getAvailableTimes() {
+    var containerClassList, date, i, isPast, m, mark, n, now, ref, tmp, tmpTimes;
+    tmp = '';
+    now = new Date();
+    for (i = n = 0, ref = this.settings.displayDateCount; (0 <= ref ? n < ref : n > ref); i = 0 <= ref ? ++n : --n) {
+      tmpTimes = '';
+      mark = '';
+      date = this.setDate(i);
+      isPast = false;
+      m = date.getDay();
+      containerClassList = ['ats-time-slot-container'];
+      if (date.getDay() === 0) {
+        containerClassList.push('ats__sunday');
+      } else if (date.getDay() === 6) {
+        containerClassList.push('ats__saturday');
+      } else {
+        containerClassList.push('ats__weekday');
+      }
+      tmp += '<div class="' + containerClassList.join(' ') + '">';
+      this.settings.availabileTimeSlots[i]['data'].forEach((elem, index) => {
+        var count, slotClassList;
+        slotClassList = ['ats-time-slot'];
+        if (new Date(this.formatDate(date) + 'T' + elem).getTime() - now.getTime() < 0) {
+          slotClassList.push('ats-time-slot__past');
+          isPast = true;
+        } else {
+          slotClassList.push('ats-time-slot__available');
+          isPast = false;
+        }
+        if (isPast !== true) {
+          tmp += '<div class="' + slotClassList.join(' ') + '" data-time="' + elem + '" data-date="' + this.formatDate(date) + '">';
+          tmp += elem;
+          if (this.settings.displayAvailableCount === true) {
+            if (this.settings.availabileTimeSlots[i]['count'] !== void 0) {
+              count = this.settings.availabileTimeSlots[i]['count'][index];
+              tmp += '<p class="ats-count">(' + count + ')</p>';
+            }
+          }
+          return tmp += '</div>';
+        }
+      });
+      tmp += '</div>';
+    }
+    return tmp;
+  }
+
   clickPrevWeekHandler() {
     var currentDateTime, direction, startDateTime;
     currentDateTime = new Date(this.getCurrentDate()).getTime();
@@ -513,14 +561,30 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   render() {
-    var ret;
+    var classList, ret;
     ret = '<div id="ats-container"> <div id="ats-nav-container">' + this.getNavigation() + '</div>';
     ret += '<div id="ats-week-container"';
-    if (this.settings.scrollable) {
-      ret += ' class="ats__scrollable"';
+    classList = [];
+    if (this.settings.view === 'availableTimeSlots') {
+      classList.push('ats-view__available-time-slots');
     }
+    if (this.settings.view === 'onlyAvailableTimes') {
+      classList.push('ats-view__only-available-times');
+    }
+    if (this.settings.scrollable) {
+      classList.push('ats__scrollable');
+    }
+    ret += ' class="' + classList.join(' ') + '"';
     ret += '>';
-    ret += '<div id="ats-week-header"> <div id="ats-dates-container">' + this.getDatesHeader() + '</div> </div> <div id="ats-week-body"> <div id="ats-times-container" class="ats-time-line-container">' + this.getTimeLine() + '</div> <div id="ats-available-time-container">' + this.getAvailableTimeSlots() + '</div> </div> </div> </div>';
+    ret += '<div id="ats-week-header"> <div id="ats-dates-container">';
+    ret += this.getDatesHeader() + '</div> </div> <div id="ats-week-body">';
+    if (this.settings.view === 'availableTimeSlots') {
+      ret += '<div id="ats-times-container" class="ats-time-line-container">' + this.getTimeLine() + '</div> <div id="ats-available-time-container">' + this.getAvailableTimeSlots() + '</div>';
+    }
+    if (this.settings.view === 'onlyAvailableTimes') {
+      ret += '<div id="ats-available-time-container">' + this.getAvailableTimes() + '</div>';
+    }
+    ret += '</div> </div> </div>';
     this.target.innerHTML = ret;
     if (this.settings.holidays !== '') {
       this.updateHoliday();
