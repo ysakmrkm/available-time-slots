@@ -424,7 +424,16 @@ class AvailableTimeSlots
           isPast = false
 
         if isPast isnt true
-          tmp += '<div class="' + slotClassList.join(' ') + '" data-time="' + elem + '" data-date="' + @formatDate(date) + '">' + elem + '</div>'
+          tmp += '<div class="' + slotClassList.join(' ') + '" data-time="' + elem + '" data-date="' + @formatDate(date) + '">'
+          tmp += elem
+
+          if @settings.displayAvailableCount is true
+            if @settings.availabileTimeSlots[i]['count'] isnt undefined
+              count = @settings.availabileTimeSlots[i]['count'][index]
+
+              tmp += '<p class="ats-count">(' + count + ')</p>'
+
+          tmp += '</div>'
       )
 
       tmp += '</div>'

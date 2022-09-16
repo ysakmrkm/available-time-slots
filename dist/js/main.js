@@ -406,7 +406,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
       }
       tmp += '<div class="' + containerClassList.join(' ') + '">';
       this.settings.availabileTimeSlots[i]['data'].forEach((elem, index) => {
-        var slotClassList;
+        var count, slotClassList;
         slotClassList = ['ats-time-slot'];
         if (new Date(this.formatDate(date) + 'T' + elem).getTime() - now.getTime() < 0) {
           slotClassList.push('ats-time-slot__past');
@@ -416,7 +416,15 @@ AvailableTimeSlots = class AvailableTimeSlots {
           isPast = false;
         }
         if (isPast !== true) {
-          return tmp += '<div class="' + slotClassList.join(' ') + '" data-time="' + elem + '" data-date="' + this.formatDate(date) + '">' + elem + '</div>';
+          tmp += '<div class="' + slotClassList.join(' ') + '" data-time="' + elem + '" data-date="' + this.formatDate(date) + '">';
+          tmp += elem;
+          if (this.settings.displayAvailableCount === true) {
+            if (this.settings.availabileTimeSlots[i]['count'] !== void 0) {
+              count = this.settings.availabileTimeSlots[i]['count'][index];
+              tmp += '<p class="ats-count">(' + count + ')</p>';
+            }
+          }
+          return tmp += '</div>';
         }
       });
       tmp += '</div>';
