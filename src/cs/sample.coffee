@@ -3,6 +3,8 @@ target = document.getElementById('app')
 date = new Date()
 date.setDate(date.getDate() - 1)
 
+datePicker = ''
+
 settings = {
 	businessHour: [8,  24],
 	availabileTimeSlotResource: 'http://localhost:3001/json?start='+date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2),
@@ -31,6 +33,18 @@ settings = {
 	prevElem: '#prev'
 	nextElem: '#next'
 	# isMultiple: true
+	initDatePicker: ()->
+		# datePicker = flatpickr('#ats-calendar', {
+		# 	wrap: true
+		# 	minDate: date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2)
+		# })
+		datePicker = new Pikaday({
+			field: document.getElementById('ats-calendar')
+			minDate: date
+		})
+	destroyDatePicker: ()->
+		datePicker.destroy()
+
 	onClickTimeSlot: (data)->
 		# console.log(data)
 		document.getElementById('selected-date').innerHTML = ''
