@@ -49,6 +49,8 @@ class AvailableTimeSlots
       displayDateCount: 7,
       onClickTimeSlot: ()->
       onClickNavigator: ()->
+      initDatePicker: ()->
+      destroyDatePicker: ()->
     }
     @settings = Object.assign({}, @defaults, options)
     @defaultNav = true
@@ -162,7 +164,7 @@ class AvailableTimeSlots
 
     if @settings.calendar
       dateHtml += '<div id="ats-calendar-container" class="ats-current-date__calendar">
-      <label id="ats-calendar" class="ats-calendar"><img id="ats-calendar-icon" class="ats-calendar__icon" src="' + @settings.iconFilePath + @settings.iconCalendar.fileName + '" width="' + @settings.iconCalendar.width + '" height="' + @settings.iconCalendar.height + '" data-toggle /><input id="ats-calendar-input" class="ats-calendar__input" name="ats-selected-date" type="text" value="' + @formatDate(@settings.startDate) + '" data-input></label>
+      <label id="ats-calendar" class="ats-calendar"><img id="ats-calendar-icon" class="ats-calendar__icon" src="' + @settings.iconFilePath + @settings.iconCalendar.fileName + '" width="' + @settings.iconCalendar.width + '" height="' + @settings.iconCalendar.height + '" data-toggle /><input id="ats-calendar-input" class="ats-calendar__input" name="ats-selected-date" type="text" value="' + @formatDate(@settings.startDate) + '" data-input readonly></label>
       </div>'
 
     dateHtml += '</div>'
@@ -553,11 +555,6 @@ class AvailableTimeSlots
       )
 
   clickCalendar: ()->
-    @datePicker = flatpickr('#ats-calendar', {
-      wrap: true
-      minDate: @formatDate(@initialStartDate)
-    })
-
     document.getElementById('ats-calendar').addEventListener('change', (e)=>
       @settings.startDate = new Date(e.target.value)
       @setAvailableTimeSlots(@settings.availabileTimeSlotResource)
@@ -644,8 +641,10 @@ class AvailableTimeSlots
       @resizeContainerHeight()
 
     if @settings.calendar
-      if @datePicker isnt undefined
-        @datePicker.destroy()
+      @settings.initDatePicker()
+
+      if @settings.initDatePicker() isnt undefined
+        @settings.destroyDatePicker()
 
       @clickCalendar()
 
