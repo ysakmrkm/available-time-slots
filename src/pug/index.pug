@@ -9,6 +9,23 @@ block vars
 block head
   link(rel='stylesheet', href='dist/css/styles.css')
   link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css')
+  style.
+    body > p {
+      display: flex;
+    }
+
+    #selected-date {
+      margin-left: 1rem;
+    }
+
+    #nav {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    #nav > * {
+      cursor: pointer;
+    }
 
 block tag
   p Selected:
@@ -16,8 +33,9 @@ block tag
 
   hr
 
-  #prev < prev
-  #next next >
+  #nav
+    #prev < prev
+    #next next >
 
   #app
 
