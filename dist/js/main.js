@@ -216,14 +216,14 @@ AvailableTimeSlots = class AvailableTimeSlots {
       } else {
         classList.push('ats__weekday');
       }
-      tmp += '<div id="ats-date-heading-' + i + '" class="' + classList.join(' ') + '" data-date="' + this.formatDate(date) + '"> <div class="ats-date-number">' + date.getDate() + '</div> <div class="ats-date-text">' + this.getWeekdayName(date.getDay()) + '</div> </div>';
+      tmp += '<div id="ats-date-heading-' + i + '" class="' + classList.join(' ') + '" data-date="' + this.formatDate(date) + '" data-date-index="' + i + '"> <div class="ats-date-number">' + date.getDate() + '</div> <div class="ats-date-text">' + this.getWeekdayName(date.getDay()) + '</div> </div>';
     }
     ret = tmp;
     return ret;
   }
 
   getAvailableTimeSlots() {
-    var availableDate, businessHoursDate, businessHoursEnd, businessHoursMonth, businessHoursStart, className, count, currentBusinessHours, date, i, isAvalable, isBusinessHours, isPast, j, k, l, m, mark, n, now, o, p, ref, ref1, ref2, ref3, slotDate, tmp, tmpTimes;
+    var availableDate, businessHoursDate, businessHoursEnd, businessHoursMonth, businessHoursStart, className, count, currentBusinessHours, date, i, isAvalable, isBusinessHours, isPast, j, k, l, m, mark, n, now, o, p, ref, ref1, ref2, ref3, slotDate, timeIndex, timeIndexText, timeText, tmp, tmpTimes;
     tmp = '';
     now = new Date();
     for (i = n = 0, ref = this.settings.displayDateCount; (0 <= ref ? n < ref : n > ref); i = 0 <= ref ? ++n : --n) {
@@ -240,13 +240,15 @@ AvailableTimeSlots = class AvailableTimeSlots {
           l = 0;
         }
         for (k = p = 0, ref3 = this.settings.availabileTimeSlots[i]['data'].length; (0 <= ref3 ? p < ref3 : p > ref3); k = 0 <= ref3 ? ++p : --p) {
-          availableDate = new Date(this.settings.availabileTimeSlots[i]['date'] + 'T' + this.settings.availabileTimeSlots[i]['data'][k] + ':00');
+          availableDate = new Date(this.settings.availabileTimeSlots[i]['date'] + 'T' + this.settings.availabileTimeSlots[i]['data'][k]['time'] + ':00');
           slotDate = new Date(this.formatDate(date) + 'T' + ('0' + this.getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + this.getCurrentTime(j).getMinutes()).slice(-2) + ':00');
           if (availableDate.getTime() === slotDate.getTime()) {
             isAvalable = true;
             if (this.settings.displayAvailableCount === true) {
-              if (this.settings.availabileTimeSlots[i]['count'] !== void 0) {
-                count = this.settings.availabileTimeSlots[i]['count'][k];
+              if (this.settings.availabileTimeSlots[i]['data'][k]['count'] !== void 0) {
+                count = this.settings.availabileTimeSlots[i]['data'][k]['count'];
+              } else {
+                count = 0;
               }
             }
           }
@@ -317,9 +319,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
         } else {
           mark = '<p class="ats-icon"><img class="ats-icon-image" src="' + this.settings.iconFilePath + this.settings.iconCircle.fileName + '" width="' + this.settings.iconCircle.width + '" height="' + this.settings.iconCircle.height + '" /></p>';
           if (this.settings.displayAvailableCount === true) {
-            if (this.settings.availabileTimeSlots[m]['count'] !== void 0) {
-              mark += '<p class="ats-count">(' + count + ')</p>';
-            }
+            mark += '<p class="ats-count">(' + count + ')</p>';
           }
           if (isBusinessHours) {
             className += ' ats-time-slot__available';
@@ -328,7 +328,15 @@ AvailableTimeSlots = class AvailableTimeSlots {
         if (!isBusinessHours) {
           mark = '';
         }
-        tmpTimes += '<div class="' + className + '" data-time="' + ('0' + slotDate.getHours()).slice(-2) + ':' + ('0' + slotDate.getMinutes()).slice(-2) + '" data-date="' + this.formatDate(date) + '">' + mark + '</div>';
+        timeText = ('0' + slotDate.getHours()).slice(-2) + ':' + ('0' + slotDate.getMinutes()).slice(-2);
+        timeIndex = this.settings.availabileTimeSlots[i]['data'].findIndex(function(elem) {
+          return elem.time === timeText;
+        });
+        timeIndexText = ' data-date-index="' + i + '"';
+        if (timeIndex > -1) {
+          timeIndexText += ' data-time-index="' + timeIndex + '"';
+        }
+        tmpTimes += '<div class="' + className + '" data-time="' + timeText + '" data-date="' + this.formatDate(date) + '"' + timeIndexText + '>' + mark + '</div>';
       }
       className = 'ats-time-slot-container';
       if (date.getDay() === 0) {
@@ -476,13 +484,19 @@ AvailableTimeSlots = class AvailableTimeSlots {
   clickAvailableTimeSlot() {
     return Array.from(document.getElementsByClassName('ats-time-slot__available')).forEach((target) => {
       return target.addEventListener('click', (e) => {
-        var date, idx, time, tmp;
+        var date, dateIndex, idx, time, timeIndex, tmp;
         date = target.getAttribute('data-date');
         time = target.getAttribute('data-time');
-        tmp = date + ' ' + time;
+        dateIndex = target.getAttribute('data-date-index');
+        timeIndex = target.getAttribute('data-time-index');
+        tmp = {};
+        tmp['date'] = date;
+        tmp['data'] = this.settings.availabileTimeSlots[dateIndex]['data'][timeIndex];
         if (target.classList.contains('is-selected')) {
           target.classList.remove('is-selected');
-          idx = this.settings.selectedDates.indexOf(tmp);
+          idx = this.settings.selectedDates.findIndex(function(elem) {
+            return elem.data.time === tmp.data.time;
+          });
           localStorage.removeItem('ats_selected_date');
           localStorage.removeItem('ats_selected_time');
           if (idx !== -1) {

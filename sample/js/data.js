@@ -44,6 +44,7 @@ app.get('/json', (req, res) => {
   const newTimes = times;
   const newCounts = counts;
 
+  const dataArrayBase = [];
   const dataArray = [];
 
   for(var i = 0 ; i < 365; i++) {
@@ -57,11 +58,28 @@ app.get('/json', (req, res) => {
     const date = ('0' + now.getDate()).slice(-2);
     const arrayNum = Math.floor( Math.random() * 7 )
 
-    dataArray[i] = {
+    dataArrayBase[i] = {
       'date': year+'-'+month+'-'+date,
       'data': newTimes[arrayNum],
       'count': newCounts[arrayNum]
     }
+
+    dataArray[i] = {};
+    dataArray[i]['data'] = [];
+
+    newTimes[arrayNum].forEach(function(elem, index) {
+      dataArray[i]['date'] = dataArrayBase[i]['date'];
+      dataArray[i]['data'][index] = {};
+      dataArray[i]['data'][index]['time'] = elem;
+      dataArray[i]['data'][index]['count'] = newCounts[arrayNum][index];
+      dataArray[i]['data'][index].textkey = 'textVal';
+      dataArray[i]['data'][index].arrayKey = [0, 1, 2];
+      dataArray[i]['data'][index].objectKey = {
+        'key1': 'val1',
+        'key2': 'val2',
+        'key3': 'val3'
+      };
+    });
   }
 
   const sampleData = {
