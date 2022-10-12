@@ -211,7 +211,7 @@ class AvailableTimeSlots
       else
         classList.push('ats__weekday')
 
-      tmp += '<div id="ats-date-heading-' + i + '" class="' + classList.join(' ') + '" data-date="' + @formatDate(date) + '">
+      tmp += '<div id="ats-date-heading-' + i + '" class="' + classList.join(' ') + '" data-date="' + @formatDate(date) + '" data-date-index="' + i + '">
         <div class="ats-date-number">' + date.getDate() + '</div>
         <div class="ats-date-text">' + @getWeekdayName(date.getDay()) + '</div>
       </div>'
@@ -242,15 +242,17 @@ class AvailableTimeSlots
           l = 0
 
         for k in [0...@settings.availabileTimeSlots[i]['data'].length]
-          availableDate = new Date(@settings.availabileTimeSlots[i]['date'] + 'T' + @settings.availabileTimeSlots[i]['data'][k]+':00')
+          availableDate = new Date(@settings.availabileTimeSlots[i]['date'] + 'T' + @settings.availabileTimeSlots[i]['data'][k]['time']+':00')
           slotDate = new Date(@formatDate(date) + 'T' + ('0' + @getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + @getCurrentTime(j).getMinutes()).slice(-2)+':00')
 
           if availableDate.getTime() is slotDate.getTime()
             isAvalable = true
 
             if @settings.displayAvailableCount is true
-              if @settings.availabileTimeSlots[i]['count'] isnt undefined
-                count = @settings.availabileTimeSlots[i]['count'][k]
+              if @settings.availabileTimeSlots[i]['data'][k]['count'] isnt undefined
+                count = @settings.availabileTimeSlots[i]['data'][k]['count']
+              else
+                count = 0
 
           if slotDate.getTime() - now.getTime() < 0
             isAvalable = false
@@ -316,8 +318,7 @@ class AvailableTimeSlots
           mark = '<p class="ats-icon"><img class="ats-icon-image" src="' + @settings.iconFilePath + @settings.iconCircle.fileName + '" width="' + @settings.iconCircle.width + '" height="' + @settings.iconCircle.height + '" /></p>'
 
           if @settings.displayAvailableCount is true
-            if @settings.availabileTimeSlots[m]['count'] isnt undefined
-              mark += '<p class="ats-count">(' + count + ')</p>'
+            mark += '<p class="ats-count">(' + count + ')</p>'
 
           if isBusinessHours
             className += ' ats-time-slot__available'
@@ -325,7 +326,16 @@ class AvailableTimeSlots
         if not isBusinessHours
           mark = ''
 
-        tmpTimes += '<div class="' + className + '" data-time="' + ('0' + slotDate.getHours()).slice(-2) + ':' + ('0' + slotDate.getMinutes()).slice(-2) + '" data-date="' + @formatDate(date) + '">' + mark + '</div>'
+        timeText = ('0' + slotDate.getHours()).slice(-2) + ':' + ('0' + slotDate.getMinutes()).slice(-2)
+
+        timeIndex = @settings.availabileTimeSlots[i]['data'].findIndex((elem)-> elem.time is timeText)
+
+        timeIndexText = ' data-date-index="' + i + '"'
+
+        if timeIndex > -1
+          timeIndexText += ' data-time-index="' + timeIndex + '"'
+
+        tmpTimes += '<div class="' + className + '" data-time="' + timeText + '" data-date="' + @formatDate(date) + '"' + timeIndexText + '>' + mark + '</div>'
 
       className = 'ats-time-slot-container'
 
@@ -482,10 +492,17 @@ class AvailableTimeSlots
       target.addEventListener('click', (e)=>
         date = target.getAttribute('data-date')
         time = target.getAttribute('data-time')
-        tmp = date + ' ' + time
+
+        dateIndex = target.getAttribute('data-date-index')
+        timeIndex = target.getAttribute('data-time-index')
+
+        tmp = {}
+        tmp['date'] = date
+        tmp['data'] = @settings.availabileTimeSlots[dateIndex]['data'][timeIndex]
+
         if target.classList.contains('is-selected')
           target.classList.remove('is-selected')
-          idx = @settings.selectedDates.indexOf(tmp)
+          idx = @settings.selectedDates.findIndex((elem)-> elem.data.time is tmp.data.time)
 
           localStorage.removeItem('ats_selected_date')
           localStorage.removeItem('ats_selected_time')
