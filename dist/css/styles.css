@@ -34,6 +34,7 @@ http://opensource.org/licenses/mit-license.php
   grid-row: 1/2;
 }
 #ats-week-container {
+  overflow: hidden;
   box-sizing: border-box;
   display: grid;
   width: 100%;

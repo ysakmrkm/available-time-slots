@@ -43,6 +43,7 @@ http://opensource.org/licenses/mit-license.php
 
 	&-week {
 		&-container {
+			overflow: hidden;
 			box-sizing: border-box;
 			display: grid;
 			width: 100%;
