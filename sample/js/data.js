@@ -65,10 +65,10 @@ app.get('/json', (req, res) => {
     }
 
     dataArray[i] = {};
+    dataArray[i]['date'] = dataArrayBase[i]['date'];
     dataArray[i]['data'] = [];
 
     newTimes[arrayNum].forEach(function(elem, index) {
-      dataArray[i]['date'] = dataArrayBase[i]['date'];
       dataArray[i]['data'][index] = {};
       dataArray[i]['data'][index]['time'] = elem;
       dataArray[i]['data'][index]['count'] = newCounts[arrayNum][index];
