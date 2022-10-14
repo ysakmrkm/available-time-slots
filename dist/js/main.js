@@ -328,10 +328,12 @@ AvailableTimeSlots = class AvailableTimeSlots {
         if (!isBusinessHours) {
           mark = '';
         }
-        timeText = ('0' + slotDate.getHours()).slice(-2) + ':' + ('0' + slotDate.getMinutes()).slice(-2);
-        timeIndex = this.settings.availabileTimeSlots[i]['data'].findIndex(function(elem) {
-          return elem.time === timeText;
-        });
+        if (slotDate !== void 0) {
+          timeText = ('0' + slotDate.getHours()).slice(-2) + ':' + ('0' + slotDate.getMinutes()).slice(-2);
+          timeIndex = this.settings.availabileTimeSlots[i]['data'].findIndex(function(elem) {
+            return elem.time === timeText;
+          });
+        }
         timeIndexText = ' data-date-index="' + i + '"';
         if (timeIndex > -1) {
           timeIndexText += ' data-time-index="' + timeIndex + '"';

@@ -326,9 +326,10 @@ class AvailableTimeSlots
         if not isBusinessHours
           mark = ''
 
-        timeText = ('0' + slotDate.getHours()).slice(-2) + ':' + ('0' + slotDate.getMinutes()).slice(-2)
+        if slotDate isnt undefined
+          timeText = ('0' + slotDate.getHours()).slice(-2) + ':' + ('0' + slotDate.getMinutes()).slice(-2)
 
-        timeIndex = @settings.availabileTimeSlots[i]['data'].findIndex((elem)-> elem.time is timeText)
+          timeIndex = @settings.availabileTimeSlots[i]['data'].findIndex((elem)-> elem.time is timeText)
 
         timeIndexText = ' data-date-index="' + i + '"'
 
