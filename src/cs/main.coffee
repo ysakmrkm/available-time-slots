@@ -335,7 +335,7 @@ class AvailableTimeSlots
         if timeIndex > -1
           timeIndexText += ' data-time-index="' + timeIndex + '"'
 
-        tmpTimes += '<div class="' + className + '" data-time="' + timeText + '" data-date="' + @formatDate(date) + '"' + timeIndexText + '>' + mark + '</div>'
+        tmpTimes += '<div class="' + className + '" data-time="' + timeText + '" data-date="' + @formatDate(date) + '"' + timeIndexText + ' ontouchstart="">' + mark + '</div>'
 
       className = 'ats-time-slot-container'
 

@@ -235,8 +235,10 @@ http://opensource.org/licenses/mit-license.php
 		&__available {
 			cursor: pointer;
 
-			&:hover {
-				background-color: rgba(#ff0, .2);
+			@media (hover: hover) {
+				&:hover {
+					background-color: rgba(#ff0, .2);
+				}
 			}
 
 			&.is-selected {
