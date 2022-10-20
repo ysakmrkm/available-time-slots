@@ -104,6 +104,7 @@ class AvailableTimeSlots
     @endNum = Math.floor((slotMaxTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / @settings.slotSpan
     @localeData = locales.find((u)=> u.code is @settings.locale)
     @daysPerWeek = 7
+    @timeSlotSourceType = ''
 
   setDate: (days)->
     date = new Date(@settings.startDate.valueOf())
@@ -352,7 +353,9 @@ class AvailableTimeSlots
     return tmp
 
   setAvailableTimeSlots: (data)->
-    if typeof data is 'string'
+    @timeSlotSourceType = typeof data
+
+    if @timeSlotSourceType is 'string'
       queryStrings = new URLSearchParams(data.split('?')[1])
 
       sourceUrl = data.split('?')[0] + '?'
@@ -391,7 +394,7 @@ class AvailableTimeSlots
 
       request.send()
 
-    if typeof data is 'object'
+    if @timeSlotSourceType is 'object'
       @settings.availabileTimeSlots = data.data
 
       @render()
@@ -461,7 +464,9 @@ class AvailableTimeSlots
 
     @settings.startDate = @setDate(@settings.displayDateCount * -1)
     @clearAvailableTimeSlots()
-    @setAvailableTimeSlots(@settings.availabileTimeSlotResource)
+
+    if @timeSlotSourceType is 'string'
+      @setAvailableTimeSlots(@settings.availabileTimeSlotResource)
 
     if typeof @settings.onClickNavigator is 'function'
       @settings.onClickNavigator(direction = 'prev')
@@ -478,7 +483,9 @@ class AvailableTimeSlots
   clickNextWeekHander: ()=>
     @settings.startDate = @setDate(@settings.displayDateCount)
     @clearAvailableTimeSlots()
-    @setAvailableTimeSlots(@settings.availabileTimeSlotResource)
+
+    if @timeSlotSourceType is 'string'
+      @setAvailableTimeSlots(@settings.availabileTimeSlotResource)
 
     document.getElementById(@prevElem.id).classList.remove('is-disable')
 

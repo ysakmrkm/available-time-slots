@@ -105,6 +105,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
       return u.code === this.settings.locale;
     });
     this.daysPerWeek = 7;
+    this.timeSlotSourceType = '';
   }
 
   setDate(days) {
@@ -355,7 +356,8 @@ AvailableTimeSlots = class AvailableTimeSlots {
 
   setAvailableTimeSlots(data) {
     var queryStrings, request, sourceUrl;
-    if (typeof data === 'string') {
+    this.timeSlotSourceType = typeof data;
+    if (this.timeSlotSourceType === 'string') {
       queryStrings = new URLSearchParams(data.split('?')[1]);
       sourceUrl = data.split('?')[0] + '?';
       if (data.split('?')[1] !== void 0) {
@@ -386,7 +388,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
       request.onerror = function() {};
       request.send();
     }
-    if (typeof data === 'object') {
+    if (this.timeSlotSourceType === 'object') {
       this.settings.availabileTimeSlots = data.data;
       this.render();
     }
@@ -452,7 +454,9 @@ AvailableTimeSlots = class AvailableTimeSlots {
     }
     this.settings.startDate = this.setDate(this.settings.displayDateCount * -1);
     this.clearAvailableTimeSlots();
-    this.setAvailableTimeSlots(this.settings.availabileTimeSlotResource);
+    if (this.timeSlotSourceType === 'string') {
+      this.setAvailableTimeSlots(this.settings.availabileTimeSlotResource);
+    }
     if (typeof this.settings.onClickNavigator === 'function') {
       return this.settings.onClickNavigator(direction = 'prev');
     }
@@ -472,7 +476,9 @@ AvailableTimeSlots = class AvailableTimeSlots {
     var direction;
     this.settings.startDate = this.setDate(this.settings.displayDateCount);
     this.clearAvailableTimeSlots();
-    this.setAvailableTimeSlots(this.settings.availabileTimeSlotResource);
+    if (this.timeSlotSourceType === 'string') {
+      this.setAvailableTimeSlots(this.settings.availabileTimeSlotResource);
+    }
     document.getElementById(this.prevElem.id).classList.remove('is-disable');
     if (typeof this.settings.onClickNavigator === 'function') {
       return this.settings.onClickNavigator(direction = 'next');
