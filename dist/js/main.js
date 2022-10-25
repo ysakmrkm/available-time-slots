@@ -583,7 +583,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   render() {
-    var classList, ret;
+    var classList, pastScrollTop, ret;
     ret = '<div id="ats-container"> <div id="ats-nav-container">' + this.getNavigation() + '</div>';
     ret += '<div id="ats-week-container"';
     classList = [];
@@ -630,8 +630,15 @@ AvailableTimeSlots = class AvailableTimeSlots {
       if (this.datePicker !== void 0) {
         this.datePicker.destroy();
       }
-      return this.clickCalendar();
+      this.clickCalendar();
     }
+    pastScrollTop = localStorage.getItem('ats_scrollTop');
+    if (pastScrollTop !== null) {
+      document.getElementById('ats-week-body').scrollTop = pastScrollTop;
+    }
+    return document.getElementById('ats-week-body').addEventListener('scroll', function() {
+      return localStorage.setItem('ats_scrollTop', this.scrollTop);
+    });
   }
 
   updateHoliday() {

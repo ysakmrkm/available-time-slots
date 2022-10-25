@@ -651,6 +651,15 @@ class AvailableTimeSlots
 
       @clickCalendar()
 
+    pastScrollTop = localStorage.getItem('ats_scrollTop')
+
+    if pastScrollTop isnt null
+      document.getElementById('ats-week-body').scrollTop = pastScrollTop
+
+    document.getElementById('ats-week-body').addEventListener('scroll', ()->
+      localStorage.setItem('ats_scrollTop', this.scrollTop)
+    )
+
   updateHoliday: ()->
     request = new XMLHttpRequest()
     request.open('GET', @settings.holidays, true)
