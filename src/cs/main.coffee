@@ -263,12 +263,10 @@ class AvailableTimeSlots
           businessHoursEnd = new Date()
 
           businessHoursMonth = @formatDate(date).split('-')[1] - 1
-          businessHoursDate = @formatDate(date).split('-')[2]
+          businessHoursDate = @formatDate(date).split('-')[2].replace(/^0/, '')
 
-          businessHoursStart.setMonth(businessHoursMonth)
-          businessHoursStart.setDate(businessHoursDate)
-          businessHoursEnd.setMonth(businessHoursMonth)
-          businessHoursEnd.setDate(businessHoursDate)
+          businessHoursStart.setMonth(businessHoursMonth, businessHoursDate)
+          businessHoursEnd.setMonth(businessHoursMonth, businessHoursDate)
 
           if typeof @settings.businessHours[0] is 'number' or typeof @settings.businessHours[0] is 'string'
             businessHoursStart.setHours(@businessHours[0][0], @businessHours[0][1], @businessHours[0][2], @businessHours[0][3])

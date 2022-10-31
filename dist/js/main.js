@@ -260,11 +260,9 @@ AvailableTimeSlots = class AvailableTimeSlots {
           businessHoursStart = new Date();
           businessHoursEnd = new Date();
           businessHoursMonth = this.formatDate(date).split('-')[1] - 1;
-          businessHoursDate = this.formatDate(date).split('-')[2];
-          businessHoursStart.setMonth(businessHoursMonth);
-          businessHoursStart.setDate(businessHoursDate);
-          businessHoursEnd.setMonth(businessHoursMonth);
-          businessHoursEnd.setDate(businessHoursDate);
+          businessHoursDate = this.formatDate(date).split('-')[2].replace(/^0/, '');
+          businessHoursStart.setMonth(businessHoursMonth, businessHoursDate);
+          businessHoursEnd.setMonth(businessHoursMonth, businessHoursDate);
           if (typeof this.settings.businessHours[0] === 'number' || typeof this.settings.businessHours[0] === 'string') {
             businessHoursStart.setHours(this.businessHours[0][0], this.businessHours[0][1], this.businessHours[0][2], this.businessHours[0][3]);
             businessHoursEnd.setHours(this.businessHours[1][0], this.businessHours[1][1], this.businessHours[1][2], this.businessHours[1][3]);
