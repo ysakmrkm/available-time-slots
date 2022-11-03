@@ -23,5 +23,6 @@ jobs:
       - run: echo '${{ toJSON(steps.node_modules_cache_id.outputs) }}'
       - if: ${{ steps.node_modules_cache_id.outputs.cache-hit != 'true' }}
         run: npm install
+      - run: npm uninstall flatpickr
       - run: npm ls --depth=0
       - run: npm run build
