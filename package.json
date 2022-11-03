@@ -5,7 +5,6 @@
     "build": "gulp build"
   },
   "dependencies": {
-    "flatpickr": "^4.6.11"
   },
   "devDependencies": {
     "browser-sync": "^2.27.7",
@@ -29,7 +28,7 @@
   },
   "name": "available-time-slots",
   "description": "![gif](https://github.com/ysakmrkm/available-time-slots/blob/main/image/screenshot.gif)",
-  "version": "0.0.35",
+  "version": "0.0.36",
   "main": "dist/js/main.js",
   "repository": {
     "type": "git",
