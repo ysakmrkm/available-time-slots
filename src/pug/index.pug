@@ -8,7 +8,9 @@ block vars
 
 block head
   link(rel='stylesheet', href='dist/css/styles.css')
+  //- DatePicker Libraries
   link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css')
+  link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css')
   style.
     body > p {
       display: flex;
@@ -42,5 +44,7 @@ block tag
 block script
   script(src='dist/js/main.js')
   script(src='dist/js/locales.js')
-  script(src='https://cdn.jsdelivr.net/npm/flatpickr')
   script(src='dist/js/sample.js')
+  //- DatePicker Libraries
+  script(src='https://cdn.jsdelivr.net/npm/flatpickr')
+  script(src='https://cdn.jsdelivr.net/npm/pikaday/pikaday.js')

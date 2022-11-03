@@ -1,10 +1,12 @@
-var AvailableTimeSlots, date, settings, target;
+var AvailableTimeSlots, date, datePicker, settings, target;
 
 target = document.getElementById('app');
 
 date = new Date();
 
 date.setDate(date.getDate() - 1);
+
+datePicker = '';
 
 settings = {
   businessHour: [8, 24],
@@ -26,6 +28,19 @@ settings = {
   prevElem: '#prev',
   nextElem: '#next',
   // isMultiple: true
+  initDatePicker: function() {
+    // datePicker = flatpickr('#ats-calendar', {
+    // 	wrap: true
+    // 	minDate: date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2)
+    // })
+    return datePicker = new Pikaday({
+      field: document.getElementById('ats-calendar'),
+      minDate: date
+    });
+  },
+  destroyDatePicker: function() {
+    return datePicker.destroy();
+  },
   onClickTimeSlot: function(data) {
     // console.log(data)
     document.getElementById('selected-date').innerHTML = '';

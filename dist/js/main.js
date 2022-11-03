@@ -53,7 +53,9 @@ AvailableTimeSlots = class AvailableTimeSlots {
       displayAvailableCount: false,
       displayDateCount: 7,
       onClickTimeSlot: function() {},
-      onClickNavigator: function() {}
+      onClickNavigator: function() {},
+      initDatePicker: function() {},
+      destroyDatePicker: function() {}
     };
     this.settings = Object.assign({}, this.defaults, options);
     this.defaultNav = true;
@@ -172,7 +174,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
     }
     dateHtml = '<div id="ats-current-date-container"> <div class="ats-current-date__text">' + dateHtmlText + '</div>';
     if (this.settings.calendar) {
-      dateHtml += '<div id="ats-calendar-container" class="ats-current-date__calendar"> <label id="ats-calendar" class="ats-calendar"><img id="ats-calendar-icon" class="ats-calendar__icon" src="' + this.settings.iconFilePath + this.settings.iconCalendar.fileName + '" width="' + this.settings.iconCalendar.width + '" height="' + this.settings.iconCalendar.height + '" data-toggle /><input id="ats-calendar-input" class="ats-calendar__input" name="ats-selected-date" type="text" value="' + this.formatDate(this.settings.startDate) + '" data-input></label> </div>';
+      dateHtml += '<div id="ats-calendar-container" class="ats-current-date__calendar"> <label id="ats-calendar" class="ats-calendar"><img id="ats-calendar-icon" class="ats-calendar__icon" src="' + this.settings.iconFilePath + this.settings.iconCalendar.fileName + '" width="' + this.settings.iconCalendar.width + '" height="' + this.settings.iconCalendar.height + '" data-toggle /><input id="ats-calendar-input" class="ats-calendar__input" name="ats-selected-date" type="text" value="' + this.formatDate(this.settings.startDate) + '" data-input readonly></label> </div>';
     }
     dateHtml += '</div>';
     navHtml = previousWeekHtml + ' ' + dateHtml + ' ' + nextWeekHtml;
@@ -551,10 +553,6 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   clickCalendar() {
-    this.datePicker = flatpickr('#ats-calendar', {
-      wrap: true,
-      minDate: this.formatDate(this.initialStartDate)
-    });
     return document.getElementById('ats-calendar').addEventListener('change', (e) => {
       this.settings.startDate = new Date(e.target.value);
       return this.setAvailableTimeSlots(this.settings.availabileTimeSlotResource);
@@ -625,8 +623,9 @@ AvailableTimeSlots = class AvailableTimeSlots {
       this.resizeContainerHeight();
     }
     if (this.settings.calendar) {
-      if (this.datePicker !== void 0) {
-        this.datePicker.destroy();
+      this.settings.initDatePicker();
+      if (this.settings.initDatePicker() !== void 0) {
+        this.settings.destroyDatePicker();
       }
       this.clickCalendar();
     }
