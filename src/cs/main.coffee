@@ -88,21 +88,6 @@ class AvailableTimeSlots
     slotMaxTimeArray = @settings.slotMaxTime.replace(/0+(?=[0-9])/g, '').split(':')
     slotMaxTime.setHours(slotMaxTimeArray[0], slotMaxTimeArray[1], 0, 0)
 
-    if typeof @settings.businessHours[0] is 'number' or 'string'
-      @businessHours = [[@settings.businessHours[0], 0, 0, 0], [@settings.businessHours[1], 0, 0, 0]]
-
-    if typeof @settings.businessHours[0] is 'object'
-      @settings.businessHours.forEach((elem, index)=>
-        if @settings.businessHours.length >= 7
-          @businessHours[index] = []
-
-          elem.forEach((elem2, index2)=>
-            @businessHours[index][index2] = [[elem2[0], 0, 0, 0], [elem2[1], 0, 0, 0]]
-          )
-        else
-          @businessHours[index] = [[elem[0], 0, 0, 0], [elem[1], 0, 0, 0]]
-      )
-
     @startNum = Math.floor((slotMinTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / @settings.slotSpan
     @endNum = Math.floor((slotMaxTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / @settings.slotSpan
     @localeData = locales.find((u)=> u.code is @settings.locale)
@@ -237,6 +222,21 @@ class AvailableTimeSlots
     endDate = new Date(@settings.endDate)
     endDate.setHours(24, 0, 0, 0)
 
+    if typeof @settings.businessHours[0] is 'number' or 'string'
+      businessHours = [[@settings.businessHours[0], 0, 0, 0], [@settings.businessHours[1], 0, 0, 0]]
+
+    if typeof @settings.businessHours[0] is 'object'
+      @settings.businessHours.forEach((elem, index)=>
+        if @settings.businessHours.length >= 7
+          businessHours[index] = []
+
+          elem.forEach((elem2, index2)=>
+            businessHours[index][index2] = [[elem2[0], 0, 0, 0], [elem2[1], 0, 0, 0]]
+          )
+        else
+          businessHours[index] = [[elem[0], 0, 0, 0], [elem[1], 0, 0, 0]]
+      )
+
     for i in [0...@settings.displayDateCount]
       tmpTimes = ''
       mark = ''
@@ -281,20 +281,20 @@ class AvailableTimeSlots
           businessHoursEnd = new Date(date)
 
           if typeof @settings.businessHours[0] is 'number' or typeof @settings.businessHours[0] is 'string'
-            businessHoursStart.setHours(@businessHours[0][0], @businessHours[0][1], @businessHours[0][2], @businessHours[0][3])
-            businessHoursEnd.setHours(@businessHours[1][0], @businessHours[1][1], @businessHours[1][2], @businessHours[1][3])
+            businessHoursStart.setHours(businessHours[0][0], businessHours[0][1], businessHours[0][2], businessHours[0][3])
+            businessHoursEnd.setHours(businessHours[1][0], businessHours[1][1], businessHours[1][2], businessHours[1][3])
 
           if typeof @settings.businessHours[0] is 'object'
-            if @businessHours.length >= @daysPerWeek
-              currentBusinessHours = @businessHours[m][l]
+            if businessHours.length >= @daysPerWeek
+              currentBusinessHours = businessHours[m][l]
 
-              if currentBusinessHours isnt undefined and l < @businessHours[m].length
+              if currentBusinessHours isnt undefined and l < businessHours[m].length
                 businessHoursStart.setHours(currentBusinessHours[0][0], currentBusinessHours[0][1], currentBusinessHours[0][2], currentBusinessHours[0][3])
                 businessHoursEnd.setHours(currentBusinessHours[1][0], currentBusinessHours[1][1], currentBusinessHours[1][2], currentBusinessHours[1][3])
             else
-              currentBusinessHours = @businessHours[l]
+              currentBusinessHours = businessHours[l]
 
-              if l < @businessHours.length
+              if l < businessHours.length
                 businessHoursStart.setHours(currentBusinessHours[0][0], currentBusinessHours[0][1], currentBusinessHours[0][2], currentBusinessHours[0][3])
                 businessHoursEnd.setHours(currentBusinessHours[1][0], currentBusinessHours[1][1], currentBusinessHours[1][2], currentBusinessHours[1][3])
 
@@ -309,11 +309,11 @@ class AvailableTimeSlots
           if typeof @settings.businessHours[0] is 'object'
             if slotDate.getTime() >= businessHoursEnd.getTime()
               if currentBusinessHours isnt undefined
-                if @businessHours.length >= @daysPerWeek
-                  if l < @businessHours[m].length
+                if businessHours.length >= @daysPerWeek
+                  if l < businessHours[m].length
                     l++
                 else
-                  if l < @businessHours.length
+                  if l < businessHours.length
                     l++
 
         if isPast
@@ -697,6 +697,9 @@ class AvailableTimeSlots
     request.onerror = ()->
 
     request.send()
+
+  setOption: (name, value)->
+    @settings[name] = value
 
   init: ()->
     @setAvailableTimeSlots(@settings.availabileTimeSlotResource)

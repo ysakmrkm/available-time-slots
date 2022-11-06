@@ -87,21 +87,6 @@ AvailableTimeSlots = class AvailableTimeSlots {
     slotMaxTime = new Date();
     slotMaxTimeArray = this.settings.slotMaxTime.replace(/0+(?=[0-9])/g, '').split(':');
     slotMaxTime.setHours(slotMaxTimeArray[0], slotMaxTimeArray[1], 0, 0);
-    if (typeof this.settings.businessHours[0] === 'number' || 'string') {
-      this.businessHours = [[this.settings.businessHours[0], 0, 0, 0], [this.settings.businessHours[1], 0, 0, 0]];
-    }
-    if (typeof this.settings.businessHours[0] === 'object') {
-      this.settings.businessHours.forEach((elem, index) => {
-        if (this.settings.businessHours.length >= 7) {
-          this.businessHours[index] = [];
-          return elem.forEach((elem2, index2) => {
-            return this.businessHours[index][index2] = [[elem2[0], 0, 0, 0], [elem2[1], 0, 0, 0]];
-          });
-        } else {
-          return this.businessHours[index] = [[elem[0], 0, 0, 0], [elem[1], 0, 0, 0]];
-        }
-      });
-    }
     this.startNum = Math.floor((slotMinTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / this.settings.slotSpan;
     this.endNum = Math.floor((slotMaxTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / this.settings.slotSpan;
     this.localeData = locales.find((u) => {
@@ -234,11 +219,26 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   getAvailableTimeSlots() {
-    var availableDate, businessHoursEnd, businessHoursStart, className, count, currentBusinessHours, date, endDate, i, isAvalable, isBusinessHours, isOutOfRange, isPast, j, k, l, m, mark, n, now, o, p, ref, ref1, ref2, ref3, slotDate, timeIndex, timeIndexText, timeText, tmp, tmpTimes;
+    var availableDate, businessHours, businessHoursEnd, businessHoursStart, className, count, currentBusinessHours, date, endDate, i, isAvalable, isBusinessHours, isOutOfRange, isPast, j, k, l, m, mark, n, now, o, p, ref, ref1, ref2, ref3, slotDate, timeIndex, timeIndexText, timeText, tmp, tmpTimes;
     tmp = '';
     now = new Date();
     endDate = new Date(this.settings.endDate);
     endDate.setHours(24, 0, 0, 0);
+    if (typeof this.settings.businessHours[0] === 'number' || 'string') {
+      businessHours = [[this.settings.businessHours[0], 0, 0, 0], [this.settings.businessHours[1], 0, 0, 0]];
+    }
+    if (typeof this.settings.businessHours[0] === 'object') {
+      this.settings.businessHours.forEach((elem, index) => {
+        if (this.settings.businessHours.length >= 7) {
+          businessHours[index] = [];
+          return elem.forEach((elem2, index2) => {
+            return businessHours[index][index2] = [[elem2[0], 0, 0, 0], [elem2[1], 0, 0, 0]];
+          });
+        } else {
+          return businessHours[index] = [[elem[0], 0, 0, 0], [elem[1], 0, 0, 0]];
+        }
+      });
+    }
     for (i = n = 0, ref = this.settings.displayDateCount; (0 <= ref ? n < ref : n > ref); i = 0 <= ref ? ++n : --n) {
       tmpTimes = '';
       mark = '';
@@ -279,19 +279,19 @@ AvailableTimeSlots = class AvailableTimeSlots {
           businessHoursStart = new Date(date);
           businessHoursEnd = new Date(date);
           if (typeof this.settings.businessHours[0] === 'number' || typeof this.settings.businessHours[0] === 'string') {
-            businessHoursStart.setHours(this.businessHours[0][0], this.businessHours[0][1], this.businessHours[0][2], this.businessHours[0][3]);
-            businessHoursEnd.setHours(this.businessHours[1][0], this.businessHours[1][1], this.businessHours[1][2], this.businessHours[1][3]);
+            businessHoursStart.setHours(businessHours[0][0], businessHours[0][1], businessHours[0][2], businessHours[0][3]);
+            businessHoursEnd.setHours(businessHours[1][0], businessHours[1][1], businessHours[1][2], businessHours[1][3]);
           }
           if (typeof this.settings.businessHours[0] === 'object') {
-            if (this.businessHours.length >= this.daysPerWeek) {
-              currentBusinessHours = this.businessHours[m][l];
-              if (currentBusinessHours !== void 0 && l < this.businessHours[m].length) {
+            if (businessHours.length >= this.daysPerWeek) {
+              currentBusinessHours = businessHours[m][l];
+              if (currentBusinessHours !== void 0 && l < businessHours[m].length) {
                 businessHoursStart.setHours(currentBusinessHours[0][0], currentBusinessHours[0][1], currentBusinessHours[0][2], currentBusinessHours[0][3]);
                 businessHoursEnd.setHours(currentBusinessHours[1][0], currentBusinessHours[1][1], currentBusinessHours[1][2], currentBusinessHours[1][3]);
               }
             } else {
-              currentBusinessHours = this.businessHours[l];
-              if (l < this.businessHours.length) {
+              currentBusinessHours = businessHours[l];
+              if (l < businessHours.length) {
                 businessHoursStart.setHours(currentBusinessHours[0][0], currentBusinessHours[0][1], currentBusinessHours[0][2], currentBusinessHours[0][3]);
                 businessHoursEnd.setHours(currentBusinessHours[1][0], currentBusinessHours[1][1], currentBusinessHours[1][2], currentBusinessHours[1][3]);
               }
@@ -308,12 +308,12 @@ AvailableTimeSlots = class AvailableTimeSlots {
           if (typeof this.settings.businessHours[0] === 'object') {
             if (slotDate.getTime() >= businessHoursEnd.getTime()) {
               if (currentBusinessHours !== void 0) {
-                if (this.businessHours.length >= this.daysPerWeek) {
-                  if (l < this.businessHours[m].length) {
+                if (businessHours.length >= this.daysPerWeek) {
+                  if (l < businessHours[m].length) {
                     l++;
                   }
                 } else {
-                  if (l < this.businessHours.length) {
+                  if (l < businessHours.length) {
                     l++;
                   }
                 }
@@ -683,6 +683,10 @@ AvailableTimeSlots = class AvailableTimeSlots {
     };
     request.onerror = function() {};
     return request.send();
+  }
+
+  setOption(name, value) {
+    return this.settings[name] = value;
   }
 
   init() {
