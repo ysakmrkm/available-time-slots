@@ -631,6 +631,13 @@ AvailableTimeSlots = class AvailableTimeSlots {
       document.getElementById(this.nextElem.id).addEventListener('click', this.clickNextWeekHander, false);
       this.clickPrevWeek();
       this.clickNextWeek();
+    } else {
+      if (this.settings.prevElem !== '') {
+        document.getElementById(this.prevElem.id).removeEventListener('click', this.clickPrevWeekHandler, false);
+      }
+      if (this.settings.nextElem !== '') {
+        document.getElementById(this.nextElem.id).removeEventListener('click', this.clickNextWeekHander, false);
+      }
     }
     this.clickAvailableTimeSlot();
     if (this.settings.scrollable) {

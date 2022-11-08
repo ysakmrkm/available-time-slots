@@ -644,6 +644,11 @@ class AvailableTimeSlots
 
       @clickPrevWeek()
       @clickNextWeek()
+    else
+      if @settings.prevElem isnt ''
+        document.getElementById(@prevElem.id).removeEventListener('click', @clickPrevWeekHandler, false)
+      if @settings.nextElem isnt ''
+        document.getElementById(@nextElem.id).removeEventListener('click', @clickNextWeekHander, false)
 
     @clickAvailableTimeSlot()
 
