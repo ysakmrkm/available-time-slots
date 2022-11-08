@@ -77,19 +77,6 @@ class AvailableTimeSlots
     @settings.startDate.setHours(0, 0, 0)
     @initialStartDate = @settings.startDate
 
-    slotBaseTime = new Date()
-    slotBaseTime.setHours(0, 0, 0, 0)
-
-    slotMinTime = new Date()
-    slotMinTimeArray = @settings.slotMinTime.replace(/0+(?=[0-9])/g, '').split(':')
-    slotMinTime.setHours(slotMinTimeArray[0], slotMinTimeArray[1], 0, 0)
-
-    slotMaxTime = new Date()
-    slotMaxTimeArray = @settings.slotMaxTime.replace(/0+(?=[0-9])/g, '').split(':')
-    slotMaxTime.setHours(slotMaxTimeArray[0], slotMaxTimeArray[1], 0, 0)
-
-    @startNum = Math.floor((slotMinTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / @settings.slotSpan
-    @endNum = Math.floor((slotMaxTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / @settings.slotSpan
     @localeData = locales.find((u)=> u.code is @settings.locale)
     @daysPerWeek = 7
     @timeSlotSourceType = ''
@@ -178,8 +165,25 @@ class AvailableTimeSlots
 
     return time
 
+  getTimeLineMinMax: ()->
+    slotBaseTime = new Date()
+    slotBaseTime.setHours(0, 0, 0, 0)
+
+    slotMinTime = new Date()
+    slotMinTimeArray = @settings.slotMinTime.replace(/0+(?=[0-9])/g, '').split(':')
+    slotMinTime.setHours(slotMinTimeArray[0], slotMinTimeArray[1], 0, 0)
+
+    slotMaxTime = new Date()
+    slotMaxTimeArray = @settings.slotMaxTime.replace(/0+(?=[0-9])/g, '').split(':')
+    slotMaxTime.setHours(slotMaxTimeArray[0], slotMaxTimeArray[1], 0, 0)
+
+    @startNum = Math.floor((slotMinTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / @settings.slotSpan
+    @endNum = Math.floor((slotMaxTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / @settings.slotSpan
+
   getTimeLine: ()->
     tmp = ''
+
+    @getTimeLineMinMax()
 
     for i in [@startNum...@endNum]
       tmp += '<div id="ats-time-line-' + i + '" class="ats-time-line">
@@ -222,6 +226,8 @@ class AvailableTimeSlots
 
     endDate = new Date(@settings.endDate)
     endDate.setHours(24, 0, 0, 0)
+
+    @getTimeLineMinMax()
 
     if typeof @settings.businessHours[0] is 'number' or 'string'
       businessHours = [[@settings.businessHours[0], 0, 0, 0], [@settings.businessHours[1], 0, 0, 0]]

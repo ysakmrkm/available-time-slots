@@ -10,7 +10,7 @@ var AvailableTimeSlots;
 
 AvailableTimeSlots = class AvailableTimeSlots {
   constructor(target, options) {
-    var dom, slotBaseTime, slotMaxTime, slotMaxTimeArray, slotMinTime, slotMinTimeArray;
+    var dom;
     this.clickPrevWeekHandler = this.clickPrevWeekHandler.bind(this);
     this.clickNextWeekHander = this.clickNextWeekHander.bind(this);
     this.resizeContainerHeightHandler = this.resizeContainerHeightHandler.bind(this);
@@ -79,16 +79,6 @@ AvailableTimeSlots = class AvailableTimeSlots {
     }
     this.settings.startDate.setHours(0, 0, 0);
     this.initialStartDate = this.settings.startDate;
-    slotBaseTime = new Date();
-    slotBaseTime.setHours(0, 0, 0, 0);
-    slotMinTime = new Date();
-    slotMinTimeArray = this.settings.slotMinTime.replace(/0+(?=[0-9])/g, '').split(':');
-    slotMinTime.setHours(slotMinTimeArray[0], slotMinTimeArray[1], 0, 0);
-    slotMaxTime = new Date();
-    slotMaxTimeArray = this.settings.slotMaxTime.replace(/0+(?=[0-9])/g, '').split(':');
-    slotMaxTime.setHours(slotMaxTimeArray[0], slotMaxTimeArray[1], 0, 0);
-    this.startNum = Math.floor((slotMinTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / this.settings.slotSpan;
-    this.endNum = Math.floor((slotMaxTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / this.settings.slotSpan;
     this.localeData = locales.find((u) => {
       return u.code === this.settings.locale;
     });
@@ -189,9 +179,24 @@ AvailableTimeSlots = class AvailableTimeSlots {
     return time;
   }
 
+  getTimeLineMinMax() {
+    var slotBaseTime, slotMaxTime, slotMaxTimeArray, slotMinTime, slotMinTimeArray;
+    slotBaseTime = new Date();
+    slotBaseTime.setHours(0, 0, 0, 0);
+    slotMinTime = new Date();
+    slotMinTimeArray = this.settings.slotMinTime.replace(/0+(?=[0-9])/g, '').split(':');
+    slotMinTime.setHours(slotMinTimeArray[0], slotMinTimeArray[1], 0, 0);
+    slotMaxTime = new Date();
+    slotMaxTimeArray = this.settings.slotMaxTime.replace(/0+(?=[0-9])/g, '').split(':');
+    slotMaxTime.setHours(slotMaxTimeArray[0], slotMaxTimeArray[1], 0, 0);
+    this.startNum = Math.floor((slotMinTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / this.settings.slotSpan;
+    return this.endNum = Math.floor((slotMaxTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / this.settings.slotSpan;
+  }
+
   getTimeLine() {
     var i, n, ref, ref1, ret, tmp;
     tmp = '';
+    this.getTimeLineMinMax();
     for (i = n = ref = this.startNum, ref1 = this.endNum; (ref <= ref1 ? n < ref1 : n > ref1); i = ref <= ref1 ? ++n : --n) {
       tmp += '<div id="ats-time-line-' + i + '" class="ats-time-line"> <div class="ats-time-line-number">' + this.formatTime(this.getCurrentTime(i)) + '</div> </div>';
     }
@@ -225,6 +230,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
     now = new Date();
     endDate = new Date(this.settings.endDate);
     endDate.setHours(24, 0, 0, 0);
+    this.getTimeLineMinMax();
     if (typeof this.settings.businessHours[0] === 'number' || 'string') {
       businessHours = [[this.settings.businessHours[0], 0, 0, 0], [this.settings.businessHours[1], 0, 0, 0]];
     }
