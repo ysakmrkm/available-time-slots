@@ -93,6 +93,7 @@ class AvailableTimeSlots
     @localeData = locales.find((u)=> u.code is @settings.locale)
     @daysPerWeek = 7
     @timeSlotSourceType = ''
+    @chnageSettingFlg = false
 
   setDate: (days)->
     date = new Date(@settings.startDate.valueOf())
@@ -470,21 +471,28 @@ class AvailableTimeSlots
     return tmp
 
   clickPrevWeekHandler: ()=>
+    pastStartDate = @settings.startDate
+
+    if typeof @settings.onClickNavigator is 'function'
+      @settings.onClickNavigator(direction = 'prev')
+
+    currentStartDate = @settings.startDate
+
     currentDateTime = new Date(@getCurrentDate()).getTime()
-    startDateTime = new Date(document.getElementById('ats-date-heading-0').getAttribute('data-date')).getTime()
+    startDate = new Date(document.getElementById('ats-date-heading-0').getAttribute('data-date'))
+    startDateTime = startDate.getTime()
 
     if startDateTime - currentDateTime <= 0
       document.getElementById(@prevElem.id).classList.add('is-disable')
       return false
 
-    @settings.startDate = @setDate(@settings.displayDateCount * -1)
+    if pastStartDate is currentStartDate
+      @settings.startDate = @setDate(@settings.displayDateCount * -1)
+
     @clearAvailableTimeSlots()
 
     if @timeSlotSourceType is 'string'
       @setAvailableTimeSlots(@settings.availabileTimeSlotResource)
-
-    if typeof @settings.onClickNavigator is 'function'
-      @settings.onClickNavigator(direction = 'prev')
 
   clickPrevWeek: ()->
     currentDateTime = new Date(@getCurrentDate()).getTime()
@@ -496,16 +504,22 @@ class AvailableTimeSlots
     document.getElementById(@prevElem.id).addEventListener('click', @clickPrevWeekHandler, false)
 
   clickNextWeekHander: ()=>
-    @settings.startDate = @setDate(@settings.displayDateCount)
+    pastStartDate = @settings.startDate
+
+    if typeof @settings.onClickNavigator is 'function'
+      @settings.onClickNavigator(direction = 'next')
+
+    currentStartDate = @settings.startDate
+
+    if pastStartDate is currentStartDate
+      @settings.startDate = @setDate(@settings.displayDateCount)
+
     @clearAvailableTimeSlots()
 
     if @timeSlotSourceType is 'string'
       @setAvailableTimeSlots(@settings.availabileTimeSlotResource)
 
     document.getElementById(@prevElem.id).classList.remove('is-disable')
-
-    if typeof @settings.onClickNavigator is 'function'
-      @settings.onClickNavigator(direction = 'next')
 
   clickNextWeek: ()->
     document.getElementById(@nextElem.id).addEventListener('click', @clickNextWeekHander, false)
@@ -596,6 +610,12 @@ class AvailableTimeSlots
     window.addEventListener('resize', @resizeContainerHeightHandler, false)
 
   render: ()->
+    if @chnageSettingFlg
+      if @timeSlotSourceType is 'string'
+        @chnageSettingFlg = false
+
+        @setAvailableTimeSlots(@settings.availabileTimeSlotResource)
+
     ret = '<div id="ats-container">
       <div id="ats-nav-container">' + @getNavigation() + '</div>'
     ret += '<div id="ats-week-container"'
@@ -705,6 +725,8 @@ class AvailableTimeSlots
 
   setOption: (name, value)->
     @settings[name] = value
+
+    @chnageSettingFlg = true
 
   init: ()->
     @setAvailableTimeSlots(@settings.availabileTimeSlotResource)

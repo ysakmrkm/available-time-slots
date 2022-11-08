@@ -94,6 +94,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
     });
     this.daysPerWeek = 7;
     this.timeSlotSourceType = '';
+    this.chnageSettingFlg = false;
   }
 
   setDate(days) {
@@ -463,20 +464,25 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   clickPrevWeekHandler() {
-    var currentDateTime, direction, startDateTime;
+    var currentDateTime, currentStartDate, direction, pastStartDate, startDate, startDateTime;
+    pastStartDate = this.settings.startDate;
+    if (typeof this.settings.onClickNavigator === 'function') {
+      this.settings.onClickNavigator(direction = 'prev');
+    }
+    currentStartDate = this.settings.startDate;
     currentDateTime = new Date(this.getCurrentDate()).getTime();
-    startDateTime = new Date(document.getElementById('ats-date-heading-0').getAttribute('data-date')).getTime();
+    startDate = new Date(document.getElementById('ats-date-heading-0').getAttribute('data-date'));
+    startDateTime = startDate.getTime();
     if (startDateTime - currentDateTime <= 0) {
       document.getElementById(this.prevElem.id).classList.add('is-disable');
       return false;
     }
-    this.settings.startDate = this.setDate(this.settings.displayDateCount * -1);
+    if (pastStartDate === currentStartDate) {
+      this.settings.startDate = this.setDate(this.settings.displayDateCount * -1);
+    }
     this.clearAvailableTimeSlots();
     if (this.timeSlotSourceType === 'string') {
-      this.setAvailableTimeSlots(this.settings.availabileTimeSlotResource);
-    }
-    if (typeof this.settings.onClickNavigator === 'function') {
-      return this.settings.onClickNavigator(direction = 'prev');
+      return this.setAvailableTimeSlots(this.settings.availabileTimeSlotResource);
     }
   }
 
@@ -491,16 +497,20 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   clickNextWeekHander() {
-    var direction;
-    this.settings.startDate = this.setDate(this.settings.displayDateCount);
+    var currentStartDate, direction, pastStartDate;
+    pastStartDate = this.settings.startDate;
+    if (typeof this.settings.onClickNavigator === 'function') {
+      this.settings.onClickNavigator(direction = 'next');
+    }
+    currentStartDate = this.settings.startDate;
+    if (pastStartDate === currentStartDate) {
+      this.settings.startDate = this.setDate(this.settings.displayDateCount);
+    }
     this.clearAvailableTimeSlots();
     if (this.timeSlotSourceType === 'string') {
       this.setAvailableTimeSlots(this.settings.availabileTimeSlotResource);
     }
-    document.getElementById(this.prevElem.id).classList.remove('is-disable');
-    if (typeof this.settings.onClickNavigator === 'function') {
-      return this.settings.onClickNavigator(direction = 'next');
-    }
+    return document.getElementById(this.prevElem.id).classList.remove('is-disable');
   }
 
   clickNextWeek() {
@@ -598,6 +608,12 @@ AvailableTimeSlots = class AvailableTimeSlots {
 
   render() {
     var classList, pastScrollTop, ret;
+    if (this.chnageSettingFlg) {
+      if (this.timeSlotSourceType === 'string') {
+        this.chnageSettingFlg = false;
+        this.setAvailableTimeSlots(this.settings.availabileTimeSlotResource);
+      }
+    }
     ret = '<div id="ats-container"> <div id="ats-nav-container">' + this.getNavigation() + '</div>';
     ret += '<div id="ats-week-container"';
     classList = [];
@@ -693,7 +709,8 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   setOption(name, value) {
-    return this.settings[name] = value;
+    this.settings[name] = value;
+    return this.chnageSettingFlg = true;
   }
 
   init() {
