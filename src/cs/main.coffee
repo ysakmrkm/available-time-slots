@@ -77,10 +77,12 @@ class AvailableTimeSlots
     @settings.startDate.setHours(0, 0, 0)
     @initialStartDate = @settings.startDate
 
-    @localeData = locales.find((u)=> u.code is @settings.locale)
     @daysPerWeek = 7
     @timeSlotSourceType = ''
     @chnageSettingFlg = false
+
+  getLocale: ()->
+    @localeData = locales.find((u)=> u.code is @settings.locale)
 
   setDate: (days)->
     date = new Date(@settings.startDate.valueOf())
@@ -122,6 +124,8 @@ class AvailableTimeSlots
     return hours + ':' + minutes
 
   getNavigation: ()->
+    @getLocale()
+
     if @settings.navigation
       previousWeekHtml = '<div id="ats-prev-week-container" class="ats-nav">' + @prevElem.outerHTML + '</div>'
       nextWeekHtml = '<div id="ats-next-week-container" class="ats-nav">' + @nextElem.outerHTML + '</div>'
@@ -195,6 +199,8 @@ class AvailableTimeSlots
     return ret
 
   getDatesHeader: ()->
+    @getLocale()
+
     tmp = ''
 
     for i in [0...@settings.displayDateCount]

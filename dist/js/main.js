@@ -79,12 +79,15 @@ AvailableTimeSlots = class AvailableTimeSlots {
     }
     this.settings.startDate.setHours(0, 0, 0);
     this.initialStartDate = this.settings.startDate;
-    this.localeData = locales.find((u) => {
-      return u.code === this.settings.locale;
-    });
     this.daysPerWeek = 7;
     this.timeSlotSourceType = '';
     this.chnageSettingFlg = false;
+  }
+
+  getLocale() {
+    return this.localeData = locales.find((u) => {
+      return u.code === this.settings.locale;
+    });
   }
 
   setDate(days) {
@@ -138,6 +141,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
 
   getNavigation() {
     var dateHtml, dateHtmlText, navHtml, nextWeekHtml, previousWeekHtml;
+    this.getLocale();
     if (this.settings.navigation) {
       previousWeekHtml = '<div id="ats-prev-week-container" class="ats-nav">' + this.prevElem.outerHTML + '</div>';
       nextWeekHtml = '<div id="ats-next-week-container" class="ats-nav">' + this.nextElem.outerHTML + '</div>';
@@ -206,6 +210,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
 
   getDatesHeader() {
     var classList, date, i, n, ref, ret, tmp;
+    this.getLocale();
     tmp = '';
     for (i = n = 0, ref = this.settings.displayDateCount; (0 <= ref ? n < ref : n > ref); i = 0 <= ref ? ++n : --n) {
       date = this.setDate(i);
