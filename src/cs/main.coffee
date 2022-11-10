@@ -691,6 +691,8 @@ class AvailableTimeSlots
       window.removeEventListener('resize', @resizeContainerHeightHandler, false)
 
       @resizeContainerHeight()
+    else
+      window.removeEventListener('resize', @resizeContainerHeightHandler, false)
 
     if @settings.calendar
       @settings.initDatePicker()

@@ -673,6 +673,8 @@ AvailableTimeSlots = class AvailableTimeSlots {
     if (this.settings.resizable) {
       window.removeEventListener('resize', this.resizeContainerHeightHandler, false);
       this.resizeContainerHeight();
+    } else {
+      window.removeEventListener('resize', this.resizeContainerHeightHandler, false);
     }
     if (this.settings.calendar) {
       this.settings.initDatePicker();
