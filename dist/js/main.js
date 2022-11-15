@@ -226,7 +226,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   getAvailableTimeSlots() {
-    var availableDate, businessHoursDate, businessHoursEnd, businessHoursMonth, businessHoursStart, className, count, currentBusinessHours, date, i, isAvalable, isBusinessHours, isPast, j, k, l, m, mark, n, now, o, p, ref, ref1, ref2, ref3, slotDate, timeIndex, timeIndexText, timeText, tmp, tmpTimes;
+    var availableDate, businessHoursEnd, businessHoursStart, className, count, currentBusinessHours, date, i, isAvalable, isBusinessHours, isPast, j, k, l, m, mark, n, now, o, p, ref, ref1, ref2, ref3, slotDate, timeIndex, timeIndexText, timeText, tmp, tmpTimes;
     tmp = '';
     now = new Date();
     for (i = n = 0, ref = this.settings.displayDateCount; (0 <= ref ? n < ref : n > ref); i = 0 <= ref ? ++n : --n) {
@@ -259,12 +259,8 @@ AvailableTimeSlots = class AvailableTimeSlots {
             isAvalable = false;
             isPast = true;
           }
-          businessHoursStart = new Date();
-          businessHoursEnd = new Date();
-          businessHoursMonth = this.formatDate(date).split('-')[1] - 1;
-          businessHoursDate = this.formatDate(date).split('-')[2].replace(/^0/, '');
-          businessHoursStart.setMonth(businessHoursMonth, businessHoursDate);
-          businessHoursEnd.setMonth(businessHoursMonth, businessHoursDate);
+          businessHoursStart = new Date(date);
+          businessHoursEnd = new Date(date);
           if (typeof this.settings.businessHours[0] === 'number' || typeof this.settings.businessHours[0] === 'string') {
             businessHoursStart.setHours(this.businessHours[0][0], this.businessHours[0][1], this.businessHours[0][2], this.businessHours[0][3]);
             businessHoursEnd.setHours(this.businessHours[1][0], this.businessHours[1][1], this.businessHours[1][2], this.businessHours[1][3]);
