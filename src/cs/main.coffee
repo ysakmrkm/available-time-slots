@@ -20,6 +20,7 @@ class AvailableTimeSlots
       nextElem: ''
       selectedDates: []
       startDate: new Date()
+      endDate: ''
       slotMinTime: '00:00'
       slotMaxTime: '24:00'
       slotSpan: 30
@@ -227,6 +228,9 @@ class AvailableTimeSlots
     tmp = ''
     now = new Date()
 
+    endDate = new Date(@settings.endDate)
+    endDate.setHours(24, 0, 0, 0)
+
     for i in [0...@settings.displayDateCount]
       tmpTimes = ''
       mark = ''
@@ -237,6 +241,7 @@ class AvailableTimeSlots
       for j in [@startNum...@endNum]
         isAvalable = false
         isPast = false
+        isOutOfRange = false
         isBusinessHours = false
 
         className = 'ats-time-slot'
@@ -260,6 +265,11 @@ class AvailableTimeSlots
           if slotDate.getTime() - now.getTime() < 0
             isAvalable = false
             isPast = true
+
+          if endDate isnt ''
+            if slotDate.getTime() - endDate.getTime() > 0
+              isAvalable = false
+              isOutOfRange = true
 
           businessHoursStart = new Date(date)
           businessHoursEnd = new Date(date)
@@ -300,12 +310,17 @@ class AvailableTimeSlots
                   if l < @businessHours.length
                     l++
 
-        if isBusinessHours
-          className += ' ats-time-slot__business-hours'
-
         if isPast
           className += ' ats-time-slot__past'
           isPast = false
+
+        if isOutOfRange
+          className += ' ats-time-slot__out-of-range'
+          isOutOfRange = false
+          isBusinessHours = false
+
+        if isBusinessHours
+          className += ' ats-time-slot__business-hours'
 
         if not isAvalable
           mark = '<p class="ats-icon"><img class="ats-icon-image" src="' + @settings.iconFilePath + @settings.iconCross.fileName + '" width="' + @settings.iconCross.width + '" height="' + @settings.iconCross.height + '" /></p>'
