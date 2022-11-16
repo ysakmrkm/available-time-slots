@@ -212,10 +212,10 @@ http://opensource.org/licenses/mit-license.php
 .ats-view__available-time-slots .ats-time-slot {
   height: 100%;
 }
-.ats-view__available-time-slots .ats-time-slot__past {
+.ats-view__available-time-slots .ats-time-slot__past, .ats-view__available-time-slots .ats-time-slot__out-of-range {
   background-color: rgba(0, 0, 0, 0.1);
 }
-.ats-view__available-time-slots .ats-time-slot:not(.ats-view__available-time-slots .ats-time-slot__past):not(.ats-view__available-time-slots .ats-time-slot__business-hours) {
+.ats-view__available-time-slots .ats-time-slot:not(.ats-view__available-time-slots .ats-time-slot__past):not(.ats-view__available-time-slots .ats-time-slot__out-of-range):not(.ats-view__available-time-slots .ats-time-slot__business-hours) {
   background-color: rgba(0, 0, 0, 0.05);
 }
 .ats-view__only-available-times #ats-dates-container,

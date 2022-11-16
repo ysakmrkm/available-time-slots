@@ -292,11 +292,12 @@ http://opensource.org/licenses/mit-license.php
 			}
 
 			.ats-time-slot {
-				&__past {
+				&__past ,
+				&__out-of-range {
 					background-color: rgba(#000, .1);
 				}
 
-				&:not(&__past):not(&__business-hours) {
+				&:not(&__past):not(&__out-of-range):not(&__business-hours) {
 					background-color: rgba(#000, .05);
 				}
 			}

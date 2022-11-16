@@ -25,6 +25,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
       nextElem: '',
       selectedDates: [],
       startDate: new Date(),
+      endDate: '',
       slotMinTime: '00:00',
       slotMaxTime: '24:00',
       slotSpan: 30,
@@ -226,9 +227,11 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   getAvailableTimeSlots() {
-    var availableDate, businessHoursEnd, businessHoursStart, className, count, currentBusinessHours, date, i, isAvalable, isBusinessHours, isPast, j, k, l, m, mark, n, now, o, p, ref, ref1, ref2, ref3, slotDate, timeIndex, timeIndexText, timeText, tmp, tmpTimes;
+    var availableDate, businessHoursEnd, businessHoursStart, className, count, currentBusinessHours, date, endDate, i, isAvalable, isBusinessHours, isOutOfRange, isPast, j, k, l, m, mark, n, now, o, p, ref, ref1, ref2, ref3, slotDate, timeIndex, timeIndexText, timeText, tmp, tmpTimes;
     tmp = '';
     now = new Date();
+    endDate = new Date(this.settings.endDate);
+    endDate.setHours(24, 0, 0, 0);
     for (i = n = 0, ref = this.settings.displayDateCount; (0 <= ref ? n < ref : n > ref); i = 0 <= ref ? ++n : --n) {
       tmpTimes = '';
       mark = '';
@@ -237,6 +240,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
       for (j = o = ref1 = this.startNum, ref2 = this.endNum; (ref1 <= ref2 ? o < ref2 : o > ref2); j = ref1 <= ref2 ? ++o : --o) {
         isAvalable = false;
         isPast = false;
+        isOutOfRange = false;
         isBusinessHours = false;
         className = 'ats-time-slot';
         if (typeof this.settings.businessHours[0] === 'object') {
@@ -258,6 +262,12 @@ AvailableTimeSlots = class AvailableTimeSlots {
           if (slotDate.getTime() - now.getTime() < 0) {
             isAvalable = false;
             isPast = true;
+          }
+          if (endDate !== '') {
+            if (slotDate.getTime() - endDate.getTime() > 0) {
+              isAvalable = false;
+              isOutOfRange = true;
+            }
           }
           businessHoursStart = new Date(date);
           businessHoursEnd = new Date(date);
@@ -304,12 +314,17 @@ AvailableTimeSlots = class AvailableTimeSlots {
             }
           }
         }
-        if (isBusinessHours) {
-          className += ' ats-time-slot__business-hours';
-        }
         if (isPast) {
           className += ' ats-time-slot__past';
           isPast = false;
+        }
+        if (isOutOfRange) {
+          className += ' ats-time-slot__out-of-range';
+          isOutOfRange = false;
+          isBusinessHours = false;
+        }
+        if (isBusinessHours) {
+          className += ' ats-time-slot__business-hours';
         }
         if (!isAvalable) {
           mark = '<p class="ats-icon"><img class="ats-icon-image" src="' + this.settings.iconFilePath + this.settings.iconCross.fileName + '" width="' + this.settings.iconCross.width + '" height="' + this.settings.iconCross.height + '" /></p>';
