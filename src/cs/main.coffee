@@ -173,26 +173,31 @@ class AvailableTimeSlots
     slotBaseTime = new Date()
     slotBaseTime.setHours(0, 0, 0, 0)
 
-    slotMinTime = new Date()
+    @slotMinTime = new Date()
     slotMinTimeArray = @settings.slotMinTime.replace(/0+(?=[0-9])/g, '').split(':')
-    slotMinTime.setHours(slotMinTimeArray[0], slotMinTimeArray[1], 0, 0)
+    @slotMinTime.setHours(slotMinTimeArray[0], slotMinTimeArray[1], 0, 0)
 
-    slotMaxTime = new Date()
+    @slotMaxTime = new Date()
     slotMaxTimeArray = @settings.slotMaxTime.replace(/0+(?=[0-9])/g, '').split(':')
-    slotMaxTime.setHours(slotMaxTimeArray[0], slotMaxTimeArray[1], 0, 0)
+    @slotMaxTime.setHours(slotMaxTimeArray[0], slotMaxTimeArray[1], 0, 0)
 
-    @startNum = Math.floor((slotMinTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / @settings.slotSpan
-    @endNum = Math.floor((slotMaxTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / @settings.slotSpan
+    @startNum = 0
+    @endNum = Math.floor((@slotMaxTime.getTime() - @slotMinTime.getTime()) / (60 * 1000) / @settings.slotSpan)
 
   getTimeLine: ()->
     tmp = ''
 
     @getTimeLineMinMax()
 
-    for i in [@startNum...@endNum]
-      tmp += '<div id="ats-time-line-' + i + '" class="ats-time-line">
-      <div class="ats-time-line-number">' + @formatTime(@getCurrentTime(i)) + '</div>
-      </div>'
+    slotMinTime = new Date(@slotMinTime)
+
+    for i in [0...@endNum]
+      if i isnt 0
+        slotMinTime.setMinutes(slotMinTime.getMinutes() + @settings.slotSpan)
+
+      tmp += '<div id="ats-time-line-' + i + '" class="ats-time-line">'
+      tmp += '<div class="ats-time-line-number">' + @formatTime(slotMinTime) + '</div>'
+      tmp += '</div>'
 
     ret = tmp
 
@@ -257,7 +262,9 @@ class AvailableTimeSlots
 
       m = date.getDay()
 
-      for j in [@startNum...@endNum]
+      slotMinTime = new Date(@slotMinTime)
+
+      for j in [0...@endNum]
         isAvalable = false
         isPast = false
         isOutOfRange = false
@@ -268,9 +275,12 @@ class AvailableTimeSlots
         if typeof @settings.businessHours[0] is 'object'
           l = 0
 
+        if j isnt 0
+          slotMinTime.setMinutes(slotMinTime.getMinutes() + @settings.slotSpan)
+
         for k in [0...@settings.availabileTimeSlots[i]['data'].length]
           availableDate = new Date(@settings.availabileTimeSlots[i]['date'] + 'T' + @settings.availabileTimeSlots[i]['data'][k]['time']+':00')
-          slotDate = new Date(@formatDate(date) + 'T' + @formatTime(@getCurrentTime(j)) + ':00')
+          slotDate = new Date(@formatDate(date) + 'T' + @formatTime(slotMinTime) + ':00')
 
           if availableDate.getTime() is slotDate.getTime()
             isAvalable = true

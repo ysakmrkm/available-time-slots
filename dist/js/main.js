@@ -184,25 +184,31 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   getTimeLineMinMax() {
-    var slotBaseTime, slotMaxTime, slotMaxTimeArray, slotMinTime, slotMinTimeArray;
+    var slotBaseTime, slotMaxTimeArray, slotMinTimeArray;
     slotBaseTime = new Date();
     slotBaseTime.setHours(0, 0, 0, 0);
-    slotMinTime = new Date();
+    this.slotMinTime = new Date();
     slotMinTimeArray = this.settings.slotMinTime.replace(/0+(?=[0-9])/g, '').split(':');
-    slotMinTime.setHours(slotMinTimeArray[0], slotMinTimeArray[1], 0, 0);
-    slotMaxTime = new Date();
+    this.slotMinTime.setHours(slotMinTimeArray[0], slotMinTimeArray[1], 0, 0);
+    this.slotMaxTime = new Date();
     slotMaxTimeArray = this.settings.slotMaxTime.replace(/0+(?=[0-9])/g, '').split(':');
-    slotMaxTime.setHours(slotMaxTimeArray[0], slotMaxTimeArray[1], 0, 0);
-    this.startNum = Math.floor((slotMinTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / this.settings.slotSpan;
-    return this.endNum = Math.floor((slotMaxTime.getTime() - slotBaseTime.getTime()) / (1000 * 60)) / this.settings.slotSpan;
+    this.slotMaxTime.setHours(slotMaxTimeArray[0], slotMaxTimeArray[1], 0, 0);
+    this.startNum = 0;
+    return this.endNum = Math.floor((this.slotMaxTime.getTime() - this.slotMinTime.getTime()) / (60 * 1000) / this.settings.slotSpan);
   }
 
   getTimeLine() {
-    var i, n, ref, ref1, ret, tmp;
+    var i, n, ref, ret, slotMinTime, tmp;
     tmp = '';
     this.getTimeLineMinMax();
-    for (i = n = ref = this.startNum, ref1 = this.endNum; (ref <= ref1 ? n < ref1 : n > ref1); i = ref <= ref1 ? ++n : --n) {
-      tmp += '<div id="ats-time-line-' + i + '" class="ats-time-line"> <div class="ats-time-line-number">' + this.formatTime(this.getCurrentTime(i)) + '</div> </div>';
+    slotMinTime = new Date(this.slotMinTime);
+    for (i = n = 0, ref = this.endNum; (0 <= ref ? n < ref : n > ref); i = 0 <= ref ? ++n : --n) {
+      if (i !== 0) {
+        slotMinTime.setMinutes(slotMinTime.getMinutes() + this.settings.slotSpan);
+      }
+      tmp += '<div id="ats-time-line-' + i + '" class="ats-time-line">';
+      tmp += '<div class="ats-time-line-number">' + this.formatTime(slotMinTime) + '</div>';
+      tmp += '</div>';
     }
     ret = tmp;
     return ret;
@@ -230,7 +236,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
   }
 
   getAvailableTimeSlots() {
-    var availableDate, businessHours, businessHoursEnd, businessHoursStart, className, count, currentBusinessHours, date, endDate, i, isAvalable, isBusinessHours, isOutOfRange, isPast, j, k, l, m, mark, n, now, o, p, ref, ref1, ref2, ref3, slotDate, timeIndex, timeIndexText, timeText, tmp, tmpTimes;
+    var availableDate, businessHours, businessHoursEnd, businessHoursStart, className, count, currentBusinessHours, date, endDate, i, isAvalable, isBusinessHours, isOutOfRange, isPast, j, k, l, m, mark, n, now, o, p, ref, ref1, ref2, slotDate, slotMinTime, timeIndex, timeIndexText, timeText, tmp, tmpTimes;
     tmp = '';
     now = new Date();
     endDate = new Date(this.settings.endDate);
@@ -256,7 +262,8 @@ AvailableTimeSlots = class AvailableTimeSlots {
       mark = '';
       date = this.setDate(i);
       m = date.getDay();
-      for (j = o = ref1 = this.startNum, ref2 = this.endNum; (ref1 <= ref2 ? o < ref2 : o > ref2); j = ref1 <= ref2 ? ++o : --o) {
+      slotMinTime = new Date(this.slotMinTime);
+      for (j = o = 0, ref1 = this.endNum; (0 <= ref1 ? o < ref1 : o > ref1); j = 0 <= ref1 ? ++o : --o) {
         isAvalable = false;
         isPast = false;
         isOutOfRange = false;
@@ -265,9 +272,12 @@ AvailableTimeSlots = class AvailableTimeSlots {
         if (typeof this.settings.businessHours[0] === 'object') {
           l = 0;
         }
-        for (k = p = 0, ref3 = this.settings.availabileTimeSlots[i]['data'].length; (0 <= ref3 ? p < ref3 : p > ref3); k = 0 <= ref3 ? ++p : --p) {
+        if (j !== 0) {
+          slotMinTime.setMinutes(slotMinTime.getMinutes() + this.settings.slotSpan);
+        }
+        for (k = p = 0, ref2 = this.settings.availabileTimeSlots[i]['data'].length; (0 <= ref2 ? p < ref2 : p > ref2); k = 0 <= ref2 ? ++p : --p) {
           availableDate = new Date(this.settings.availabileTimeSlots[i]['date'] + 'T' + this.settings.availabileTimeSlots[i]['data'][k]['time'] + ':00');
-          slotDate = new Date(this.formatDate(date) + 'T' + this.formatTime(this.getCurrentTime(j)) + ':00');
+          slotDate = new Date(this.formatDate(date) + 'T' + this.formatTime(slotMinTime) + ':00');
           if (availableDate.getTime() === slotDate.getTime()) {
             isAvalable = true;
             if (this.settings.displayAvailableCount === true) {
