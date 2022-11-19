@@ -142,6 +142,12 @@ class AvailableTimeSlots
 
     return year + '-' + month + '-' + date
 
+  formatTime: (date)->
+    hours = ('0' + date.getHours()).slice(-2)
+    minutes = ('0' + date.getMinutes()).slice(-2)
+
+    return hours + ':' + minutes
+
   getNavigation: ()->
     if @settings.navigation
       previousWeekHtml = '<div id="ats-prev-week-container" class="ats-nav">' + @prevElem.outerHTML + '</div>'
@@ -191,7 +197,7 @@ class AvailableTimeSlots
 
     for i in [@startNum...@endNum]
       tmp += '<div id="ats-time-line-' + i + '" class="ats-time-line">
-      <div class="ats-time-line-number">' + ('0' + @getCurrentTime(i).getHours()).slice(-2) + ':' + ('0' + @getCurrentTime(i).getMinutes()).slice(-2) + '</div>
+      <div class="ats-time-line-number">' + @formatTime(@getCurrentTime(i)) + '</div>
       </div>'
 
     ret = tmp
@@ -251,7 +257,7 @@ class AvailableTimeSlots
 
         for k in [0...@settings.availabileTimeSlots[i]['data'].length]
           availableDate = new Date(@settings.availabileTimeSlots[i]['date'] + 'T' + @settings.availabileTimeSlots[i]['data'][k]['time']+':00')
-          slotDate = new Date(@formatDate(date) + 'T' + ('0' + @getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + @getCurrentTime(j).getMinutes()).slice(-2)+':00')
+          slotDate = new Date(@formatDate(date) + 'T' + @formatTime(@getCurrentTime(j)) + ':00')
 
           if availableDate.getTime() is slotDate.getTime()
             isAvalable = true
@@ -337,7 +343,7 @@ class AvailableTimeSlots
           mark = ''
 
         if slotDate isnt undefined
-          timeText = ('0' + slotDate.getHours()).slice(-2) + ':' + ('0' + slotDate.getMinutes()).slice(-2)
+          timeText = @formatTime(slotDate)
 
           timeIndex = @settings.availabileTimeSlots[i]['data'].findIndex((elem)-> elem.time is timeText)
 

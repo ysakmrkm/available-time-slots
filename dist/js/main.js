@@ -153,6 +153,13 @@ AvailableTimeSlots = class AvailableTimeSlots {
     return year + '-' + month + '-' + date;
   }
 
+  formatTime(date) {
+    var hours, minutes;
+    hours = ('0' + date.getHours()).slice(-2);
+    minutes = ('0' + date.getMinutes()).slice(-2);
+    return hours + ':' + minutes;
+  }
+
   getNavigation() {
     var dateHtml, dateHtmlText, navHtml, nextWeekHtml, previousWeekHtml;
     if (this.settings.navigation) {
@@ -200,7 +207,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
     var i, n, ref, ref1, ret, tmp;
     tmp = '';
     for (i = n = ref = this.startNum, ref1 = this.endNum; (ref <= ref1 ? n < ref1 : n > ref1); i = ref <= ref1 ? ++n : --n) {
-      tmp += '<div id="ats-time-line-' + i + '" class="ats-time-line"> <div class="ats-time-line-number">' + ('0' + this.getCurrentTime(i).getHours()).slice(-2) + ':' + ('0' + this.getCurrentTime(i).getMinutes()).slice(-2) + '</div> </div>';
+      tmp += '<div id="ats-time-line-' + i + '" class="ats-time-line"> <div class="ats-time-line-number">' + this.formatTime(this.getCurrentTime(i)) + '</div> </div>';
     }
     ret = tmp;
     return ret;
@@ -248,7 +255,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
         }
         for (k = p = 0, ref3 = this.settings.availabileTimeSlots[i]['data'].length; (0 <= ref3 ? p < ref3 : p > ref3); k = 0 <= ref3 ? ++p : --p) {
           availableDate = new Date(this.settings.availabileTimeSlots[i]['date'] + 'T' + this.settings.availabileTimeSlots[i]['data'][k]['time'] + ':00');
-          slotDate = new Date(this.formatDate(date) + 'T' + ('0' + this.getCurrentTime(j).getHours()).slice(-2) + ':' + ('0' + this.getCurrentTime(j).getMinutes()).slice(-2) + ':00');
+          slotDate = new Date(this.formatDate(date) + 'T' + this.formatTime(this.getCurrentTime(j)) + ':00');
           if (availableDate.getTime() === slotDate.getTime()) {
             isAvalable = true;
             if (this.settings.displayAvailableCount === true) {
@@ -341,7 +348,7 @@ AvailableTimeSlots = class AvailableTimeSlots {
           mark = '';
         }
         if (slotDate !== void 0) {
-          timeText = ('0' + slotDate.getHours()).slice(-2) + ':' + ('0' + slotDate.getMinutes()).slice(-2);
+          timeText = this.formatTime(slotDate);
           timeIndex = this.settings.availabileTimeSlots[i]['data'].findIndex(function(elem) {
             return elem.time === timeText;
           });
