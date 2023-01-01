@@ -12,15 +12,11 @@ UI library of selectable available time slots
 
 ```html
 <link rel="stylesheet" href="../dist/css/styles.css">
-<!-- if calendar option is true -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 <div id="app"></div>
 
 <script src="../dist/js/main.js"></script>
 <script src="../dist/js/locales.js"></script>
-<!-- if calendar option is true -->
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
 	target = document.getElementById('app');
 
@@ -74,10 +70,6 @@ nextHtml = '<div id="ats-next-week" class="ats-nav__item ats-nav__item__next">><
 	onClickNavigator: function(clickNavigationDirection){}
 }
 ```
-
-## Dependency
-
-If `calendar` option is `true`, nedd to use [flatpickr](https://github.com/flatpickr/flatpickr)
 
 ## More information
 
